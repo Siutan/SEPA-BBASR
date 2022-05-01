@@ -1,0 +1,6 @@
+{
+	"appId": "com.sepa.prototype",
+	"appName": "Sepa Prototype",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
