@@ -2,6 +2,8 @@
   import createAccountOffice from '$lib/templates/Admin/Images/create-account-office.jpeg'
   import createAccountOfficeDark from '$lib/templates/Admin/Images/create-account-office-dark.jpeg'
 
+  // randomly chooses light or dark mode
+  // idk why i did this i got bored
   const rands = ['', 'dark']
   const randCls = rands[Math.floor(Math.random() * rands.length)]
 </script>

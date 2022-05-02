@@ -7,9 +7,9 @@
 		<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Dashboard</h2>
 		<!-- CTA -->
 		<div
-			class="flex items-center justify-between p-6 mb-8 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
+			class="flex items-center justify-between p-6 mb-8 text-sm font-semibold text-purple-100 dark:bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
 		>
-			<div class="flex flex-col items-left w-full p-10 bg-gray-800 rounded-lg text-lg">
+			<div class="flex flex-col items-left w-full p-10 bg-gray-100 shadow-inner text-black dark:bg-gray-800 dark:text-white rounded-lg text-lg">
 				<span class="text-red-600">Welcome Back _______, </span>
 				<span class="text-purple-600">Here's your daily report: </span>
 				<span
@@ -85,7 +85,7 @@
 			<!-- Card -->
 			<div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
 				<div
-					class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500"
+					class="p-3 mr-4 text-red-500 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-500"
 				>
 					<!-- failed svg-->
 					<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

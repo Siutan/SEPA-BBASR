@@ -46,19 +46,21 @@
 			],
 			sublinks: [
 				{ name: 'Create Customer', url: '/' },
-				{ name: 'Manage Customers', url: '/' },
-				{ name: '404', url: '/yoooooooooooooooooooo' }
+				{ name: 'Manage Customers', url: '/' }
 			]
 		},
 		{
-			name: 'Dev Pages',
+			name: 'Development',
 			svg: [
 				'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
 				//'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z',
 			],
 			sublinks: [
 				{ name: 'Custom Components', url: '/cards' },
-				{ name: '404', url: '/this-page-does-not-exists-at-all' }
+				{ name: '404', url: '/this-page-does-not-exists-at-all' },
+				{ name: 'login', url: '/pages/login' },
+				{ name: 'register', url: '/pages/create-account' },
+				{ name: 'forgot-password', url: '/pages/forgot-password' }
 			]
 		}
 	];
@@ -160,7 +162,7 @@
 		<button
 			class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 		>
-			Create account
+			Create Claim
 			<span class="ml-2" aria-hidden="true">+</span>
 		</button>
 	</div>

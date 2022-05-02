@@ -98,3 +98,34 @@ yarn dev --open --host --port 5000
     # Then open the app in Android Studio to run it
     npx cap open android
   ```
+  
+- #### iOS:
+
+  ##### First time setup:
+
+  ```bash
+  # First build the web app:
+  yarn build
+
+  # Then create the files necessary for iOS development:
+  npx cap add ios
+
+  # sync the projects together
+  yarn cap:sync
+
+  # Open iOS project in Xcode to run on a mobile device or emulator
+  npx cap open ios
+  ```
+
+  ##### After initial setup:
+
+  ```bash
+    # Just sync before you run the app
+    yarn cap:sync
+
+    # Then open the app in Xcode to run it
+    npx cap open ios
+  ```
+  
+## Styling
+- please use refer to 
