@@ -1,7 +1,4 @@
 <style>
-  .step-is-active {
-    display: block;
-  }
   .step-not-active {
     display: none;
   }

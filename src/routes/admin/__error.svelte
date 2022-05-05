@@ -11,6 +11,7 @@
     <p class="text-gray-700 dark:text-gray-300">
       Page not found. Check the address or
       <a class="text-purple-600 hover:underline dark:text-purple-300" href="/"> go back </a>
+      
       .
     </p>
   </div>

@@ -9,7 +9,7 @@
 		<div
 			class="flex items-center justify-between p-6 mb-8 text-sm font-semibold text-purple-100 dark:bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
 		>
-			<div class="flex flex-col items-left w-full p-10 bg-gray-100 shadow-inner text-black dark:bg-gray-800 dark:text-white rounded-lg text-lg">
+			<div class="flex flex-col items-left w-full p-10 bg-gray-100 shadow-inner text-black dark:bg-gray-800 dark:text-gray-400 rounded-lg text-lg">
 				<span class="text-red-600">Welcome Back _______, </span>
 				<span class="text-purple-600">Here's your daily report: </span>
 				<span
@@ -21,11 +21,10 @@
 				<span>Your progress is looking <span class="text-green-500">great!</span></span>
 				<!-- plus sign -->
 				<div
-					class=" p-2 mt-12 w-56 align-middle border rounded-lg border-teal-400 hover:bg-teal-900 hover:text-gray-300 "
+					class=" p-2 mt-12 w-56 align-middle border rounded-lg border-teal-400 hover:bg-teal-900 hover:text-gray-400 "
 				>
 					<a class="flex flex-row gap-5" href="/claims/createClaim">
 						<svg
-							id="Capa_1"
 							xmlns="http://www.w3.org/2000/svg"
 							xmlns:xlink="http://www.w3.org/1999/xlink"
 							height="30"

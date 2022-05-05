@@ -35,6 +35,15 @@
   */
   export function nextStep() {
     const steps = document.querySelectorAll('.step')
+
+    // get form data from current step
+    const currentStep = document.querySelector('.step-is-active')
+    const currentStepForm = currentStep.querySelector('input')
+    // const currentStepFormData = new FormData(currentStepForm)
+    // const currentStepFormDataEntries = currentStepFormData.entries()
+    console.log(currentStepForm)
+
+
     if (formHasError()) {
       return
     }
@@ -72,7 +81,7 @@
           <div class="separator-check-current" />
         {:else if $currentStep > index}
           <div class="separator-check">
-            <svg viewBox="0 0 32 32" style="fill:#16bdca">
+            <svg viewBox="0 0 32 32" style="fill:#9061f9">
               <path d="M1 14 L5 10 L13 18 L27 4 L31 8 L13 26 z" />
             </svg>
           </div>
@@ -83,7 +92,7 @@
     </div>
     <!-- This slot represents StepForm  -->
     <div class="multistep-right-sidebar transition duration-700 ease-in-out">
-      <slot class="" />
+      <slot />
     </div>
     <!-- end of  StepForm  -->
   </form>
@@ -124,7 +133,7 @@
     height: 30px;
     margin: 0 auto;
     border-radius: 50%;
-    box-shadow: 0 0 0 2px #16bdca;
+    box-shadow: 0 0 0 2px #9061f9;
     padding: 12px 10px 2px;
     z-index: 10;
   }
@@ -133,8 +142,8 @@
     height: 30px;
     margin: 0 auto;
     border-radius: 50%;
-    background-color: #444444;
-    box-shadow: 0 0 0 2px #16bdca;
+    background-color: #3d0796;
+    box-shadow: 0 0 0 2px #3d0796;
     z-index: 10;
   }
   .separator-check-current {
@@ -142,17 +151,9 @@
     height: 30px;
     margin: 0 auto;
     border-radius: 50%;
-    background: #7e3af2;
+    background: #9061f9;
     z-index: 10;
-    box-shadow: 0px 1px 8px #5e40db;
-  }
-  .separator-check-number {
-    color: white;
-    text-align: center;
-  }
-  .separator-check-number-blank {
-    text-align: center;
-    margin-top: -3px;
+    box-shadow: 0 1px 8px #9061f9;
   }
   .separator-line {
     border-right: 2px solid #ccc;

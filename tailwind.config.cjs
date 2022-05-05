@@ -2,9 +2,10 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
 	mode: 'jit',
-	content: ['src/app.html', 'src/**/*.svelte', './node_modules/tw-elements/dist/js/**/*.js'],
+	content: ['src/app.html', 'src/**/*.svelte', './node_modules/tw-elements/dist/js/**/*.js'], //"./node_modules/flowbite/**/*.js"
 	plugins: [
-		require('tw-elements/dist/plugin')
+		require('tw-elements/dist/plugin'),
+		//require('flowbite/plugin')
 	],
 	darkMode: 'class', // or 'media' or 'class'
 	theme: {
