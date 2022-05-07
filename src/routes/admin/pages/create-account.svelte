@@ -33,13 +33,23 @@
             <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
               Create account
             </h1>
-            <label class="block text-sm">
+            <label class="block pb-2 text-sm">
               <span class="text-gray-700 dark:text-gray-400">Email</span>
               <input
                 class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                 placeholder="Jane Doe"
               />
             </label>
+
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400">Phone Number</span>
+              <input
+                readonly
+                placeholder="(61) 456-789-123"
+                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+              />
+            </label>
+            <p class="text-sm  pt-5 italic">If this isn't your Phone number, please contact your carrier to change your number to this one</p>
             <label class="block mt-4 text-sm">
               <span class="text-gray-700 dark:text-gray-400">Password</span>
               <input

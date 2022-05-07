@@ -1,3 +1,7 @@
+<script>
+  import MagicBall from '$lib/easterEggs/8Ball.svelte';
+  let visible = false;
+</script>
 <main class="h-full pb-16 overflow-y-auto">
   <div class="container flex flex-col items-center px-6 mx-auto">
     <svg class="w-12 h-12 mt-8 text-purple-200" fill="currentColor" viewBox="0 0 20 20">
@@ -11,8 +15,14 @@
     <p class="text-gray-700 dark:text-gray-300">
       Page not found. Check the address or
       <a class="text-purple-600 hover:underline dark:text-purple-300" href="/"> go back </a>
+      or if you want to play a game, try the <span class="text-purple-600 hover:underline dark:text-purple-300" on:click={() => (visible = !visible)} >Magic 8 Ball</span>
       
       .
     </p>
+    <div>
+      {#if visible}
+        <MagicBall />
+      {/if}
+    </div>
   </div>
 </main>

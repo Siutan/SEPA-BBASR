@@ -42,11 +42,11 @@
 		let year = value.slice(4, 8);
 		if (value.length === 2) {
 			// not sure if the first 2 if statements are necessary
-			e.target.value = value + '/';
+			e.target.value = value + '-';
 		} else if (value.length === 4) {
-			e.target.value = day + '/' + month + '/';
+			e.target.value = day + '-' + month + '-';
 		} else if (value.length === 8) {
-			e.target.value = day + '/' + month + '/' + year; // formats date to dd/mm/yyyy
+			e.target.value = day + '-' + month + '-' + year; // formats date to dd/mm/yyyy
 		}
 	};
 
@@ -89,8 +89,6 @@
 		// if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
 		imageUrl = CImage.webPath;
 	};
-
-	let createNewCustomer: boolean;
 </script>
 
 <svelte:head>
@@ -106,43 +104,14 @@
 				<Step>
 					<!-- Customer Information -->
 					<div class="w-32 flex flex-col gap-4 pl-4 px-4 pb-4 md:w-full lg:w-full">
-						<!-- buttons -->
-						<div class="flex flex-row gap-2">
-							<label
-								class="w-full flex flex-col items-center text-center md:px-4 lg:py-6 lg:px-4 lg:px-4 bg-white text-gray-900 rounded-lg shadow-lg md:tracking-wide lg:tracking-wide uppercase border cursor-pointer transition duration-500 hover:bg-gray-700 hover:text-white"
-							>
-								<span class="mt-2 text-base leading-normal hidden md:block lg:block "
-									>Existing Customer</span
-								>
-								<input
-									on:click|preventDefault={() => {
-										createNewCustomer = false;
-									}}
-									class="hidden"
-								/>
-							</label>
-							<label
-								class="w-full flex flex-col items-center text-center md:px-4 lg:py-6 lg:px-4 lg:px-4 bg-white text-gray-900 rounded-lg shadow-lg md:tracking-wide lg:tracking-wide uppercase border cursor-pointer transition duration-500 hover:bg-gray-700 hover:text-white"
-							>
-								<span class="mt-2 text-base leading-normal hidden md:block lg:block "
-									>New Customer</span
-								>
-								<input
-									on:click|preventDefault={() => {
-										createNewCustomer = true;
-									}}
-									class="hidden"
-								/>
-							</label>
-						</div>
+
 					</div>
-					{#if createNewCustomer}
-						<div class="p-5 flex flex-col flex-wrap gap-5">
-							<div class="grid xl:grid-cols-2 xl:gap-6">
-								<div class="relative z-0 w-full mb-6 group">
+						<div id="customerForm" class="p-5 flex flex-col flex-wrap gap-5">
+							<div  class="grid xl:grid-cols-2 xl:gap-6">
+								<div  class="relative z-0 w-full mb-6 group">
 									<input
 										type="text"
-										name="first_name"
+										name="givenName"
 										id="floating_first_name"
 										class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 										placeholder=" "
@@ -156,7 +125,7 @@
 								<div class="relative z-0 w-full mb-6 group">
 									<input
 										type="text"
-										name="last_name"
+										name="lastName"
 										id="floating_last_name"
 										class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 										placeholder=" "
@@ -172,7 +141,7 @@
 								<div class="relative z-0 w-full mb-6 group">
 									<input
 										type="tel"
-										name="floating_phone"
+										name="phone"
 										id="floating_phone"
 										on:focusout={formatPhone}
 										class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
@@ -187,7 +156,7 @@
 								<div class="relative z-0 w-full mb-6 group">
 									<input
 										type="text"
-										name="date"
+										name="dob"
 										id="floating_date"
 										on:focusout={formatDOB}
 										class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
@@ -203,7 +172,7 @@
 							<div class="relative z-0 w-full mb-6 group">
 								<input
 									type="email"
-									name="email"
+									name="emailAddress"
 									id="floating_email"
 									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 									placeholder=" "
@@ -219,7 +188,7 @@
 									type="text"
 									bind:value={address}
 									on:input={debounce}
-									name="floating_address"
+									name="address"
 									id="floating_address"
 									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 									placeholder=" "
@@ -248,7 +217,7 @@
 							<div class="relative z-0 w-full mb-6 group">
 								<input
 									type="text"
-									name="memberID"
+									name="membershipId"
 									id="floating_memberID"
 									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 									placeholder=" "
@@ -260,24 +229,6 @@
 								>
 							</div>
 						</div>
-					{:else if !createNewCustomer}
-						<div class="p-5 flex flex-col flex-wrap gap-5">
-								<div class="relative z-0 w-full mb-6 group">
-									<input
-										type="text"
-										name="existing_memberID"
-										id="existing_memberID"
-										class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-										placeholder=" "
-									/>
-									<label
-										for="existing_memberID"
-										class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-										>Membership ID (X-00000)</label
-									>
-								</div>
-						</div>
-					{/if}
 				</Step>
 				<Step>
 					<!-- Upload Image -->
@@ -286,7 +237,7 @@
 					>
 						<div class="w-32 flex flex-col gap-4 pl-4 px-4 pb-4 md:w-full lg:w-full">
 							<div class="w-full">
-								<img class="object-cover" src={imageUrl} alt="" />
+								<img class="object-cover" draggable="false" src={imageUrl} alt="" />
 							</div>
 							<!-- buttons -->
 							<div class="flex flex-row gap-2">
