@@ -1,10 +1,17 @@
 <script>
+	//TODO:
+	// - add is empty validation
+	// - add input sanitization
+
 	import { onMount, afterUpdate } from 'svelte';
 	import { currentStep as stepStore, currentStep } from './stores.js';
 	import { uuidv4, formHasError, updateStepStatus, updateButtonVisibility } from './helpers.js';
 
 	export let multiStepOptions;
 	export let resetSteps;
+
+	let index = 0;
+
 	/*
   Lifecycle Hooks
   */
@@ -59,9 +66,12 @@
 						.then((res) => {
 							console.log("Customer created");
 							console.log(res);
+							localStorage.setItem('customer', JSON.stringify(res));
 						});
 				} else {
 					console.log('Customer exists');
+					console.log(data);
+					localStorage.setItem('customer', JSON.stringify(data));
 				}
 			});
 	}
@@ -103,6 +113,7 @@ function fetchVehicleData(vehicleForm) {
 					vehicleFormData[input.value = vehicle[input.name]];
 				});
 				console.log(vehicleFormData);
+				localStorage.setItem('vehicle', JSON.stringify(data["vehicle"]));
 			});
 	}
 
@@ -114,37 +125,29 @@ function fetchVehicleData(vehicleForm) {
 		let imageFormExists = document.body.contains(imageForm);
 		let vehicleFormExists = document.body.contains(vehicleForm);
 
-		if (customerFormExists) {
-			// get inputs inside customerForm
-			let customerFormInputs = customerForm.querySelectorAll('input');
-			let customerFormData = {};
-			customerFormInputs.forEach((input) => {
-				customerFormData[input.name] = input.value;
-			});
-			// check if Member ID exists in database
-			// if it does, get the customer's data from the database
-			// if it doesn't, create a new customer in the database
-			// then get the customer's data from the database
-			fetchCustomerData(customerFormData);
-			console.log(customerFormData);
-		}
-
-		if(imageFormExists) {
-			// get inputs inside vehicleForm
-			//let vehicleFormInputs = vehicleForm.querySelectorAll('input');
-			//let vehicleFormData = {};
-			//vehicleFormInputs.forEach((input) => {
-				//vehicleFormData[input.name] = input.value;
-			//});
-			console.log("pog")
-			if (vehicleFormExists) {
-				// get inputs inside vehicleForm
-
+		if(index === 0) {
+			if (customerFormExists) {
+				// get inputs inside customerForm
+				let customerFormInputs = customerForm.querySelectorAll('input');
+				let customerFormData = {};
+				customerFormInputs.forEach((input) => {
+					customerFormData[input.name] = input.value;
+				});
 				// check if Member ID exists in database
 				// if it does, get the customer's data from the database
 				// if it doesn't, create a new customer in the database
 				// then get the customer's data from the database
-				fetchVehicleData(vehicleForm);
+				fetchCustomerData(customerFormData);
+				console.log(customerFormData);
+				index++;
+			}
+		} else if (index === 1){
+			if(imageFormExists) {
+				console.log("pog")
+				if (vehicleFormExists) {
+					fetchVehicleData(vehicleForm);
+					index++;
+				}
 			}
 		}
 	}

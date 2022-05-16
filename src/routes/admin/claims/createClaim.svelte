@@ -76,6 +76,7 @@
 
 	// Display Image Upload
 	let imageUrl: string;
+	let setImage: string | ArrayBuffer;
 	const takePicture = async () => {
 		const CImage = await Camera.getPhoto({
 			quality: 100,
@@ -88,7 +89,74 @@
 		// passed to the Filesystem API to read the raw data of the image,
 		// if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
 		imageUrl = CImage.webPath;
+		console.log(imageUrl);
+
+		fetch(imageUrl)
+			.then(res => res.blob())
+			.then(blob => {
+				let reader = new FileReader();
+				reader.readAsDataURL(blob);
+				reader.onloadend = () => {
+					let base64data = reader.result;
+					console.log(base64data);
+					setImage = base64data;
+				};
+			});
 	};
+
+
+	function getClaim(e) {
+		e.preventDefault();
+		let requestOptions = {
+			method: 'GET'
+		};
+
+		fetch("https://dairies-rest-api.herokuapp.com/claims/00071", requestOptions)
+			.then(response => response.text())
+			.then(result => console.log(result))
+			.catch(error => console.log('error', error));
+	}
+
+	// handle submit
+	function handleSubmit(e) {
+		e.preventDefault();
+		//prepare data
+		let cData = JSON.parse(localStorage.getItem('customer'));
+		let vData = JSON.parse(localStorage.getItem('vehicle'));
+
+		let fileInput = document.querySelector('#imageInput') as HTMLInputElement;
+
+		let formData = new FormData();
+		formData.append("recordId", "00073");
+		formData.append("membershipId", cData["membershipId"]);
+		formData.append("image", fileInput.files[0]);
+		formData.append("rego", "reg321");
+		formData.append("make", vData["Make"]);
+		formData.append("model", vData["Model"]);
+		formData.append("bodyType", vData["Body"]);
+		formData.append("yearOfMake", "string");
+		formData.append("colour", "Red");
+		formData.append("engineNumber", "12345");
+
+		// send data to server
+		fetch('https://dairies-rest-api.herokuapp.com/claims', {
+			method: 'POST',
+			body: formData,
+
+		})
+			.then((response) => response.json())
+			.then((json) => {
+				console.log('Success:', json);
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+
+		// clear local storage
+		//localStorage.clear();
+		// redirect to success page
+	}
+
 </script>
 
 <svelte:head>
@@ -254,13 +322,13 @@
 									<span class="mt-2 text-base leading-normal hidden md:block lg:block "
 										>Upload an image</span
 									>
-									<input on:click|preventDefault={takePicture} type="file" class="hidden" />
+									<input id="imageInput" on:click|preventDefault={takePicture} type="file" class="hidden" />
 								</label>
 								<label
 									class=" flex flex-col items-center text-center md:px-4 lg:py-6 lg:px-4 lg:px-4 bg-white text-gray-900 rounded-lg shadow-lg md:tracking-wide lg:tracking-wide uppercase border cursor-pointer transition duration-500 hover:bg-gray-700 hover:text-white"
 								>
 									<span class="mt-2 text-sm leading-normal">Get Vehicle Data</span>
-									<input class="hidden" />
+									<input on:click={getClaim} class="hidden" />
 								</label>
 							</div>
 						</div>
@@ -364,6 +432,7 @@
 						<p>Please Review your Form Before Submitting, Once the form is Submitted, It <span class="text-red-600">CANNOT</span> be deleted.</p>
 					</div>
 					<button
+						on:click={handleSubmit}
 						class=" mx-5 px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 					>
 						Submit
