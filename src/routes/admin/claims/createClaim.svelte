@@ -103,9 +103,6 @@
 			<Form {multiStepOptions}>
 				<Step>
 					<!-- Customer Information -->
-					<div class="w-32 flex flex-col gap-4 pl-4 px-4 pb-4 md:w-full lg:w-full">
-
-					</div>
 						<div id="customerForm" class="p-5 flex flex-col flex-wrap gap-5">
 							<div  class="grid xl:grid-cols-2 xl:gap-6">
 								<div  class="relative z-0 w-full mb-6 group">
@@ -158,14 +155,13 @@
 										type="text"
 										name="dob"
 										id="floating_date"
-										on:focusout={formatDOB}
 										class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 										placeholder=" "
 									/>
 									<label
 										for="floating_date"
 										class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-										>Date of Birth (dd/mm/yyyy)</label
+										>Date of Birth (yyyy/mm/dd)</label
 									>
 								</div>
 							</div>
@@ -233,6 +229,7 @@
 				<Step>
 					<!-- Upload Image -->
 					<div
+						id="imageForm"
 						class=" ml-10 flex flex-col flex-wrap items-center gap-5 h-full px-4 py-3 mb-8 bg-white self-center w-3/4 rounded-lg shadow-md dark:bg-gray-900 md:ml-0 lg:ml-0  "
 					>
 						<div class="w-32 flex flex-col gap-4 pl-4 px-4 pb-4 md:w-full lg:w-full">
@@ -271,93 +268,107 @@
 				</Step>
 				<Step>
 					<!-- Vehicle Fields -->
-					<div class="p-5 flex flex-col flex-wrap gap-5">
-						<div class="flex flex-col w-fit">
-							<label class="block text-gray-700 dark:text-gray-200 mb-2" for="rego">
-								License Plate
-							</label>
-							<input
-								class="w-7/12 px-3 py-2 text-gray-700 dark:text-gray-200 bg-gray-900 rounded-lg focus:outline-none focus:border-gray-500"
-								type="text"
-								name="rego"
-								id="rego"
-							/>
-						</div>
-						<div class="flex flex-col gap-5 md:flex-row lg:flex-row">
-							<div class="flex flex-col">
-								<label class="block text-gray-700 dark:text-gray-200 mb-2" for="vMake">
-									Vehicle Make
-								</label>
+					<div id="vehicleForm" class="p-5 flex flex-col flex-wrap gap-5">
+						<div  class="grid xl:grid-cols-2 xl:gap-6">
+							<div  class="relative z-0 w-full mb-6 group">
 								<input
-									class="w-full px-3 py-2 text-gray-700 dark:text-gray-200 bg-gray-900 rounded-lg focus:outline-none focus:border-gray-500"
 									type="text"
 									name="make"
-									id="vMake"
+									id="floating_vehicleMake"
+									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+									placeholder=" "
 								/>
+								<label
+									for="floating_vehicleMake"
+									class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+								>Vehicle Make</label
+								>
 							</div>
-							<div class="flex flex-col">
-								<label class="block text-gray-700 dark:text-gray-200 mb-2" for="vModel">
-									Vehicle Model
-								</label>
+							<div class="relative z-0 w-full mb-6 group">
 								<input
-									class="w-full px-3 py-2 text-gray-700 dark:text-gray-200 bg-gray-900 rounded-lg focus:outline-none focus:border-gray-500"
 									type="text"
 									name="model"
-									id="vModel"
+									id="vehicleModel"
+									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+									placeholder=" "
 								/>
+								<label
+									for="vehicleModel"
+									class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+								>Vehicle Model</label
+								>
 							</div>
 						</div>
-						<div class="flex flex-col gap-5 md:flex-row lg:flex-row">
-							<div class="flex flex-col">
-								<label class="block text-gray-700 dark:text-gray-200 mb-2" for="bodyType">
-									Vehicle Body Type
-								</label>
+						<div class="grid xl:grid-cols-2 xl:gap-6">
+							<div class="relative z-0 w-full mb-6 group">
 								<input
-									class="w-full px-3 py-2 text-gray-700 dark:text-gray-200 bg-gray-900 rounded-lg focus:outline-none focus:border-gray-500"
+									type="text"
+									name="year"
+									id="floating_vehicle_year"
+									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+									placeholder=" "
+								/>
+								<label
+									for="floating_vehicle_year"
+									class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+								>Vehicle Year of Make (range)</label
+								>
+							</div>
+							<div class="relative z-0 w-full mb-6 group">
+								<input
 									type="text"
 									name="bodyType"
-									id="bodyType"
+									id="floating_vehicle_body"
+									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+									placeholder=" "
 								/>
-							</div>
-							<div class="flex flex-col">
-								<label class="block text-gray-700 dark:text-gray-200 mb-2" for="yearOfMake">
-									Year of Manufacture
-								</label>
-								<input
-									class="w-full px-3 py-2 text-gray-700 dark:text-gray-200 bg-gray-900 rounded-lg focus:outline-none focus:border-gray-500"
-									type="text"
-									name="yearOfMake"
-									id="yearOfMake"
-								/>
+								<label
+									for="floating_vehicle_body"
+									class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+								>Vehicle Body Type</label
+								>
 							</div>
 						</div>
-						<div class="flex flex-col gap-5 md:flex-row lg:flex-row">
-							<div class="flex flex-col">
-								<label class="block text-gray-700 dark:text-gray-200 mb-2" for="vColor">
-									Vehicle Colour
-								</label>
-								<input
-									class="w-full px-3 py-2 text-gray-700 dark:text-gray-200 bg-gray-900 rounded-lg focus:outline-none focus:border-gray-500"
-									type="text"
-									name="vColor"
-									id="vColor"
-								/>
-							</div>
-							<div class="flex flex-col">
-								<label class="block text-gray-700 dark:text-gray-200 mb-2" for="engineNumber">
-									Engine Number/ID
-								</label>
-								<input
-									class="w-full px-3 py-2 text-gray-700 dark:text-gray-200 bg-gray-900 rounded-lg focus:outline-none focus:border-gray-500"
-									type="text"
-									name="engineNumber"
-									id="engineNumber"
-								/>
-							</div>
+						<div class="relative z-0 w-full mb-6 group">
+							<input
+								type="text"
+								name="engine"
+								id="floating_engine"
+								class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+								placeholder=" "
+							/>
+							<label
+								for="floating_engine"
+								class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+							>Vehicle Engine Type</label
+							>
+						</div>
+						<div class="relative z-0 w-full mb-6 group">
+							<input
+								type="text"
+								name="vehicleId"
+								id="floating_vehicleId"
+								class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+								placeholder=" "
+							/>
+							<label
+								for="floating_vehicleId"
+								class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+							>Vehicle ID</label
+							>
 						</div>
 					</div>
 				</Step>
-				<Step />
+				<Step>
+					<div id="reviewForm" class="p-5 flex flex-col flex-wrap gap-5">
+						<p>Please Review your Form Before Submitting, Once the form is Submitted, It <span class="text-red-600">CANNOT</span> be deleted.</p>
+					</div>
+					<button
+						class=" mx-5 px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+					>
+						Submit
+					</button>
+				</Step>
 			</Form>
 		</div>
 	</div>

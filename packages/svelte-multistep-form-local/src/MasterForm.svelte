@@ -66,10 +66,52 @@
 			});
 	}
 
+function fetchVehicleData(vehicleForm) {
+		let vehicleGetUrl =
+			'https://dairies-rest-api.herokuapp.com/vehicles/' + '152648200';
+
+		// check if member id exists
+		fetch(vehicleGetUrl, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+			.then((response) => response.json())
+			.then((data) => {
+
+				console.log(data);
+				let vMake = data["vehicle"]["Make"];
+				let vModel = data["vehicle"]["Model"];
+				let vYear = data["vehicle"]["Year"];
+				let vBody = data["vehicle"]["Body"];
+				let vEngine = data["vehicle"]["Engine"];
+				let vId = data["vehicleId"];
+
+				let vehicle = {
+					"vehicleId": vId,
+					"make": vMake,
+					"model": vModel,
+					"year": vYear,
+					"bodyType": vBody,
+					"engine": vEngine
+				};
+
+				let vehicleFormInputs = vehicleForm.querySelectorAll('input');
+				let vehicleFormData = {};
+				vehicleFormInputs.forEach((input) => {
+					vehicleFormData[input.value = vehicle[input.name]];
+				});
+				console.log(vehicleFormData);
+			});
+	}
+
 	function handleForm() {
 		let customerForm = document.getElementById('customerForm');
+		let imageForm = document.getElementById('imageForm');
 		let vehicleForm = document.getElementById('vehicleForm');
 		let customerFormExists = document.body.contains(customerForm);
+		let imageFormExists = document.body.contains(imageForm);
 		let vehicleFormExists = document.body.contains(vehicleForm);
 
 		if (customerFormExists) {
@@ -85,13 +127,25 @@
 			// then get the customer's data from the database
 			fetchCustomerData(customerFormData);
 			console.log(customerFormData);
-		} else {
-			console.log('customer form does not exist');
 		}
-		if (vehicleFormExists) {
-			console.log('vehicle form exists');
-		} else {
-			console.log('vehicle form does not exist');
+
+		if(imageFormExists) {
+			// get inputs inside vehicleForm
+			//let vehicleFormInputs = vehicleForm.querySelectorAll('input');
+			//let vehicleFormData = {};
+			//vehicleFormInputs.forEach((input) => {
+				//vehicleFormData[input.name] = input.value;
+			//});
+			console.log("pog")
+			if (vehicleFormExists) {
+				// get inputs inside vehicleForm
+
+				// check if Member ID exists in database
+				// if it does, get the customer's data from the database
+				// if it doesn't, create a new customer in the database
+				// then get the customer's data from the database
+				fetchVehicleData(vehicleForm);
+			}
 		}
 	}
 
