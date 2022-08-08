@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { Form, Step } from 'svelte-multistep-form-local';
 	import { Camera, CameraResultType } from '@capacitor/camera';
-	import { HereProvider } from 'leaflet-geosearch'; // This doesn't work when building
+	import axios from "axios";
+	import { onMount } from "svelte";
 
 	// Customer data Form
 	// --------------------------------------------------
@@ -10,14 +11,15 @@
 	let results: object = [];
 	let debounceTimer: NodeJS.Timeout;
 
-	const provider: HereProvider = new HereProvider({
-		// https://community.algolia.com/places/api-clients.html#search-parameters
-		params: {
-			apiKey: 'uc52Fgb7mmXq_weQa5T3AWZIuqxcOLEcSILU_tR6T3g',
-			countries: 'au',
-			hitsPerPage: 5
-		}
-	});
+
+	// const provider: HereProvider = new HereProvider({
+	// 	// https://community.algolia.com/places/api-clients.html#search-parameters
+	// 	params: {
+	// 		apiKey: 'uc52Fgb7mmXq_weQa5T3AWZIuqxcOLEcSILU_tR6T3g',
+	// 		countries: 'au',
+	// 		hitsPerPage: 5
+	// 	}
+	// });
 
 	const debounce = async (e) => {
 		clearTimeout(debounceTimer);
@@ -31,7 +33,18 @@
 	};
 
 	async function getLocation() {
-		results = await provider.search({ query: address });
+		// url = https://api.geoapify.com/v1/geocode/autocomplete?text=LOCATIONGOESHERE&filter=countrycode:au&apiKey=dc17356b57e24d99aad8a6d3f195dedc
+		let url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&filter=countrycode:au&apiKey=dc17356b57e24d99aad8a6d3f195dedc`;
+		let response = await axios.get(url);
+		let resData = response.data.features
+		// loop through the results and get the formatted address
+		for (let i = 0; i < resData.length; i++) {
+			let formattedData = {
+				label: resData[i].properties.formatted,
+			}
+			results.push(formattedData);
+		}
+		console.log(results);
 	}
 
 	// DOB Formatting after focus loss
@@ -153,9 +166,22 @@
 			});
 
 		// clear local storage
-		//localStorage.clear();
-		// redirect to success page
+		localStorage.clear();
+		// redirect to success page or display a final form step with a success message
+		window.location.href = '/';
 	}
+
+
+	let driverOptions = [
+		{ id: 1, text: `Yes` },
+		{ id: 2, text: `No` }
+	];
+
+	let driverSelected;
+
+	let relation;
+	let driverPermission;
+	let nonDriverHasInsurance;
 
 </script>
 
@@ -184,7 +210,7 @@
 									<label
 										for="floating_first_name"
 										class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-										>First name</label
+										>First name of Insured</label
 									>
 								</div>
 								<div class="relative z-0 w-full mb-6 group">
@@ -198,7 +224,7 @@
 									<label
 										for="floating_last_name"
 										class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-										>Last name</label
+										>Last name of Insured</label
 									>
 								</div>
 							</div>
@@ -215,7 +241,7 @@
 									<label
 										for="floating_phone"
 										class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-										>Phone number (61 123-456-789)</label
+										>Phone number (614-00-000-000)</label
 									>
 								</div>
 								<div class="relative z-0 w-full mb-6 group">
@@ -289,9 +315,166 @@
 								<label
 									for="floating_memberID"
 									class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-									>Membership ID (??)</label
+									>Policy Number (XX000000)</label
 								>
+								<div class="relative z-0 my-10 w-full mb-6 group">
+									<select
+										name="last_rider"
+										id="floating_last_rider"
+										class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+										bind:value={driverSelected}
+										>
+										<option disabled value="" >Select</option>
+										{#each driverOptions as option}
+											<option value={option}>
+												{option.text}
+											</option>
+										{/each}
+									</select>
+									<label
+										for="floating_last_rider"
+										class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+									>Was the policy holder the last person to use the vehicle?</label
+									>
 							</div>
+								{#if driverSelected}
+									{#if driverSelected.id===2}
+										<div>
+											<div  class="grid xl:grid-cols-2 xl:gap-6">
+												<div  class="relative z-0 w-full mb-6 group">
+													<input
+														type="text"
+														name="givenName"
+														id="non_policy_first_name"
+														class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+														placeholder=" "
+													/>
+													<label
+														for="non_policy_first_name"
+														class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+													>First name of Last Driver</label
+													>
+												</div>
+												<div class="relative z-0 w-full mb-6 group">
+													<input
+														type="text"
+														name="lastName"
+														id="non_policy_last_name"
+														class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+														placeholder=" "
+													/>
+													<label
+														for="non_policy_last_name"
+														class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+													>Last name of Last Driver</label
+													>
+												</div>
+											</div>
+											<div class="grid xl:grid-cols-2 xl:gap-6">
+												<div class="relative z-0 w-full mb-6 group">
+													<input
+														type="tel"
+														name="phone"
+														id="non_policy_phone"
+														on:focusout={formatPhone}
+														class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+														placeholder=" "
+													/>
+													<label
+														for="non_policy_phone"
+														class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+													>Phone number of Last Driver</label
+													>
+												</div>
+												<div class="relative z-0 w-full mb-6 group">
+													<input
+														type="text"
+														name="dob"
+														id="non_policy_date"
+														class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+														placeholder=" "
+													/>
+													<label
+														for="non_policy_date"
+														class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+													>Date of Birth of Last Driver</label
+													>
+												</div>
+											</div>
+											<div class="my-4">
+												<div
+													class="text-lg text-gray-500 dark:text-gray-400"
+												>Relation of last driver to the policy holder</div
+												>
+												<label class="pl-1 pr-4">
+													<input type=radio bind:group={relation} name="relation" value={1}>
+													Husband
+												</label>
+												<label class="px-4">
+													<input type=radio bind:group={relation} name="relation" value={2}>
+													Wife
+												</label>
+												<label class="px-4">
+													<input type=radio bind:group={relation} name="relation" value={3}>
+													Son
+												</label>
+												<label class="px-4">
+													<input type=radio bind:group={relation} name="relation" value={4}>
+													Daughter
+												</label>
+												<label class="px-4">
+													<input type=radio bind:group={relation} name="relation" value={5}>
+													Other
+												</label>
+												{#if relation === 5}
+												<input
+													type="text"
+													id="relation_other"
+													name="relation_other"
+													class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+													placeholder=" "/>
+													<label
+														for="relation_other"
+														class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+													>Provide Details</label
+													>
+												{/if}
+											</div>
+											<div class="my-4">
+												<div
+													class="text-lg text-gray-500 dark:text-gray-400"
+												>Did the last driver have the policy holder's permission to use the vehicle?</div
+												>
+												<label class="pl-1 pr-4">
+													<input type=radio bind:group={driverPermission} name="driverPermission" value={1}>
+													Yes
+												</label>
+												<label class="px-4">
+													<input type=radio bind:group={driverPermission} name="driverPermission" value={2}>
+													No
+												</label>
+											</div>
+											<div class="my-4">
+												<div
+													class="text-lg text-gray-500 dark:text-gray-400"
+												>Does the last driver have motor vehicle insurance?</div
+												>
+												<label class="pl-1 pr-4">
+													<input type=radio bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" value={1}>
+													Yes
+												</label>
+												<label class="px-4">
+													<input type=radio bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" value={2}>
+													No
+												</label>
+											</div>
+
+
+
+										</div>
+									{/if}
+								{/if}
+						</div>
 						</div>
 				</Step>
 				<Step>
