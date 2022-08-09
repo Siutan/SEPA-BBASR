@@ -129,9 +129,14 @@ function fetchVehicleData(vehicleForm) {
 			if (customerFormExists) {
 				// get inputs inside customerForm
 				let customerFormInputs = customerForm.querySelectorAll('input');
+				let customerFormSelects = customerForm.querySelectorAll('select');
 				let customerFormData = {};
 				customerFormInputs.forEach((input) => {
 					customerFormData[input.name] = input.value;
+				});
+				customerFormSelects.forEach((select) => {
+					console.log(select.value);
+					customerFormData[select.name] = select.selectedIndex;
 				});
 				// check if Member ID exists in database
 				// if it does, get the customer's data from the database

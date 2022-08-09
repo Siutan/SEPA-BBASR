@@ -2,7 +2,6 @@
 	import { Form, Step } from 'svelte-multistep-form-local';
 	import { Camera, CameraResultType } from '@capacitor/camera';
 	import axios from "axios";
-	import { onMount } from "svelte";
 
 	// Customer data Form
 	// --------------------------------------------------
@@ -48,20 +47,20 @@
 	}
 
 	// DOB Formatting after focus loss
-	const formatDOB = (e) => {
-		let value = e.target.value;
-		let day = value.slice(0, 2);
-		let month = value.slice(2, 4);
-		let year = value.slice(4, 8);
-		if (value.length === 2) {
-			// not sure if the first 2 if statements are necessary
-			e.target.value = value + '-';
-		} else if (value.length === 4) {
-			e.target.value = day + '-' + month + '-';
-		} else if (value.length === 8) {
-			e.target.value = day + '-' + month + '-' + year; // formats date to dd/mm/yyyy
-		}
-	};
+	// const formatDOB = (e) => {
+	// 	let value = e.target.value;
+	// 	let day = value.slice(0, 2);
+	// 	let month = value.slice(2, 4);
+	// 	let year = value.slice(4, 8);
+	// 	if (value.length === 2) {
+	// 		// not sure if the first 2 if statements are necessary
+	// 		e.target.value = value + '-';
+	// 	} else if (value.length === 4) {
+	// 		e.target.value = day + '-' + month + '-';
+	// 	} else if (value.length === 8) {
+	// 		e.target.value = day + '-' + month + '-' + year; // formats date to dd/mm/yyyy
+	// 	}
+	// };
 
 	// Phone number formatting
 	const formatPhone = (e) => {
@@ -179,7 +178,15 @@
 
 	let driverSelected;
 
-	let relation;
+	let relation = [
+		{ id: 1, text: `Husband` },
+		{ id: 2, text: `Wife` },
+		{ id: 3, text: `Son` },
+		{ id: 4, text: `Daughter` },
+		{ id: 5, text: `Other` }
+	];
+	let relationSelected;
+
 	let driverPermission;
 	let nonDriverHasInsurance;
 
@@ -319,14 +326,14 @@
 								>
 								<div class="relative z-0 my-10 w-full mb-6 group">
 									<select
-										name="last_rider"
+										name="lastRider"
 										id="floating_last_rider"
 										class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 										bind:value={driverSelected}
 										>
-										<option disabled value="" >Select</option>
+										<option disabled value="" class="text-gray-600" >Select</option>
 										{#each driverOptions as option}
-											<option value={option}>
+											<option class="text-black" value={option}>
 												{option.text}
 											</option>
 										{/each}
@@ -344,7 +351,7 @@
 												<div  class="relative z-0 w-full mb-6 group">
 													<input
 														type="text"
-														name="givenName"
+														name="nonPolicyFirstName"
 														id="non_policy_first_name"
 														class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 														placeholder=" "
@@ -358,7 +365,7 @@
 												<div class="relative z-0 w-full mb-6 group">
 													<input
 														type="text"
-														name="lastName"
+														name="nonPolicyLastName"
 														id="non_policy_last_name"
 														class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 														placeholder=" "
@@ -374,7 +381,7 @@
 												<div class="relative z-0 w-full mb-6 group">
 													<input
 														type="tel"
-														name="phone"
+														name="nonPolicyPhone"
 														id="non_policy_phone"
 														on:focusout={formatPhone}
 														class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
@@ -389,7 +396,7 @@
 												<div class="relative z-0 w-full mb-6 group">
 													<input
 														type="text"
-														name="dob"
+														name="nonPolicyDoB"
 														id="non_policy_date"
 														class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
 														placeholder=" "
@@ -401,43 +408,42 @@
 													>
 												</div>
 											</div>
-											<div class="my-4">
-												<div
-													class="text-lg text-gray-500 dark:text-gray-400"
-												>Relation of last driver to the policy holder</div
-												>
-												<label class="pl-1 pr-4">
-													<input type=radio bind:group={relation} name="relation" value={1}>
-													Husband
-												</label>
-												<label class="px-4">
-													<input type=radio bind:group={relation} name="relation" value={2}>
-													Wife
-												</label>
-												<label class="px-4">
-													<input type=radio bind:group={relation} name="relation" value={3}>
-													Son
-												</label>
-												<label class="px-4">
-													<input type=radio bind:group={relation} name="relation" value={4}>
-													Daughter
-												</label>
-												<label class="px-4">
-													<input type=radio bind:group={relation} name="relation" value={5}>
-													Other
-												</label>
-												{#if relation === 5}
-												<input
-													type="text"
-													id="relation_other"
-													name="relation_other"
+											<div class="relative z-0 my-10 w-full mb-6 group">
+												<select
+													name="driverRelation"
+													id="floating_relation"
 													class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-													placeholder=" "/>
-													<label
-														for="relation_other"
-														class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-													>Provide Details</label
-													>
+													bind:value={relationSelected}
+												>
+													<option disabled value="" class="text-gray-600" >Select</option>
+													{#each relation as option}
+														<option class="text-black" value={option}>
+															{option.text}
+														</option>
+													{/each}
+												</select>
+												<label
+													for="floating_relation"
+													class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+												>What was the drivers relation to the policy holder?</label
+												>
+												{#if relationSelected}
+													{#if relationSelected.id===5}
+														<div class="relative mt-5 z-0 w-full mb-6 group">
+															<input
+																type="text"
+																name="relationOtherDetails"
+																id="relation_other"
+																class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+																placeholder=" "
+															/>
+															<label
+																for="relation_other"
+																class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+															>Details</label
+															>
+														</div>
+													{/if}
 												{/if}
 											</div>
 											<div class="my-4">
