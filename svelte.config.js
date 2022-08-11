@@ -1,10 +1,10 @@
-import preprocess from 'svelte-preprocess'
-import { resolve } from 'path'
+import preprocess from 'svelte-preprocess';
+import { resolve } from 'path';
 //import adapter from '@sveltejs/adapter-auto'
 // import adapter from '@sveltejs/adapter-vercel'
-import adapter from '@sveltejs/adapter-static'
+import adapter from '@sveltejs/adapter-static';
 
-let routeFolder = 'admin'
+let routeFolder = 'admin';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -13,10 +13,15 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		prerender : { default: true},
-		adapter: adapter(),
+		prerender: { default: true },
+		adapter: adapter({
+			// default options are shown
+			pages: 'build',
+			assets: 'build',
+			fallback: null
+		}),
 		files: {
-			routes: `src/routes/${routeFolder}`,
+			routes: `src/routes/${routeFolder}`
 		},
 
 		vite: {
@@ -26,17 +31,17 @@ const config = {
 					$lib: resolve('./src/lib'),
 					$stores: resolve('./src/stores'),
 					$assets: resolve('./src/assets'),
-					$icon: resolve('./node_modules/svelte-bootstrap-icons/lib'),
-				},
+					$icon: resolve('./node_modules/svelte-bootstrap-icons/lib')
+				}
 			},
 			server: {
 				fs: {
 					// Allow serving files from one level up to the project root (needed for local modules in packages)
-					allow: ['..'],
-				},
-			},
-		},
-	},
-}
+					allow: ['..']
+				}
+			}
+		}
+	}
+};
 
-export default config
+export default config;
