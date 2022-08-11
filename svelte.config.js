@@ -1,7 +1,8 @@
 import preprocess from 'svelte-preprocess';
 import { resolve } from 'path';
 //import adapter from '@sveltejs/adapter-auto'
-import adapter from '@sveltejs/adapter-static';
+// import adapter from '@sveltejs/adapter-static';
+import adapter from 'svelte-adapter-azure-swa';
 
 let routeFolder = 'admin';
 
@@ -13,12 +14,7 @@ const config = {
 
 	kit: {
 		prerender: { default: true },
-		adapter: adapter({
-			// default options are shown
-			pages: 'build',
-			assets: 'build',
-			fallback: null
-		}),
+		adapter: adapter(),
 		files: {
 			routes: `src/routes/${routeFolder}`
 		},
