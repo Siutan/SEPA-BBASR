@@ -117,62 +117,118 @@ function fetchVehicleData(vehicleForm) {
 			});
 	}
 
-	function handleForm() {
+
+	function handleForm(stepDirection) {
+		console.log(index)
+
+
 		let customerForm = document.getElementById('customerForm');
 		let imageForm = document.getElementById('imageForm');
 		let vehicleForm = document.getElementById('vehicleForm');
+		let historyForm = document.getElementById('historyForm');
 		let customerFormExists = document.body.contains(customerForm);
 		let imageFormExists = document.body.contains(imageForm);
 		let vehicleFormExists = document.body.contains(vehicleForm);
+		let historyFormExists = document.body.contains(historyForm);
 
-		if(index === 0) {
-			if (customerFormExists) {
-				// get inputs inside customerForm
-				let customerFormInputs = customerForm.querySelectorAll('input');
-				let customerFormSelects = customerForm.querySelectorAll('select');
-				let customerFormData = {};
-				customerFormInputs.forEach((input) => {
-					customerFormData[input.name] = input.value;
-				});
-				customerFormSelects.forEach((select) => {
-					console.log(select.value);
-					customerFormData[select.name] = select.selectedIndex;
-				});
-				// check if Member ID exists in database
-				// if it does, get the customer's data from the database
-				// if it doesn't, create a new customer in the database
-				// then get the customer's data from the database
-				fetchCustomerData(customerFormData);
-				console.log(customerFormData);
-				index++;
-			}
-		} else if (index === 1){
-			if(imageFormExists) {
-				console.log("pog")
-				if (vehicleFormExists) {
-					fetchVehicleData(vehicleForm);
-					index++;
-				}
-			}
+
+		if (customerFormExists) {
+			// get inputs inside customerForm
+			let customerFormInputs = customerForm.querySelectorAll('input');
+			let customerFormSelects = customerForm.querySelectorAll('select');
+			let customerFormData = {};
+			customerFormInputs.forEach((input) => {
+				customerFormData[input.name] = input.value;
+			});
+			customerFormSelects.forEach((select) => {
+				console.log(select.value);
+				customerFormData[select.name] = select.selectedIndex;
+			});
+			// check if Member ID exists in database
+			// if it does, get the customer's data from the database
+			// if it doesn't, create a new customer in the database
+			// then get the customer's data from the database
+			fetchCustomerData(customerFormData);
+			console.log(customerFormData);
 		}
+
+
+
+		// if(imageFormExists) {
+		// 	console.log("img form exists");
+		// 	if (vehicleFormExists) {
+		// 		fetchVehicleData(vehicleForm);
+		// 	}
+		// }
+
+		let historyFormInputs = historyForm.querySelectorAll('input');
+		let historyFormData = {};
+		historyFormInputs.forEach((input) => {
+			historyFormData[input.name] = input.value;
+		});
+		console.log(historyFormData);
+
+		// if(index === 0) {
+		// 	// if (customerFormExists) {
+		// 	// 	// get inputs inside customerForm
+		// 	// 	let customerFormInputs = customerForm.querySelectorAll('input');
+		// 	// 	let customerFormSelects = customerForm.querySelectorAll('select');
+		// 	// 	let customerFormData = {};
+		// 	// 	customerFormInputs.forEach((input) => {
+		// 	// 		customerFormData[input.name] = input.value;
+		// 	// 	});
+		// 	// 	customerFormSelects.forEach((select) => {
+		// 	// 		console.log(select.value);
+		// 	// 		customerFormData[select.name] = select.selectedIndex;
+		// 	// 	});
+		// 	// 	// check if Member ID exists in database
+		// 	// 	// if it does, get the customer's data from the database
+		// 	// 	// if it doesn't, create a new customer in the database
+		// 	// 	// then get the customer's data from the database
+		// 	// 	fetchCustomerData(customerFormData);
+		// 	// 	console.log(customerFormData);
+		// 		if (stepDirection === 'next') {
+		// 			index++;
+		// 		} else {
+		// 			index--;
+		// 		}
+		// 	}
+		// } else if (index === 1){
+		// 	// if(imageFormExists) {
+		// 	// 	console.log("img form exists");
+		// 	// 	if (vehicleFormExists) {
+		// 	// 		fetchVehicleData(vehicleForm);
+		// 			if (stepDirection === 'next') {
+		// 				index++;
+		// 			} else {
+		// 				index--;
+		// 			}
+		// 		}
+		// 	}
+		// } else if (index === 2){
+		// 	if(historyFormExists) {
+		// 		console.log("history form exists");
+		// 		// get inputs inside historyForm
+		// 		// let historyFormInputs = historyForm.querySelectorAll('input');
+		// 		// let historyFormData = {};
+		// 		// historyFormInputs.forEach((input) => {
+		// 		// 	historyFormData[input.name] = input.value;
+		// 		// });
+		// 		// console.log(historyFormData);
+		// 		if (stepDirection === 'next') {
+		// 			index++;
+		// 		} else {
+		// 			index--;
+		// 		}
+		// 	}
+		// }
 	}
 
 	/*
   App-navigation
   */
 	export function nextStep() {
-		handleForm();
-		// get form data from current step
-		// let elementExists = document.getElementById('existingMember');
-		// const existing = document.body.contains(elementExists);
-		// if (existing) {
-		// 	const currentStepForm = document.getElementById('existing_memberID').value;
-		// 	// const currentStepFormData = new FormData(currentStepForm)
-		// 	// const currentStepFormDataEntries = currentStepFormData.entries()
-		// 	console.log(currentStepForm);
-		// } else {
-		// 	console.log('no current member');
-		// }
+		handleForm('next');
 		const steps = document.querySelectorAll('.step');
 		if (formHasError()) {
 			return;
@@ -183,6 +239,7 @@ function fetchVehicleData(vehicleForm) {
 	}
 
 	export const previousStep = () => {
+		handleForm('previous');
 		if ($currentStep - 1 > -1) {
 			updateStepStatus(currentStep.decrement);
 		}

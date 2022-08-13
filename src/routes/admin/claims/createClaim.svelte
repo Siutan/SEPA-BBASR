@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Switch from "../../../lib/components/Switch.svelte";
+
 	import { Form, Step } from 'svelte-multistep-form-local';
 	import { Camera, CameraResultType } from '@capacitor/camera';
 	import axios from "axios";
@@ -11,14 +13,7 @@
 	let debounceTimer: NodeJS.Timeout;
 
 
-	// const provider: HereProvider = new HereProvider({
-	// 	// https://community.algolia.com/places/api-clients.html#search-parameters
-	// 	params: {
-	// 		apiKey: 'uc52Fgb7mmXq_weQa5T3AWZIuqxcOLEcSILU_tR6T3g',
-	// 		countries: 'au',
-	// 		hitsPerPage: 5
-	// 	}
-	// });
+
 
 	const debounce = async (e) => {
 		clearTimeout(debounceTimer);
@@ -81,8 +76,9 @@
 		stepsDescription: [
 			{ title: 'Step 1', subtitle: 'Customer Information' },
 			{ title: 'Step 2', subtitle: 'Upload Images' },
-			{ title: 'Step 3', subtitle: 'Claim & Vehicle Information' },
-			{ title: 'Step 4', subtitle: 'Review Information' }
+			{ title: 'Step 3', subtitle: 'Driver History' },
+			{ title: 'Step 4', subtitle: 'Claim & Vehicle Information' },
+			{ title: 'Step 5', subtitle: 'Review Information' }
 		]
 	};
 
@@ -135,6 +131,7 @@
 		//prepare data
 		let cData = JSON.parse(localStorage.getItem('customer'));
 		let vData = JSON.parse(localStorage.getItem('vehicle'));
+		let dData = JSON.parse(localStorage.getItem('driver'));
 
 		let fileInput = document.querySelector('#imageInput') as HTMLInputElement;
 
@@ -189,6 +186,12 @@
 
 	let driverPermission;
 	let nonDriverHasInsurance;
+
+	let motorAccident;
+	let convictedOfOffence;
+	let disqualified;
+	let refusedInsurance;
+
 
 </script>
 
@@ -519,6 +522,78 @@
 									<span class="mt-2 text-sm leading-normal">Get Vehicle Data</span>
 									<input on:click={getClaim} class="hidden" />
 								</label>
+							</div>
+						</div>
+					</div>
+				</Step>
+				<Step>
+					<!-- Upload Image -->
+					<div
+						id="historyForm"
+						class="p-5 flex flex-col flex-wrap gap-5"
+					>
+						<div
+							class="flex flex-col gap-4 pb-4 md:w-full lg:w-full"
+						>
+							<p class="font-semibold text-xl">In the past 5 years, has the driver/last rider ever:</p>
+							<Switch name="motorAccident" bind:value={motorAccident} label="Been involved in a motor accident/incident?" design="inner" />
+							<Switch name="convictedOffence" bind:value={convictedOfOffence} label="Been issued/convicted of a driving offence?" design="inner" />
+							<Switch name="disqualified" bind:value={disqualified} label="Been disqualified from driving or had their licence cancelled or suspended?" design="inner" />
+							<Switch name="refusedInsurance" bind:value={refusedInsurance} label="Been refused vehicle insurance or had their policy cancelled?" design="inner" />
+
+						<!-- Very badly done, please redo this later -->
+							<div class="hidden">
+								<input
+									type="text"
+									name="motorAccident"
+									value={motorAccident}
+								/>
+								<input
+									type="text"
+									name="convictedOffence"
+									value={convictedOfOffence}
+								/>
+								<input
+									type="text"
+									name="disqualified"
+									value={disqualified}
+								/>
+								<input
+									type="text"
+									name="refusedInsurance"
+									value={refusedInsurance}
+								/>
+							</div>
+						</div>
+						<div  class="grid xl:grid-cols-2 xl:gap-6">
+
+							<div  class="relative z-0 w-full mb-6 group">
+								<input
+									type="number"
+									name="LicenceNumber"
+									id="licenseNumber"
+									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+									placeholder=" "
+								/>
+								<label
+									for="licenseNumber"
+									class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+								>Licence Number</label
+								>
+							</div>
+							<div class="relative z-0 w-full mb-6 group">
+								<input
+									type="text"
+									name="LicenceIssueDate"
+									id="licenseIssueDate"
+									class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+									placeholder=" "
+								/>
+								<label
+									for="licenseIssueDate"
+									class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+								>Licence issue date (yyyy/mm/dd)</label
+								>
 							</div>
 						</div>
 					</div>
