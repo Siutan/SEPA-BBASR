@@ -34,7 +34,7 @@
 			],
 			sublinks: [
 				{ name: 'Create Claim', url: '/claims/createClaim' },
-				{ name: 'Manage Claims', url: '/' }
+				{ name: 'Manage Claims', url: '/claims/displayClaim' }
 			]
 		},
 		{
