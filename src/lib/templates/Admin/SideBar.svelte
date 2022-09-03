@@ -46,9 +46,9 @@
 			sublinks: [
 				{ name: 'Custom Components', url: '/cards' },
 				{ name: '404', url: '/this-page-does-not-exists-at-all' },
-				{ name: 'login', url: '/pages/login' },
-				{ name: 'register', url: '/pages/create-account' },
-				{ name: 'forgot-password', url: '/pages/forgot-password' }
+				{ name: 'login', url: '/auth/login' },
+				{ name: 'register', url: '/auth/create-account' },
+				{ name: 'forgot-password', url: '/auth/forgot-password' }
 			]
 		}
 	];
