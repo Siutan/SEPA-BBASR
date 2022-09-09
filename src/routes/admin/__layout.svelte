@@ -1,3 +1,14 @@
+<script context="module" lang="ts">
+  import type { Load } from '@sveltejs/kit'
+
+  export  const load: Load = () => {
+    console.log("Load function called");
+      return {} ;
+  }
+
+
+</script>
+
 <script lang="ts">
   import '$lib/tailwind.css'
   import { isSideMenuOpen, closeSideMenu } from '$stores/menus'
@@ -5,6 +16,31 @@
   import { keydownEscape } from '$lib/ioevents/keydown'
   import SideBar from '$lib/templates/Admin/SideBar.svelte'
   import Header from '$lib/templates/Admin/Header.svelte'
+  import { onMount } from 'svelte';
+  import { goto } from "$app/navigation";
+
+  onMount(() => {
+    console.log("on mount called")
+
+    fetch('https://dairies-rest-api.herokuapp.com/auth', {
+      method: 'GET',
+      credentials: 'include',
+      mode: 'cors'
+    })
+      .then(response => {
+        console.log(response.status);
+        if (response.status === 200) {
+          console.log("Logged in");
+
+        } else {
+          console.log("Not logged in");
+          goto('/auth/login');
+        }
+      })
+
+   
+  });
+
 </script>
 
 <svelte:head>
