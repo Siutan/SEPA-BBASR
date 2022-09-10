@@ -159,17 +159,15 @@
     // send data to server
     fetch("https://dairies-rest-api.herokuapp.com/claims", {
       method: "POST",
-      body: formData
-
+      body: JSON.stringify(formData)
     })
       .then((response) => response.json())
-      .then((json) => {
-        console.log("Success:", json);
+      .then((data) => {
+        console.log("Success:", data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-
     // clear local storage
     localStorage.clear();
     // redirect to success page or display a final form step with a success message

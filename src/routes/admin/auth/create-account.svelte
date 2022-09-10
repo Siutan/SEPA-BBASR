@@ -139,7 +139,7 @@
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: false,
+        withCredentials: true,
         data: {
           "employeeId": employeeId,
           "givenName": givenName,

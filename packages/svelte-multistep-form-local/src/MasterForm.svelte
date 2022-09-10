@@ -90,7 +90,7 @@
       headers: {
         'Content-Type': 'multipart/form-data'
       },
-      data: data
+    data: data
     };
     axios(config)
       .then((response) => {

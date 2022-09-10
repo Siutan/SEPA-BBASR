@@ -1,7 +1,5 @@
 <script lang="ts">
   import Input from "../../../lib/components/Input.svelte";
-  import Logout from "$src/lib/components/Logout.svelte"; 
-  import axios from "axios";
   import { goto } from "$app/navigation";
 
 
@@ -60,7 +58,7 @@
           }
           else{
 
-            //call redirect funtion
+            //call redirect function
             loginSuccess(data);
           }
 
@@ -72,24 +70,6 @@
           postError = `Error Logging in with credentials`;
 
       });
-      // let loginConfig = {
-      // method: "post",
-      // url: "https://dairies-rest-api.herokuapp.com/auth/login",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   withCredentials: false,
-      //   data: {
-      //     "employeeId": employeeId,
-      //     "password": password,
-      //   }
-
-      // }
-
-      
-      // //attempt Login function called
-      // attemptLogin(loginConfig);
-  
     }  
     
   }
@@ -115,45 +95,9 @@
     }
 
     //if no errors return true, otherwise return false
-    if(passwordError == "" && employeeIdError == "")
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    return passwordError == "" && employeeIdError == "";
 
 
-  }
-
-  //axios call to attempt login
-  function attemptLogin(config){
-    console.log(`attemptLogin function called`);
-    axios(config)
-      .then(function (response) {
-        console.log(`success ${JSON.stringify(response.data)}`);
-        postError = "";
-
-        //If we receive a message, there was an error with login credentials
-        if(response.data.message)
-        {
-          loading = false;
-          postError = `Error Logging in with credentials`;
-        }
-        else{
-          //call redirect funtion
-          loginSuccess(response);
-        }
-
-      })
-      .catch(function (error) {
-        console.log(`Error: ${error}`);
-        
-        loading = false;
-        postError = `Error Logging in with credentials`;
-
-      });
   }
 
   //if Login is a success store cookie and redirect them to logged in dashboard
@@ -165,21 +109,10 @@
     console.log(data);
 
     //redirect to dashboard/homepage
+    // BUG: redirect lands at page where nothing is clickable
     goto('/')
     
     
-  }
-
-  function getClaims(){
-    fetch('https://dairies-rest-api.herokuapp.com/claims', {
-      method: 'GET',
-      credentials: 'include',
-      mode: 'cors'
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      });
   }
 
 </script>
@@ -218,8 +151,6 @@
             </svg> -->
             <!-- {/if} -->
           </button>
-          <button on:click={getClaims}>Get Claims</button>
-          <Logout />
           </div>
         </div>
       </div>

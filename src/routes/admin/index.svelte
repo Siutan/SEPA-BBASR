@@ -1,4 +1,8 @@
+<script>
+
+</script>
 <svelte:head>
+
 	<title>Dashboard</title>
 </svelte:head>
 
@@ -18,7 +22,8 @@
 					Today. <span class="text-green-500">12 claims have passed</span> and
 					<span class="text-red-500">2 have failed</span>
 				</span>
-				<span>Your progress is looking <span class="text-green-500">great!</span></span>
+					<span>Your progress is looking <span class="text-green-500">great!</span>
+				</span>
 				<!-- plus sign -->
 				<div
 					class=" p-2 mt-12 w-56 align-middle border rounded-lg border-teal-400 hover:bg-teal-900 hover:text-gray-400 "
