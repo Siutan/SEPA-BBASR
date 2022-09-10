@@ -75,8 +75,6 @@
   }
 
   function validInputs(){
-    console.log(`Employee Id is ${employeeId}`);
-    console.log(`Password is ${password}`);
     if(employeeId.length == 0)
     {
       employeeIdError = "Employee Id must be entered";

@@ -11,10 +11,10 @@
 		<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Dashboard</h2>
 		<!-- CTA -->
 		<div
-			class="flex items-center justify-between p-6 mb-8 text-sm font-semibold text-purple-100 dark:bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
+			class="flex items-center justify-between p-2 mb-8 text-sm font-semibold text-purple-100 dark:bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
 		>
-			<div class="flex flex-col items-left w-full p-10 bg-gray-100 shadow-inner text-black dark:bg-gray-800 dark:text-gray-400 rounded-lg text-lg">
-				<span class="text-red-600">Welcome Back _______, </span>
+			<div class="flex flex-col items-left w-full p-10 bg-gray-100 shadow-inner text-black dark:bg-gray-800 dark:text-gray-300 rounded-lg text-lg">
+				<span class="text-gray-300">Welcome Back _______, </span>
 				<span class="text-purple-600">Here's your daily report: </span>
 				<span
 					>You have <span class="text-orange-500">4 claims in progress</span>. You have completed
