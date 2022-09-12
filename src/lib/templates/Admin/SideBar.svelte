@@ -56,7 +56,7 @@
 
 <div class="py-4 text-gray-500 dark:text-gray-400">
 	{#if withTitle}
-		<a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="/"> RACV </a>
+		<a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="/"> DAIRIES </a>
 	{/if}
 	<ul class="mt-6">
 		{#each links as link, a}

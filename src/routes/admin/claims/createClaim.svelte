@@ -162,7 +162,7 @@
     formdata.append("customer[lastName]", cData.lastName);
     formdata.append("customer[phone]", cData.phone);
     formdata.append("customer[email]", cData.emailAddress);
-    formdata.append("customer[address]", cData.emailAddress);
+    formdata.append("customer[address]", cData.address);
     formdata.append("customer[dob]", cData.dob);
     formdata.append("customer[nonPolicyFirstName]", "");
     formdata.append("customer[nonPolicyLastName]", "");
@@ -193,44 +193,6 @@
     formdata.append("vehicle[colour]", "");
     formdata.append("vehicle[engineNumber]", "");
 
-    // formdata.append("image", '');
-    // formdata.append("recordID", "7");
-    // formdata.append("membershipId", "1");
-    // formdata.append("customer[givenName]", "\"test\"");
-    // formdata.append("customer[lastName]", "\"test\"");
-    // formdata.append("customer[phone]", "\"test\"");
-    // formdata.append("customer[email]", "\"test\"");
-    // formdata.append("customer[address]", "\"test\"");
-    // formdata.append("customer[dob]", "01/01/2021");
-    // formdata.append("customer[nonPolicyFirstName]", "\"test\"");
-    // formdata.append("customer[nonPolicyLastName]", "\"test\"");
-    // formdata.append("customer[nonPolicyPhone]", "\"test\"");
-    // formdata.append("customer[nonPolicyDoB]", "\"test\"");
-    // formdata.append("customer[driverPermission]", "\"test\"");
-    // formdata.append("customer[nonPolicyDoB]", "\"test\"");
-    // formdata.append("customer[nonDriverHasInsurance]", "\"test\"");
-    // formdata.append("customer[lastRider]", "\"test\"");
-    // formdata.append("customer[driverRelation]", "\"test\"");
-    // formdata.append("customerHistory[motorAccident]", "true");
-    // formdata.append("customerHistory[convictedOffence]", "true");
-    // formdata.append("customerHistory[disqualified]", "true");
-    // formdata.append("customerHistory[refusedInsurance]", "true");
-    // formdata.append("customerHistory[LicenceNumber]", "1111");
-    // formdata.append("customerHistory[LicenceIssueDate]", "01/01/2021");
-    // formdata.append("vehicle[vehicleId]", "00002");
-    // formdata.append("vehicle[plate]", "xyzpotato");
-    // formdata.append("vehicle[generation_id]", "");
-    // formdata.append("vehicle[generation_name]", "");
-    // formdata.append("vehicle[make_id]", "");
-    // formdata.append("vehicle[make_name]", "hello");
-    // formdata.append("vehicle[model_id]", "");
-    // formdata.append("vehicle[model_name]", "hello");
-    // formdata.append("vehicle[years]", "5");
-    // formdata.append("vehicle[rego]", "");
-    // formdata.append("vehicle[bodyType]", "");
-    // formdata.append("vehicle[colour]", "");
-    // formdata.append("vehicle[engineNumber]", "");
-
     let requestOptions = {
       method: 'POST',
       credentials: 'include',
@@ -243,7 +205,12 @@
     fetch("https://dairies-rest-api.herokuapp.com/claims", requestOptions)
       // console.log response data
       .then(response => response.json())
-      .then(data => console.log("response data: ", data))
+      .then(data => {
+        console.log("response data: ", data)
+        // redirect to home page
+        window.location.href = "/";
+      })
+      .catch(error => console.log('error', error));
   }
 
 

@@ -30,6 +30,10 @@
         console.log(JSON.stringify(response.data));
         postSuccess = "User successfully registered";
         postError = "";
+        // refresh page
+        setTimeout(function () {
+          location.reload();
+        }, 2000);
       })
       .catch(function (error) {
         console.log(error);
@@ -89,7 +93,7 @@
       case email.toLowerCase().match(emailExpression) == null:
         emailError = "Please enter a valid Email Address";
         break;
-      case email.endsWith("racv.com.au") == false:
+      case email.endsWith("dairies.com") == false:
         emailError = "Please enter a valid Company Email Address";
         break;
       default:
@@ -98,7 +102,7 @@
   }
 
   function validatePassword() {
-    let passwordExpression = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!#$%&?]{6,16}$/;
+    let passwordExpression = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!*#$%&?]{6,16}$/;
 
     // switch case for password validation
     switch (true) {
@@ -158,10 +162,6 @@
 
 <section id="body" class="">
   <!-- Put this in class below if needed: min-h-screen -->
-  <div class="flex items-center p-6 bg-gray-50 dark:bg-gray-900">
-    <div
-      class="flex-1 max-w-xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800"
-    >
       <div class="flex flex-col overflow-y-auto ">
         <div class="flex items-center justify-center p-6 sm:p-12">
           <div class="w-full">
@@ -286,20 +286,6 @@
                       label="Admin" design="slider" />
             </div>
 
-            <div class="flex mt-6 text-sm">
-              <label class="flex items-center dark:text-gray-400">
-                <input
-                  type="checkbox"
-                  class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-                />
-                <span class="ml-2">
-                  I agree to the
-                  <span class="underline">privacy policy</span>
-                  <!-- Do we have a privacy policy? -->
-                </span>
-              </label>
-            </div>
-
             <!-- Change to button  -->
             <button
               class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
@@ -313,18 +299,7 @@
               <p class="text-xl text-red-600">{postError}</p>
             </div>
             <hr class="my-8" />
-            <!-- Do we need this? -->
-            <p class="mt-4">
-              <a
-                class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                href="./login.html"
-              >
-                Already have an account? Login
-              </a>
-            </p>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 </section>

@@ -39,15 +39,27 @@
   </div>
 
 {:else if design == 'slider'}
-  <div class="s s--slider" style="font-size:{fontSize}px">
-    <span id={`switch-${uniqueID}`}>{label}</span>
-    <button
-      role="switch"
-      aria-checked={checked}
-      aria-labelledby={`switch-${uniqueID}`}
-      on:click={handleClick}>
-    </button>
-  </div>
+  {#if value === "false"}
+    <div class="s s--slider" style="font-size:{fontSize}px">
+      <span id={`switch-${uniqueID}`}>{label}</span>
+      <button
+        role="switch"
+        aria-checked={false}
+        aria-labelledby={`switch-${uniqueID}`}
+        on:click={handleClick}>
+      </button>
+    </div>
+  {:else}
+    <div class="s s--slider" style="font-size:{fontSize}px">
+      <span id={`switch-${uniqueID}`}>{label}</span>
+      <button
+        role="switch"
+        aria-checked={checked}
+        aria-labelledby={`switch-${uniqueID}`}
+        on:click={handleClick}>
+      </button>
+    </div>
+    {/if}
 
 {:else}
   <div class="s s--multi">
