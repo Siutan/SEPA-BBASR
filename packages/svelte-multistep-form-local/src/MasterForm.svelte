@@ -48,7 +48,9 @@
       method: "GET",
       headers: {
         "Content-Type": "application/json"
-      }
+      },
+      mode: "cors",
+      credentials: "include"
     })
       .then((response) => response.json())
       .then((data) => {
@@ -60,6 +62,8 @@
             headers: {
               "Content-Type": "application/json"
             },
+            mode: "cors",
+            credentials: "include",
             // send the request data as the new customer details in the body
             body: JSON.stringify(requestData)
           })
@@ -86,11 +90,13 @@
     data.append("image", vehicleImage.files[0]);
     let config = {
       method: "post",
-      url: "https://dairies-rest-api.herokuapp.com/claims/autogen/",
+      url: "https://dairies-rest-api.herokuapp.com/claims/autogen",
       headers: {
         'Content-Type': 'multipart/form-data'
       },
-    data: data
+      mode: "cors",
+      credentials: "include",
+      data: data
     };
     axios(config)
       .then((response) => {
@@ -187,6 +193,7 @@
       historyFormData[input.name] = input.value;
     });
     console.log(historyFormData);
+    localStorage.setItem("history", JSON.stringify(historyFormData));
 
     // if(index === 0) {
     // 	// if (customerFormExists) {

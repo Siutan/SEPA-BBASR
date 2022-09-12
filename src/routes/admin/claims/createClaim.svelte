@@ -4,7 +4,7 @@
   import { Form, Step } from "svelte-multistep-form-local";
   import { Camera, CameraResultType } from "@capacitor/camera";
   import axios from "axios";
-  import FormData from "form-data";
+  import form from "form-data";
 
   // Customer data Form
   // --------------------------------------------------
@@ -15,6 +15,10 @@
 
   // vehicle data Form
   // --------------------------------------------------
+
+  // vehicle data Form
+  // --------------------------------------------------
+  let vehicle_rego: string;
   let vehicle_make: string;
   let vehicle_model: string;
   let vehicle_year: string;
@@ -112,10 +116,12 @@
     data.append("image", vehicleImage.files[0]);
     let config = {
       method: "post",
-      url: "https://dairies-rest-api.herokuapp.com/claims/autogen/",
+      url: "https://dairies-rest-api.herokuapp.com/claims/autogen",
       headers: {
         "Content-Type": "multipart/form-data"
       },
+      mode: "cors",
+      withCredentials: true,
       data: data
     };
     axios(config)
@@ -124,6 +130,7 @@
         localStorage.setItem("vehicle", JSON.stringify(response.data));
         // fill out the form with the data
         let vehicleData = JSON.parse(localStorage.getItem("vehicle"));
+        vehicle_rego = vehicleData.plate;
         vehicle_make = vehicleData.mode_info.make_name;
         vehicle_model = vehicleData.mode_info.model_name;
         vehicle_year = vehicleData.mode_info.years;
@@ -140,38 +147,103 @@
     //prepare data
     let cData = JSON.parse(localStorage.getItem("customer"));
     let vData = JSON.parse(localStorage.getItem("vehicle"));
-    let dData = JSON.parse(localStorage.getItem("driver"));
+    let dData = JSON.parse(localStorage.getItem("history"));
+    console.log(vData)
+    console.log(dData)
 
     let fileInput = document.querySelector("#imageInput") as HTMLInputElement;
 
-    let formData = new FormData();
-    formData.append("recordId", "00073");
-    formData.append("membershipId", cData["membershipId"]);
-    formData.append("image", fileInput.files[0]);
-    formData.append("rego", "reg321");
-    formData.append("make", vData["Make"]);
-    formData.append("model", vData["Model"]);
-    formData.append("bodyType", vData["Body"]);
-    formData.append("yearOfMake", "string");
-    formData.append("colour", "Red");
-    formData.append("engineNumber", "12345");
+    let headers = new Headers();
+    let formdata = new form();
+    formdata.append("image", fileInput.files[0]);
+    formdata.append("recordID", "5");
+    formdata.append("membershipId", cData.membershipId);
+    formdata.append("customer[givenName]", cData.givenName);
+    formdata.append("customer[lastName]", cData.lastName);
+    formdata.append("customer[phone]", cData.phone);
+    formdata.append("customer[email]", cData.emailAddress);
+    formdata.append("customer[address]", cData.emailAddress);
+    formdata.append("customer[dob]", cData.dob);
+    formdata.append("customer[nonPolicyFirstName]", "");
+    formdata.append("customer[nonPolicyLastName]", "");
+    formdata.append("customer[nonPolicyPhone]", "");
+    formdata.append("customer[nonPolicyDoB]", "");
+    formdata.append("customer[driverPermission]", "");
+    formdata.append("customer[nonPolicyDoB]", "");
+    formdata.append("customer[nonDriverHasInsurance]", "");
+    formdata.append("customer[lastRider]", cData.lastRider);
+    formdata.append("customer[driverRelation]", "null");
+    formdata.append("customerHistory[motorAccident]", dData.motorAccident);
+    formdata.append("customerHistory[convictedOffence]", dData.convictedOffence);
+    formdata.append("customerHistory[disqualified]", dData.disqualified);
+    formdata.append("customerHistory[refusedInsurance]", dData.refusedInsurance);
+    formdata.append("customerHistory[LicenceNumber]", dData.LicenceNumber);
+    formdata.append("customerHistory[LicenceIssueDate]", dData.LicenceIssueDate);
+    formdata.append("vehicle[vehicleId]", "00002");
+    formdata.append("vehicle[plate]", vData.plate);
+    formdata.append("vehicle[generation_id]", vData.generation_id);
+    formdata.append("vehicle[generation_name]", vData.generation_name);
+    formdata.append("vehicle[make_id]", vData.make);
+    formdata.append("vehicle[make_name]", vData.make_name);
+    formdata.append("vehicle[model_id]", "");
+    formdata.append("vehicle[model_name]", "hello");
+    formdata.append("vehicle[years]", "5");
+    formdata.append("vehicle[rego]", "");
+    formdata.append("vehicle[bodyType]", "");
+    formdata.append("vehicle[colour]", "");
+    formdata.append("vehicle[engineNumber]", "");
 
-    // send data to server
-    fetch("https://dairies-rest-api.herokuapp.com/claims", {
-      method: "POST",
-      body: JSON.stringify(formData)
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-    // clear local storage
-    localStorage.clear();
-    // redirect to success page or display a final form step with a success message
-    window.location.href = "/";
+    // formdata.append("image", '');
+    // formdata.append("recordID", "7");
+    // formdata.append("membershipId", "1");
+    // formdata.append("customer[givenName]", "\"test\"");
+    // formdata.append("customer[lastName]", "\"test\"");
+    // formdata.append("customer[phone]", "\"test\"");
+    // formdata.append("customer[email]", "\"test\"");
+    // formdata.append("customer[address]", "\"test\"");
+    // formdata.append("customer[dob]", "01/01/2021");
+    // formdata.append("customer[nonPolicyFirstName]", "\"test\"");
+    // formdata.append("customer[nonPolicyLastName]", "\"test\"");
+    // formdata.append("customer[nonPolicyPhone]", "\"test\"");
+    // formdata.append("customer[nonPolicyDoB]", "\"test\"");
+    // formdata.append("customer[driverPermission]", "\"test\"");
+    // formdata.append("customer[nonPolicyDoB]", "\"test\"");
+    // formdata.append("customer[nonDriverHasInsurance]", "\"test\"");
+    // formdata.append("customer[lastRider]", "\"test\"");
+    // formdata.append("customer[driverRelation]", "\"test\"");
+    // formdata.append("customerHistory[motorAccident]", "true");
+    // formdata.append("customerHistory[convictedOffence]", "true");
+    // formdata.append("customerHistory[disqualified]", "true");
+    // formdata.append("customerHistory[refusedInsurance]", "true");
+    // formdata.append("customerHistory[LicenceNumber]", "1111");
+    // formdata.append("customerHistory[LicenceIssueDate]", "01/01/2021");
+    // formdata.append("vehicle[vehicleId]", "00002");
+    // formdata.append("vehicle[plate]", "xyzpotato");
+    // formdata.append("vehicle[generation_id]", "");
+    // formdata.append("vehicle[generation_name]", "");
+    // formdata.append("vehicle[make_id]", "");
+    // formdata.append("vehicle[make_name]", "hello");
+    // formdata.append("vehicle[model_id]", "");
+    // formdata.append("vehicle[model_name]", "hello");
+    // formdata.append("vehicle[years]", "5");
+    // formdata.append("vehicle[rego]", "");
+    // formdata.append("vehicle[bodyType]", "");
+    // formdata.append("vehicle[colour]", "");
+    // formdata.append("vehicle[engineNumber]", "");
+
+    let requestOptions = {
+      method: 'POST',
+      credentials: 'include',
+      mode: 'cors',
+      headers: headers,
+      body: formdata,
+      redirect: 'follow'
+    };
+
+    fetch("https://dairies-rest-api.herokuapp.com/claims", requestOptions)
+      // console.log response data
+      .then(response => response.json())
+      .then(data => console.log("response data: ", data))
   }
 
 
