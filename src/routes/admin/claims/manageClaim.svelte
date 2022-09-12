@@ -41,6 +41,7 @@
 
   // get image from claim id
   async function getImage(claimId) {
+    console.log(claimId)
     let url = "https://dairies-rest-api.herokuapp.com/claims/image/" + claimId;
     await fetch(url, {
       method: "GET",
@@ -461,7 +462,8 @@
                   <div class="rounded-lg p-2 ml-2 mb-2  bg-gray-100 dark:bg-gray-800">
                     <p class="font-semibold text-xl p-2">Vehicle Images</p>
                     <div class="flex flex-col space-y-3 p-2">
-                      <img src={JSON.stringify(detailedImage)} alt="{JSON.stringify(detailedImage)}" />
+                      <!-- send https with request -->
+                      <img src={detailedImage.imageLink} alt="Image" />
                     </div>
                   </div>
                 </div>
