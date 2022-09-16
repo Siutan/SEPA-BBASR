@@ -1,31 +1,38 @@
 <script lang="ts">
-    import '$lib/tailwind.css'
-    import { isSideMenuOpen, closeSideMenu } from '$stores/menus'
-    import { onMount } from 'svelte';
+  import '$lib/tailwind.css'
   import { goto } from "$app/navigation";
+  
+  //function checks auth endpoint to determine if user is already logged in
+  async function authenticate(){
+    let authenticated:boolean = false;
+        await fetch("https://dairies-rest-api.herokuapp.com/auth", {
+          method: "GET",
+          credentials: "include",
+          mode: "cors"
+        })
+        .then(response => {
+          console.log(response.status);
+          if (response.status === 200) {
+            console.log("Already Logged in");
+            goto("/");
+            authenticated = true;
 
-  onMount(() => {
-    console.log("on mount called")
+          } else {
+            console.log("Not logged in");
+            
+            authenticated = false;
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
 
-    fetch('https://dairies-rest-api.herokuapp.com/auth', {
-      method: 'GET',
-      credentials: 'include',
-      mode: 'cors'
-    })
-      .then(response => {
-        console.log(response.status);
-        if (response.status === 200) {
-          console.log("Logged in");
-          //If already logged in redirect to dashboard
-          goto('/');
+        return authenticated
+    } 
 
-        } else {
-          console.log("Not logged in");
-        }
-      })
+    //Create a promise from calling the authenticate function
+    let promise = authenticate();
 
-   
-  });
   </script>
   
   <svelte:head>
@@ -36,13 +43,38 @@
   </svelte:head>
   
   <section id="body" class="dark">
-    <div class="flex h-screen bg-gray-50 dark:bg-gray-900" class:overflow-hidden={$isSideMenuOpen}>
-  
-      <div class="flex flex-col flex-1 w-full">
-        <!-- <Header /> -->
-  
-        <slot />
-      </div>
-    </div>
+    
+    <!-- await the promise from the authentication  -->
+    {#await promise}
+
+      <!-- while waiting render a dark screen so less jaring -->
+      <div class="flex h-screen bg-gray-50 dark:bg-gray-900"></div>
+
+    <!-- When the promise is returned check if authenticated is true or false  -->
+    {:then authenticated}
+
+      <!-- If already authenticated render a dark screen as page will be redirected -->
+      {#if authenticated}
+
+        <div class="flex h-screen bg-gray-50 dark:bg-gray-900"></div>
+        
+      <!-- Else not authenticated then the login page will be loaded  -->
+      {:else}
+        <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
+      
+          <div class="flex flex-col flex-1 w-full">
+            <!-- <Header /> -->
+      
+            <slot />
+          </div>
+        </div>
+      {/if}
+    
+    <!-- If any errors are thrown from the promise render a black page with the error -->
+    {:catch error}
+      <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <p>failed to load page {error}</p>
+      </div>  
+    {/await}
   </section>
   

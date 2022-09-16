@@ -1,3 +1,24 @@
+<script context="module">
+  // export const load = async ({ session })=>{
+  //   console.log('load function called');
+  //   console.log("session: ", session);
+  //   let redirect = {}       
+  //   if(!session){
+  //     console.log("Not logged in, redirect")
+  //     redirect =  {  
+  //         status: 302,
+  //         redirect: "/auth/login"
+  //     }
+  //   }
+  //   else{
+  //     console.log("Logged in, no redirect necessary");
+  //   }
+      
+  //   return redirect
+
+  // }
+</script>
+
 <script lang="ts">
   import "$lib/tailwind.css";
   import { isSideMenuOpen, closeSideMenu } from "$stores/menus";
@@ -5,30 +26,41 @@
   import { keydownEscape } from "$lib/ioevents/keydown";
   import SideBar from "$lib/templates/Admin/SideBar.svelte";
   import Header from "$lib/templates/Admin/Header.svelte";
-  import { onMount } from "svelte";
   import { goto } from "$app/navigation";
+  import { get_root_for_style } from "svelte/internal";
 
-  onMount( async () => {
-    console.log("on mount called");
+   //function checks auth endpoint to determine if user is already logged in
+  async function authenticate(){
 
-    await fetch("https://dairies-rest-api.herokuapp.com/auth", {
-      method: "GET",
-      credentials: "include",
-      mode: "cors"
-    })
-      .then(response => {
-        console.log(response.status);
-        if (response.status === 200) {
-          console.log("Logged in");
+    let authenticated:boolean = false;
 
-        } else {
-          console.log("Not logged in");
-          goto("/auth/login");
-        }
-      });
+      await fetch("https://dairies-rest-api.herokuapp.com/auth", {
+          method: "GET",
+          credentials: "include",
+          mode: "cors"
+        })
+        .then(response => {
+          console.log(response.status);
+          if (response.status === 200) {
+            console.log("Logged in");
+            authenticated = true;
 
+          } else {
+            console.log("Not logged in");
+            goto("/auth/login");
+            authenticated = false;
+          }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 
-  });
+    return authenticated;
+
+  } 
+
+  //Create a promise from calling the authenticate function
+  let promise = authenticate();
 
 </script>
 
@@ -41,12 +73,20 @@
 
 
 <section id="body" class="dark">
-  {#await onMount()}
-    <div class="flex items-center justify-center flex-1 h-full">
-      <div class="w-12 h-12 border-2 border-gray-200 rounded-full animate-spin" />
-    </div>
-  {:then x}
-    <div class="flex h-screen bg-gray-50 dark:bg-gray-900" class:overflow-hidden={$isSideMenuOpen}>
+
+  <!-- await the promise from the authentication  -->
+  {#await promise}
+
+   <!-- while waiting render a dark screen so less jaring -->
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-900"></div>
+  
+  <!-- When the promise is returned check if authenticated is true or false  -->
+  {:then authenticated}
+
+    <!-- If the user is authenticatted load the dashboard -->
+    {#if authenticated}
+
+      <div class="flex h-screen bg-gray-50 dark:bg-gray-900" class:overflow-hidden={$isSideMenuOpen}>
         <!-- Desktop sidebar -->
         <aside
           class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0"
@@ -77,5 +117,17 @@
           <slot />
         </div>
       </div>
-  {/await}
+
+    <!-- Else render a dark screen as the page will be redirected  -->
+    {:else}
+      <div class="flex h-screen bg-gray-50 dark:bg-gray-900"></div>
+    {/if}
+   
+    <!-- If any errors are thrown from the promise render a black page with the error -->
+    {:catch error}
+      <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <p>failed to load page {error}</p>
+      </div>  
+    {/await}
+
 </section>
