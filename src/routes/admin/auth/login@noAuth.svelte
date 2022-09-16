@@ -105,6 +105,7 @@
 
     console.log("loginSuccess function called");
     console.log(data);
+    
 
     //redirect to dashboard/homepage
     // BUG: redirect lands at page where nothing is clickable
