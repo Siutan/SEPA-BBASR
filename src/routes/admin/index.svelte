@@ -1,10 +1,63 @@
 <script>
+import {onMount} from "svelte"
+
+let claims;
+let totalClaims;
+let completeClaim = 0;
+let pendingClaim = 0;
+let failedClaim = 0;
+
+async function getClaims() {
+    await fetch("https://dairies-rest-api.herokuapp.com/claims", {
+      method: "GET",
+      credentials: "include",
+      mode: "cors"
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        claims = data;
+		totalClaims = Object.keys(claims).length;
+		claimProcess();
+      });
+  }
+  function claimProcess(){
+	for (let i = 0; i < totalClaims; i++){
+		console.log(claims[i].status)
+		if(claims[i].status=="success"){
+			completeClaim = completeClaim+1;
+		}
+		else if(claims[i].status=="pending")
+		{
+			pendingClaim = pendingClaim+1;
+		}
+		else 
+		{
+			failedClaim = failedClaim+1;
+		}
+	};
+
+  }
+
+  onMount(async () => {
+		getClaims()
+	});
+
 
 </script>
 <svelte:head>
 
 	<title>Dashboard</title>
 </svelte:head>
+
+<!-- {#await getClaims()}
+..loading
+{:then data}
+  {#each claims as claim}
+  <p>{claim.status}</p>
+  {/each}
+
+{/await}  -->
 
 <main class="h-full overflow-y-auto">
 	<div class="container px-6 mx-auto grid">
@@ -13,6 +66,7 @@
 		<div
 			class="flex items-center justify-between p-2 mb-8 text-sm font-semibold text-purple-100 dark:bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
 		>
+
 			<div class="flex flex-col items-left w-full p-10 bg-gray-100 shadow-inner text-black dark:bg-gray-800 dark:text-gray-300 rounded-lg text-lg">
 				<span class="text-gray-300">Welcome Back _______, </span>
 				<span class="text-purple-600">Here's your daily report: </span>
@@ -64,7 +118,7 @@
 				</div>
 				<div>
 					<p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">Total claims</p>
-					<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">6389</p>
+					<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">{totalClaims}</p>
 				</div>
 			</div>
 			<!-- Card -->
@@ -83,7 +137,7 @@
 				</div>
 				<div>
 					<p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">Completed claims</p>
-					<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">537</p>
+					<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">{completeClaim}</p>
 				</div>
 			</div>
 			<!-- Card -->
@@ -102,7 +156,7 @@
 				</div>
 				<div>
 					<p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">Failed claims</p>
-					<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">376</p>
+					<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">{failedClaim}</p>
 				</div>
 			</div>
 			<!-- Card -->
@@ -121,7 +175,7 @@
 				</div>
 				<div>
 					<p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">Pending claims</p>
-					<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">35</p>
+					<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">{pendingClaim}</p>
 				</div>
 			</div>
 		</div>
@@ -530,4 +584,5 @@
 			</div>
 		</div>
 	</div>
+	
 </main>
