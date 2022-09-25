@@ -68,15 +68,14 @@ async function getClaims() {
 		>
 
 			<div class="flex flex-col items-left w-full p-10 bg-gray-100 shadow-inner text-black dark:bg-gray-800 dark:text-gray-300 rounded-lg text-lg">
-				<span class="text-gray-300">Welcome Back _______, </span>
-				<span class="text-purple-600">Here's your daily report: </span>
+				<span class="text-gray-300">Welcome </span>
+				<span class="text-purple-600">Here's the reports: </span>
 				<span
-					>You have <span class="text-orange-500">4 claims in progress</span>. You have completed
-					<span class="text-green-500">14 claims</span>
-					Today. <span class="text-green-500">12 claims have passed</span> and
-					<span class="text-red-500">2 have failed</span>
+					>There is <span class="text-orange-500">{pendingClaim} claims in process</span>, <span class="text-green-500">{completeClaim} completed claims</span> 
+					, and
+					<span class="text-red-500">{failedClaim} failed.</span>
 				</span>
-					<span>Your progress is looking <span class="text-green-500">great!</span>
+					<span>The progress is looks <span class="text-green-500">great!</span>
 				</span>
 				<!-- plus sign -->
 				<div
