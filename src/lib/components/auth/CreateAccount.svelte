@@ -113,7 +113,7 @@
         passwordError = "Password must be at least 8 characters";
         break;
       case password.match(passwordExpression) == null:
-        passwordError = "Password must have at least 1 number and 1 special character";
+        passwordError = "Password must have at least 1 number, 1 Uppercase character and 1 special character";
         break;
       case password != confirmPassword:
         passwordError = "Passwords do not match";

@@ -20,4 +20,7 @@ module.exports = {
 	globals: {
 		"NodeJS": true
 	},
+	rules: {
+		"@typescript-eslint/no-inferrable-types": "off",  // turns off error when type inference is made on a variable. E.G. let authenticated:boolean = false; will throw an error if this rule is on.
+	},
 }

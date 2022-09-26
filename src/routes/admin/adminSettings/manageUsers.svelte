@@ -24,8 +24,12 @@
     "lastName": "",
     "password": "",
     "companyEmail": "",
-    "admin": null
+    "admin": false,
   };
+
+  let newPass = "";
+  let adminStatus;
+
 
   async function getUsers() {
     await fetch("https://dairies-rest-api.herokuapp.com/user", {
@@ -38,7 +42,6 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         users = data;
       });
   }
@@ -51,7 +54,7 @@
       "lastName": selectedUser.lastName,
       "companyEmail": selectedUser.companyEmail,
       "admin": selectedUser.admin,
-      "password": selectedUser.password
+      "password": newPass
     };
     await fetch("https://dairies-rest-api.herokuapp.com/user/update", {
       method: "POST",
@@ -73,6 +76,11 @@
   function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
+
+  const changeAdmin = () => {
+    selectedUser.admin = !selectedUser.admin;
+  };
+
 
 </script>
 
@@ -278,7 +286,7 @@
                         id="floating_pass"
                         class=" vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                         placeholder=" "
-                        bind:value={selectedUser.password}
+                        bind:value={newPass}
                       />
                       <label
                         for="floating_id"
@@ -287,19 +295,20 @@
                       >
                     </div>
                       <div>
-                        {#if selectedUser.admin}
-                          <Switch
-                            bind:value={selectedUser.admin}
-                            label="Admin"
-                            design="slider"
-                          />
-                        {:else}
-                          <Switch
-                            bind:value={selectedUser.admin}
-                            label="Admin"
-                            design="slider"
-                          />
-                        {/if}
+                        <select
+                          class="block w-full py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600"
+                        >
+                          <option
+                            class="bg-gray-800"
+                            value="true"
+                            selected={selectedUser.admin === true}
+                          >Admin</option>
+                          <option
+                            class="bg-gray-800"
+                            value="false"
+                            selected={selectedUser.admin === false}
+                          >User</option>
+                        </select>
                       </div>
 
                       <!-- Change to button  -->
@@ -307,6 +316,7 @@
                         class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                         on:click={() => {
                           updateAccount()
+                          newPass = ""
                         }}
                       >
                         Update account

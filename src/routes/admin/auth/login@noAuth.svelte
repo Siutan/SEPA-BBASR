@@ -9,6 +9,8 @@
   let passwordError = "";
   let postError = "";
 
+  let buttonText = "Login";
+
   let loading = false;
 
 
@@ -16,11 +18,7 @@
   //get email input, dispatched from the child 'Input' component
   const getEmployeeId = (e) => {
     employeeId = e.detail;
-  }
-
-  //get password input, dispatched from the child 'Input' component
-  const getPassword = (e) => {
-    password = e.detail;
+    console.log(employeeId);
   }
 
   //function called when login button is clicked 
@@ -33,6 +31,7 @@
     
     //check if inputs are valid
     if(validInputs()){
+      buttonText = "Logging in...";
 
       //Post to the login endpoint
       fetch('https://dairies-rest-api.herokuapp.com/auth/login', {
@@ -73,20 +72,21 @@
     }  
     
   }
+  const isEmpty = (str) => {
+    return (!str || 0 === str.length);
+  }
 
   function validInputs(){
-    if(employeeId.length == 0)
-    {
-      employeeIdError = "Employee Id must be entered";
-      loading = false;
+    if (isEmpty(employeeId)) {
+      employeeIdError = "Employee ID is required";
+      return false;
     }
     else{
       employeeIdError = "";
     }
-
-    if(password.length == 0){
-      passwordError = "Please enter a password"
-      loading = false;
+    if (isEmpty(password)) {
+      passwordError = "Password is required";
+      return false;
     }
     else{
       passwordError = "";
@@ -105,13 +105,11 @@
 
     console.log("loginSuccess function called");
     console.log(data);
-    
+
 
     //redirect to dashboard/homepage
     // BUG: redirect lands at page where nothing is clickable
     goto('/')
-    
-    
   }
 
 </script>
@@ -122,36 +120,59 @@
       class="flex-1 max-w-xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800"
     >
       <div class="flex flex-col overflow-y-auto ">
-        <div class="flex items-center justify-center p-6 sm:p-12">
-          <div class="w-full">
-            <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
-              Login
-            </h1>
-            <div class="grid xl:grid-cols-1 xl:gap-6">
-              <Input id="employeeId" name="employeeId" label="Employee Id" on:dispatch={getEmployeeId} >
-                <slot>{employeeIdError}</slot>  
-              </Input>
-              <Input id="password" name="password" label="Password" type="password" on:dispatch={getPassword} >
-                <slot>{passwordError}</slot>
-              </Input>
-            </div>
-            
-            <div class="pt-3">
-              <p class="text-xl text-red-600">{postError}</p>
-            </div>
+        <form
+          on:submit|preventDefault={submitLogin}
+        >
+          <div class="flex items-center justify-center p-6 sm:p-12">
+            <div class="w-full">
+              <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
+                Login
+              </h1>
+              <div class="grid xl:grid-cols-1 xl:gap-6">
+                <Input id="employeeId" name="employeeId" label="Employee Id" on:dispatch={getEmployeeId} >
+                  <slot>{employeeIdError}</slot>
+                </Input>
 
-            <button
-              class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-              on:click={submitLogin}
-          >
-            Login
-            <!-- {#if loading} -->
-            <!-- <svg class="animate-spin h-2 w-2 mr-3 white..." viewBox="0 0 24 24">
-            </svg> -->
-            <!-- {/if} -->
-          </button>
+                <div>
+                  <div class="relative z-0 w-full mb-6 group">
+                    <input
+                      type="password"
+                      name="password"
+                      id="password"
+                      class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                      placeholder=" "
+                      bind:value={password}
+                    />
+                    <label
+                      for="password"
+                      class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >Password</label
+                    >
+                    <slot>{passwordError}</slot>
+                  </div>
+
+
+                </div>
+              </div>
+
+              <div class="pt-3">
+                <p class="text-xl text-red-600">{postError}</p>
+              </div>
+
+              <button
+                type="submit"
+                class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                on:click={submitLogin}
+              >
+                {buttonText}
+                <!-- {#if loading} -->
+                <!-- <svg class="animate-spin h-2 w-2 mr-3 white..." viewBox="0 0 24 24">
+                </svg> -->
+                <!-- {/if} -->
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>

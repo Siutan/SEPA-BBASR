@@ -192,7 +192,7 @@
 							</li>
 							<li class="flex">
 								<a
-									class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+									class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200 cursor-pointer"
 									href="/adminSettings/manageUsers"
 								>
 									<svg
@@ -210,7 +210,7 @@
 										/>
 										<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 									</svg>
-									<span>Settings</span>
+									<span>Manage Users</span>
 								</a>
 							</li>
 							<Logout />
