@@ -1,8 +1,8 @@
 <script>
-	import {onMount} from "svelte"
-	import FusionCharts from 'fusioncharts';
-    import Charts from 'fusioncharts/fusioncharts.charts';
-    import SvelteFC, { fcRoot } from 'svelte-fusioncharts';
+	 import {onMount} from "svelte"
+	// import FusionCharts from 'fusioncharts';
+    // import Charts from 'fusioncharts/fusioncharts.charts';
+    // import SvelteFC, { fcRoot } from 'svelte-fusioncharts';
 
 
 	let claims;
@@ -51,26 +51,26 @@
 	
 	  }
   
-	fcRoot(FusionCharts, Charts);
+	// fcRoot(FusionCharts, Charts);
 
-	let dataSource = {
-		"chart": {
-		"caption": "Status",
-        "showValues": "1",
-        "enableMultiSlicing": "1"
-		},
-		"data": [
-			{"label": "Success","value": "40"},
-			{"label": "Pending","value": "20"},
-			{"label": "Failed","value": "10"}
-		]
-	},
-		chartConfig = {
-      type: 'pie2d',
+	// let dataSource = {
+	// 	"chart": {
+	// 	"caption": "Status",
+    //     "showValues": "1",
+    //     "enableMultiSlicing": "1"
+	// 	},
+	// 	"data": [
+	// 		{"label": "Success","value": "40"},
+	// 		{"label": "Pending","value": "20"},
+	// 		{"label": "Failed","value": "10"}
+	// 	]
+	// },
+	// 	chartConfig = {
+    //   type: 'pie2d',
       
-      renderAt: 'chart-container',
-      dataSource
-    };
+    //   renderAt: 'chart-container',
+    //   dataSource
+    // };
 	
 	
 	  onMount(async () => {
@@ -499,7 +499,7 @@
 			<div class="grid gap-6 mb-8 md:grid-cols-2">
 				<div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800" id = "chart-container">
 				
-					<SvelteFC {...chartConfig} />
+					<!-- <SvelteFC {...chartConfig} /> -->
 					
 				</div>
 	
