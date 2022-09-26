@@ -2,19 +2,7 @@
 	import {onMount} from "svelte"
 	import { Pie } from 'svelte-chartjs';
 
-//   import {
-//     Chart as ChartJS,
-//     Title,
-//     Tooltip,
-//     Legend,
-//     ArcElement,
-//     CategoryScale,
-//   } from 'chart.js';
 
-//   ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
-
-// import Chart from 'chart.js';
-// const { Chart: Chart$1, PieController, Title, Tooltip, Legend, ArcElement, CategoryScale } = Chart;
   
 	let claims;
 	let totalClaims;
