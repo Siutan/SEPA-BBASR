@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 	import {onMount} from "svelte"
 	import FusionCharts from 'fusioncharts';
     import Charts from 'fusioncharts/fusioncharts.charts';
@@ -60,7 +60,7 @@
         "enableMultiSlicing": "1"
 		},
 		"data": [
-			{"label": "Success","value": completeClaim},
+			{"label": "Success","value": "40"},
 			{"label": "Pending","value": "20"},
 			{"label": "Failed","value": "10"}
 		]
