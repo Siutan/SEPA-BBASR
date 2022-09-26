@@ -1,5 +1,9 @@
-<script>
+<script lang="ts">
 	import {onMount} from "svelte"
+	import FusionCharts from 'fusioncharts';
+    import Charts from 'fusioncharts/fusioncharts.charts';
+    import SvelteFC, { fcRoot } from 'svelte-fusioncharts';
+
 
 	let claims;
 	let totalClaims;
@@ -20,8 +24,13 @@
 			claims = data;
 			totalClaims = Object.keys(claims).length;
 			claimProcess();
+			
+			
+			
 		  });
 	  }
+
+	
 	  function claimProcess(){
 		console.log("claimProcess")	
 		for (let i = 0; i < totalClaims; i++){
@@ -37,12 +46,35 @@
 			{
 				failedClaim = failedClaim+1;
 			}
+
 		};
 	
 	  }
+  
+	fcRoot(FusionCharts, Charts);
+
+	let dataSource = {
+		"chart": {
+		"caption": "Status",
+        "showValues": "1",
+        "enableMultiSlicing": "1"
+		},
+		"data": [
+			{"label": "Success","value": completeClaim},
+			{"label": "Pending","value": "20"},
+			{"label": "Failed","value": "10"}
+		]
+	},
+		chartConfig = {
+      type: 'pie2d',
+      
+      renderAt: 'chart-container',
+      dataSource
+    };
+	
 	
 	  onMount(async () => {
-		console.log("onMount")	
+		
 		getClaims()
 	
 		});
@@ -185,8 +217,8 @@
 							<tr
 								class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
 							>
-								<th class="px-4 py-3">Client ID</th>
-								<th class="px-4 py-3">Membership ID</th>
+								<th class="px-4 py-3">MembershipID</th>
+								<th class="px-4 py-3">ClaimID</th>
 								<th class="px-4 py-3">Status</th>
 								<th class="px-4 py-3">Date</th>
 							</tr>
@@ -197,17 +229,12 @@
 									<div class="flex items-center text-sm">
 										<!-- Avatar with inset shadow -->
 										<div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-											<img
-												class="object-cover w-full h-full rounded-full"
-												src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-												alt=""
-												loading="lazy"
-											/>
+											
 											<div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" />
 										</div>
 										<div>
 											<p class="font-semibold">Hans Burger</p>
-											<p class="text-xs text-gray-600 dark:text-gray-400">10x Developer</p>
+										
 										</div>
 									</div>
 								</td>
@@ -470,27 +497,19 @@
 			<!-- Charts -->
 			<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Charts</h2>
 			<div class="grid gap-6 mb-8 md:grid-cols-2">
-				<div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+				<div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800" id = "chart-container">
 				
-					 <canvas id="chartPie"></canvas> 
+					<SvelteFC {...chartConfig} />
+					
 				</div>
 	
 	
 				<div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">Claim Creation by Date</h4>
+
 					<canvas id="line" />
-					<div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
-						<!-- Chart legend -->
-						<div class="flex items-center">
-							<span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full" />
-							<span>Organic</span>
-						</div>
-						<div class="flex items-center">
-							<span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full" />
-							<span>Paid</span>
-						</div>
-					</div>
+					
 				</div>
+
 			</div>
 		</div>
 		
