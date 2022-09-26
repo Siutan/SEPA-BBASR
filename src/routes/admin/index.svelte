@@ -1,9 +1,6 @@
 <script>
 	import {onMount} from "svelte"
-	import { Pie } from 'svelte-chartjs';
 
-
-  
 	let claims;
 	let totalClaims;
 	let completeClaim = 0;
@@ -43,26 +40,6 @@
 		};
 	
 	  }
-	  let data = {
-  labels: ['Completed', 'Pending', 'Failed'],
-  datasets: [
-    {
-    data: [12, 20, 30],
-      backgroundColor: [
-        '#F7464A',
-        '#46BFBD',
-        '#FDB45C',
-
-      ],
-      hoverBackgroundColor: [
-        '#FF5A5E',
-        '#5AD3D1',
-        '#FFC870',
-
-      ],
-    },
-  ],
-};
 	
 	  onMount(async () => {
 		console.log("onMount")	
@@ -494,11 +471,7 @@
 			<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Charts</h2>
 			<div class="grid gap-6 mb-8 md:grid-cols-2">
 				<div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					{#await getClaims() }
-                    <p>Loading...</p>
-					{:then x} 
-					<Pie {data} options={{ responsive: true }} /> 
-					{/await}
+				
 					 <canvas id="chartPie"></canvas> 
 				</div>
 	
