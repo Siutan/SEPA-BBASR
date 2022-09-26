@@ -2333,10 +2333,10 @@ chart.js@^2.9.4:
     chartjs-color "^2.1.0"
     moment "^2.10.2"
 
-chart.js@^3.5.0:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.7.1.tgz#0516f690c6a8680c6c707e31a4c1807a6f400ada"
-  integrity sha512-8knRegQLFnPQAheZV8MjxIXc5gQEfDFD897BJgv/klO/vtIyFFmgMXrNfgrXpbTr/XbTturxRgxIXx/Y+ASJBA==
+chart.js@^3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.9.1.tgz#3abf2c775169c4c71217a107163ac708515924b8"
+  integrity sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==
 
 chartjs-color-string@^0.6.0:
   version "0.6.0"
@@ -6107,12 +6107,10 @@ svelte-bootstrap-icons@^1.8.0:
   resolved "https://registry.yarnpkg.com/svelte-bootstrap-icons/-/svelte-bootstrap-icons-1.8.1.tgz#c31e85bda1b34d8324fbeeb4baddbc6da03e837f"
   integrity sha512-QgQbkcIbUNRv3MAK/vdCBbHclnEUf8w+4lzHVTp87usKaFSlkUXJ6hox17FcstMsyUsclctiCRRvC4JXJS2WGw==
 
-svelte-chartjs@^1.0.1:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/svelte-chartjs/-/svelte-chartjs-1.1.4.tgz#468868aec8a2469ba3480628f77c81ae992ac2de"
-  integrity sha512-G+G3h1yDFKNTamwq1iDSK1nthStVpEKaCh8K17cUlMPRX1bFF14sK2kWNv0tPj+OGWDTJgDM3X18EU0o3/kH5Q==
-  dependencies:
-    chart.js "^3.5.0"
+svelte-chartjs@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/svelte-chartjs/-/svelte-chartjs-3.0.1.tgz#7d9a559c968bc37bf5012b77b8d4c90b7ce614c4"
+  integrity sha512-/9TWJ3Ps8XlhtfAZCiuybdMhF66uDnf3lnUk7qkstG/GbXyuSW8HW6Pq/YBIA7ffa6+cRi/jg15YiIwslj6TGw==
 
 svelte-check@^2.2.6:
   version "2.2.11"
