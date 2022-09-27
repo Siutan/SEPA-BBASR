@@ -18,7 +18,6 @@
   //get email input, dispatched from the child 'Input' component
   const getEmployeeId = (e) => {
     employeeId = e.detail;
-    console.log(employeeId);
   }
 
   //function called when login button is clicked 
@@ -48,7 +47,6 @@
         })
         .then(response => response.json())
         .then((data) => {
-          console.log(data);
           postError = "";
           if(data.message)
           {
@@ -63,7 +61,6 @@
 
         })
         .catch((error) => {
-          console.log(`Error: ${error}`);
           
           loading = false;
           postError = `Error Logging in with credentials`;
@@ -100,11 +97,10 @@
 
   //if Login is a success store cookie and redirect them to logged in dashboard
   function loginSuccess(data){
+    // store user id in cookie
+    document.cookie = `employeeId=${data.employeeId}`;
     
     loading = false;
-
-    console.log("loginSuccess function called");
-    console.log(data);
 
 
     //redirect to dashboard/homepage

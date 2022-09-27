@@ -13,7 +13,6 @@
 	let failedClaim = 0;
 	
 	async function getClaims() {
-		console.log("getClaims")	
 		await fetch("https://dairies-rest-api.herokuapp.com/claims", {
 		  method: "GET",
 		  credentials: "include",
@@ -21,7 +20,6 @@
 		})
 		  .then((response) => response.json())
 		  .then((data) => {
-			console.log(data);
 			claims = data;
 			totalClaims = Object.keys(claims).length;
 			claimProcess();
@@ -33,9 +31,7 @@
 
 	
 	  function claimProcess(){
-		console.log("claimProcess")	
 		for (let i = 0; i < totalClaims; i++){
-			console.log(claims[i].status)
 			if(claims[i].status=="success"){
 				completeClaim = completeClaim+1;
 			}

@@ -1,24 +1,3 @@
-<script context="module">
-  // export const load = async ({ session })=>{
-  //   console.log('load function called');
-  //   console.log("session: ", session);
-  //   let redirect = {}       
-  //   if(!session){
-  //     console.log("Not logged in, redirect")
-  //     redirect =  {  
-  //         status: 302,
-  //         redirect: "/auth/login"
-  //     }
-  //   }
-  //   else{
-  //     console.log("Logged in, no redirect necessary");
-  //   }
-      
-  //   return redirect
-
-  // }
-</script>
-
 <script lang="ts">
   import "$lib/tailwind.css";
   import { isSideMenuOpen, closeSideMenu } from "$stores/menus";
@@ -27,7 +6,6 @@
   import SideBar from "$lib/templates/Admin/SideBar.svelte";
   import Header from "$lib/templates/Admin/Header.svelte";
   import { goto } from "$app/navigation";
-  import { get_root_for_style } from "svelte/internal";
 
    //function checks auth endpoint to determine if user is already logged in
   async function authenticate(){

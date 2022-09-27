@@ -1,13 +1,15 @@
 <script lang="ts">
   import StatusCircle from "../../../lib/components/StatusCircle.svelte";
-  import Input from "../../../lib/components/Input.svelte";
   import CreateAccount from "../../../lib/components/auth/CreateAccount.svelte";
-  import Switch from "../../../lib/components/Switch.svelte";
   import { clickOutside } from "$lib/ioevents/click";
   import { keydownEscape } from "$lib/ioevents/keydown";
 
   // modal stuff
   let isModalOpen = false;
+
+  // loading text
+  let updateButtonText = "Update User";
+  let deleteButtonText = "Delete User";
 
   const openModal = () => {
     isModalOpen = true;
@@ -27,8 +29,17 @@
     "admin": false,
   };
 
+  let placeholder = 'Please select a user status';
+
+  let options = [{
+    label: "Admin",
+    value: true
+  }, {
+    label: "User",
+    value: false
+  }];
+
   let newPass = "";
-  let adminStatus;
 
 
   async function getUsers() {
@@ -46,8 +57,30 @@
       });
   }
 
+  // delete user
+  async function deleteAccount() {
+    deleteButtonText = "Deleting user...";
+    await fetch("https://dairies-rest-api.herokuapp.com/user/" + selectedUser.employeeId, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      mode: "cors"
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          getUsers();
+          closeModal();
+          deleteButtonText = "Delete User";
+        }
+      });
+  }
+
   // update account
   async function updateAccount() {
+    updateButtonText = "Updating User...";
     let user = {
       "employeeId": selectedUser.employeeId,
       "givenName": selectedUser.givenName,
@@ -67,8 +100,8 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         getUsers();
+        updateButtonText = "Update User";
       });
   }
 
@@ -76,11 +109,6 @@
   function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-
-  const changeAdmin = () => {
-    selectedUser.admin = !selectedUser.admin;
-  };
-
 
 </script>
 
@@ -296,19 +324,24 @@
                     </div>
                       <div>
                         <select
+                          id="floating_select"
+                          bind:value={selectedUser.admin}
                           class="block w-full py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600"
                         >
-                          <option
-                            class="bg-gray-800"
-                            value="true"
-                            selected={selectedUser.admin === true}
-                          >Admin</option>
-                          <option
-                            class="bg-gray-800"
-                            value="false"
-                            selected={selectedUser.admin === false}
-                          >User</option>
+                          {#if placeholder}
+                            <option class="text-gray-900 dark:text-white" value="" disabled selected>{placeholder}</option>
+                          {/if}
+                          {#each options as option}
+                            <option class="text-gray-900 dark:text-white" value={option.value}>
+                              {option.label || option.text}
+                            </option>
+                          {/each}
                         </select>
+                        <label
+                          for="floating_select"
+                          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >Employee Status</label
+                        >
                       </div>
 
                       <!-- Change to button  -->
@@ -319,9 +352,18 @@
                           newPass = ""
                         }}
                       >
-                        Update account
+                        {updateButtonText}
                       </button>
                       <hr class="my-8" />
+                    <button
+                      class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-300 hover:bg-red-800 focus:outline-none focus:shadow-outline-purple"
+                      on:click={() => {
+                          deleteAccount()
+                          newPass = ""
+                        }}
+                    >
+                      {deleteButtonText}
+                    </button>
                       <!-- Do we need this? -->
 
                   </div>
