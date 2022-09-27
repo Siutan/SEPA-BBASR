@@ -9,7 +9,8 @@
 
   // loading text
   let updateButtonText = "Update User";
-  let deleteButtonText = "Delete User";
+  let deleteButtonText = "Deactivate User";
+  let reactivateButtonText = "Reactivate User";
 
   const openModal = () => {
     isModalOpen = true;
@@ -43,6 +44,7 @@
 
 
   async function getUsers() {
+
     await fetch("https://dairies-rest-api.herokuapp.com/user", {
       method: "GET",
       headers: {
@@ -54,14 +56,27 @@
       .then((response) => response.json())
       .then((data) => {
         users = data;
+        fetch("https://dairies-rest-api.herokuapp.com/user/inactive", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          mode: "cors"
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(users);
+            users = [...users, ...data];
+          });
       });
   }
 
   // delete user
-  async function deleteAccount() {
-    deleteButtonText = "Deleting user...";
-    await fetch("https://dairies-rest-api.herokuapp.com/user/" + selectedUser.employeeId, {
-      method: "DELETE",
+  async function reactivateAccount() {
+    reactivateButtonText = "Reactivating user...";
+    await fetch("https://dairies-rest-api.herokuapp.com/user/reactivate/" + selectedUser.employeeId, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
@@ -70,11 +85,26 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) {
-          getUsers();
-          closeModal();
-          deleteButtonText = "Delete User";
-        }
+        getUsers();
+        reactivateButtonText = "Reactivate User";
+      });
+  }
+
+  // reactivate user
+  async function deleteAccount() {
+    deleteButtonText = "Deactivating user...";
+    await fetch("https://dairies-rest-api.herokuapp.com/user/deactivate/" + selectedUser.employeeId, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      mode: "cors"
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        getUsers();
+        deleteButtonText = "Deactivate User";
       });
   }
 
@@ -110,6 +140,7 @@
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
+
 </script>
 
 <svelte:head>
@@ -144,6 +175,7 @@
                 <th class="px-4 py-3">Given Name</th>
                 <th class="px-4 py-3">Last Name</th>
                 <th class="px-4 py-3">Admin</th>
+                <th class="px-4 py-3">Active</th>
               </tr>
               </thead>
               <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -161,6 +193,7 @@
                   </td>
                   <td class="px-4 py-3 text-sm">{capitalize(user.givenName)}</td>
                   <td class="px-4 py-3 text-sm">{capitalize(user.lastName)}</td>
+
                   <td class="px-4 py-3 text-xs">
 
                     {#if user.admin}
@@ -169,6 +202,7 @@
                       <StatusCircle status="danger" />
                     {/if}
                   </td>
+                  <td class="px-4 py-3 text-sm">{user.active}</td>
                 </tr>
               {/each}
               <div
@@ -355,15 +389,28 @@
                         {updateButtonText}
                       </button>
                       <hr class="my-8" />
-                    <button
-                      class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-300 hover:bg-red-800 focus:outline-none focus:shadow-outline-purple"
-                      on:click={() => {
+
+                      {#if selectedUser.active}
+                        <button
+                          class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-300 hover:bg-red-800 focus:outline-none focus:shadow-outline-purple"
+                          on:click={() => {
                           deleteAccount()
                           newPass = ""
                         }}
-                    >
-                      {deleteButtonText}
-                    </button>
+                        >
+                          {deleteButtonText}
+                        </button>
+                      {:else}
+                        <button
+                          class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-orange-500 border border-transparent rounded-lg active:bg-orange-300 hover:bg-orange-600 focus:outline-none focus:shadow-outline-purple"
+                          on:click={() => {
+                          reactivateAccount()
+                          newPass = ""
+                        }}
+                        >
+                          {reactivateButtonText}
+                        </button>
+                      {/if}
                       <!-- Do we need this? -->
 
                   </div>

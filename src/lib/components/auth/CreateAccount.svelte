@@ -20,6 +20,9 @@
   let postSuccess = "";
   let postError = "";
 
+  // loading
+  let buttonText = "Create Account";
+
 
 
 
@@ -121,6 +124,19 @@
     }
   }
 
+  // create employee id based on first and last name
+  function createEmployeeId() {
+
+    // make 5 digit random number
+    let randomNum = Math.floor(Math.random() * 100000);
+
+    if (givenName.length > 0 && lastName.length > 0) {
+      employeeId = givenName[0].toLowerCase() + lastName[0].toLowerCase() + randomNum;
+    }
+
+    email = employeeId + "@dairies.com";
+  }
+
   // form submit function
   function submitForm() {
     validateName("submit");
@@ -128,6 +144,7 @@
     validateEmail();
     validatePassword();
     if (emailError === "" && passwordError === "") {
+      buttonText = "Creating Account...";
       // handle admin check like this for now, change it later
       if (isAdmin) {
         isAdmin = 1;
@@ -194,7 +211,10 @@
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   bind:value={lastName}
-                  on:focusout={() => validateName("last")}
+                  on:focusout={() => {
+                    validateName("last")
+                    createEmployeeId()
+                  }}
                 />
                 <label
                   for="floating_lastName"
@@ -213,8 +233,8 @@
                 id="floating_email"
                 class=" vehicle block py-2.5 px-0 text-sm w-full text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                 placeholder=" "
+                disabled
                 bind:value={email}
-                on:focusout={validateEmail}
               />
               <label
                 for="floating_email"
@@ -232,6 +252,7 @@
                 id="floating_id"
                 class=" vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                 placeholder=" "
+                disabled
                 bind:value={employeeId}
                 on:focusout={validateId}
               />
@@ -289,7 +310,7 @@
               class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
               on:click={submitForm}
             >
-              Create account
+              {buttonText}
             </button>
 
             <div class="pt-3">
