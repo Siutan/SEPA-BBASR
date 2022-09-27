@@ -33,7 +33,7 @@
       } else {
         getLocation();
       }
-    }, 1000);
+    }, 800);
   };
 
   async function getLocation() {
@@ -156,7 +156,10 @@
     let headers = new Headers();
     let formdata = new form();
     formdata.append("image", fileInput.files[0]);
+    
+    //Test if this is needed
     formdata.append("recordID", "5");
+    
     formdata.append("membershipId", cData.membershipId);
     formdata.append("customer[givenName]", cData.givenName);
     formdata.append("customer[lastName]", cData.lastName);
@@ -262,6 +265,8 @@
                   id="floating_first_name"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  maxlength="50"
+                  required
                 />
                 <label
                   for="floating_first_name"
@@ -276,6 +281,8 @@
                   id="floating_last_name"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  maxlength="50"
+                  required
                 />
                 <label
                   for="floating_last_name"
@@ -293,11 +300,13 @@
                   on:focusout={formatPhone}
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  maxlength="11"
+                  required
                 />
                 <label
                   for="floating_phone"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Phone number (614-00-000-000)</label
+                >Phone number (614XXXXXXXX)</label
                 >
               </div>
               <div class="relative z-0 w-full mb-6 group">
@@ -307,21 +316,26 @@
                   id="floating_date"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  
+                  maxlength="10"
+                  required
                 />
                 <label
                   for="floating_date"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Date of Birth (yyyy/mm/dd)</label
+                >Date of Birth (yyyy-mm-dd)</label
                 >
               </div>
             </div>
             <div class="relative z-0 w-full mb-6 group">
               <input
-                type="email"
+                type="text"
                 name="emailAddress"
                 id="floating_email"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                 placeholder=" "
+                maxlength="50"
+                required
               />
               <label
                 for="floating_email"
@@ -338,6 +352,8 @@
                 id="floating_address"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                 placeholder=" "
+                maxlength="100"
+                required
               />
               <label
                 for="floating_address"
@@ -367,6 +383,8 @@
                 id="floating_memberID"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                 placeholder=" "
+                maxlength="8"
+                required
               />
               <label
                 for="floating_memberID"
@@ -379,10 +397,11 @@
                   id="floating_last_rider"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   bind:value={driverSelected}
+                  required
                 >
                   <option disabled value="" class="text-gray-600">Select</option>
                   {#each driverOptions as option}
-                    <option class="text-black" value={option}>
+                    <option class="text-black" value={option.id}>
                       {option.text}
                     </option>
                   {/each}
@@ -394,7 +413,7 @@
                 >
               </div>
               {#if driverSelected}
-                {#if driverSelected.id === 2}
+                {#if driverSelected === 2}
                   <div>
                     <div class="grid xl:grid-cols-2 xl:gap-6">
                       <div class="relative z-0 w-full mb-6 group">
@@ -404,6 +423,8 @@
                           id="non_policy_first_name"
                           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                           placeholder=" "
+                          maxlength="50"
+                          required
                         />
                         <label
                           for="non_policy_first_name"
@@ -418,6 +439,8 @@
                           id="non_policy_last_name"
                           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                           placeholder=" "
+                          maxlength="50"
+                          required
                         />
                         <label
                           for="non_policy_last_name"
@@ -435,11 +458,13 @@
                           on:focusout={formatPhone}
                           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                           placeholder=" "
+                          maxlength="11"
+                          required
                         />
                         <label
                           for="non_policy_phone"
                           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >Phone number of Last Driver</label
+                        >Phone number of Last Driver (614XXXXXXXX)</label
                         >
                       </div>
                       <div class="relative z-0 w-full mb-6 group">
@@ -449,11 +474,13 @@
                           id="non_policy_date"
                           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                           placeholder=" "
+                          maxlength="10"
+                          required
                         />
                         <label
                           for="non_policy_date"
                           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >Date of Birth of Last Driver</label
+                        >Date of Birth of Last Driver (yyyy-mm-dd)</label
                         >
                       </div>
                     </div>
@@ -463,10 +490,11 @@
                         id="floating_relation"
                         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                         bind:value={relationSelected}
+                        required
                       >
                         <option disabled value="" class="text-gray-600">Select</option>
                         {#each relation as option}
-                          <option class="text-black" value={option}>
+                          <option class="text-black" value={option.id}>
                             {option.text}
                           </option>
                         {/each}
@@ -477,7 +505,7 @@
                       >What was the drivers relation to the policy holder?</label
                       >
                       {#if relationSelected}
-                        {#if relationSelected.id === 5}
+                        {#if relationSelected === 5}
                           <div class="relative mt-5 z-0 w-full mb-6 group">
                             <input
                               type="text"
@@ -485,6 +513,8 @@
                               id="relation_other"
                               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                               placeholder=" "
+                              maxlength="50"
+                              required
                             />
                             <label
                               for="relation_other"
@@ -502,11 +532,11 @@
                       </div
                       >
                       <label class="pl-1 pr-4">
-                        <input type="radio" bind:group={driverPermission} name="driverPermission" value={1}>
+                        <input type="radio" bind:group={driverPermission} name="driverPermission" id="driver_permission_yes" value={1}>
                         Yes
                       </label>
                       <label class="px-4">
-                        <input type="radio" bind:group={driverPermission} name="driverPermission" value={2}>
+                        <input type="radio" bind:group={driverPermission} name="driverPermission" id="driver_permission_no" value={2}>
                         No
                       </label>
                     </div>
@@ -517,11 +547,11 @@
                       </div
                       >
                       <label class="pl-1 pr-4">
-                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" value={1}>
+                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" id="non_driver_has_insurance_yes" value={1}>
                         Yes
                       </label>
                       <label class="px-4">
-                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" value={2}>
+                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" id="non_driver_has_insurance_yes" value={2}>
                         No
                       </label>
                     </div>
