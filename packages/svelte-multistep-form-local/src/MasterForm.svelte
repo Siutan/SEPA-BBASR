@@ -434,7 +434,11 @@
 
     #multistep-error-messages {
         position: absolute;
-        right: 0;
+        /* right: 0; */
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -50px;
         height: auto;
         width: auto;
         border-left: 10px solid red;
@@ -444,7 +448,9 @@
         visibility: hidden;
         opacity: 0;
         transition: visibility 0s, opacity 0.2s linear;
+        color:black;
     }
+
 
     .noselect {
         -webkit-touch-callout: none; /* iOS Safari */
