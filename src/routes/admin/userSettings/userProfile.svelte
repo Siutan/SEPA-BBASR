@@ -1,13 +1,9 @@
 <script lang="ts">
-  import Switch from "../../../lib/components/Switch.svelte";
   import axios from "axios";
 
   // form data
-  let employeeId = "";
   let givenName = "";
   let lastName = "";
-  let password = "";
-  let confirmPassword = "";
   let email = "";
   let isAdmin;
 
@@ -20,17 +16,39 @@
   let postSuccess = "";
   let postError = "";
 
-  // loading
-  let buttonText = "Create Account";
+  // loading message
+  let buttonText = "Update Account";
 
+  // get the employee id from userId cookie
+  const getCookieValue = (name) => (
+    document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+  )
+  let employeeId = getCookieValue("employeeId");
 
-
+  // do a get request to get the employee data
+  const getEmployee = async () => {
+    try {
+      let employeeConfig = {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
+      }
+      const response = await axios.get(`https://dairies-rest-api.herokuapp.com/user/${employeeId}`, employeeConfig);
+      givenName = response.data.givenName;
+      lastName = response.data.lastName;
+      email = response.data.companyEmail;
+      isAdmin = response.data.isAdmin;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // axios call to register user
-  function registerUser(config) {
+  function updateUser(config) {
     axios(config)
       .then(function (response) {
-        postSuccess = "User successfully registered";
+        postSuccess = "User successfully Updated";
         postError = "";
         // refresh page
         setTimeout(function () {
@@ -73,15 +91,6 @@
     }
   }
 
-  function validateId() {
-    // check when user leaves input field
-    if (employeeId.length < 2) {
-      idError = "Employee ID must be at least 2 characters";
-    } else {
-      idError = "";
-    }
-  }
-
   // validate Company Email, Password, and Confirm Password
   function validateEmail() {
     let emailExpression = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -102,49 +111,11 @@
     }
   }
 
-  function validatePassword() {
-    let passwordExpression = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!*#$%&?]{6,16}$/;
-
-    // switch case for password validation
-    switch (true) {
-      case password == "":
-        passwordError = "Password is required";
-        break;
-      case password.length < 6 || password.length > 16:
-        passwordError = "Password must be at least 8 characters";
-        break;
-      case password.match(passwordExpression) == null:
-        passwordError = "Password must have at least 1 number, 1 Uppercase character and 1 special character";
-        break;
-      case password != confirmPassword:
-        passwordError = "Passwords do not match";
-        break;
-      default:
-        passwordError = "";
-    }
-  }
-
-  // create employee id based on first and last name
-  function createEmployeeId() {
-
-    // make 5 digit random number
-    let randomNum = Math.floor(Math.random() * 100000);
-
-    if (givenName.length > 0 && lastName.length > 0) {
-      employeeId = givenName[0].toLowerCase() + lastName[0].toLowerCase() + randomNum;
-    }
-
-    email = employeeId + "@dairies.com";
-  }
-
   // form submit function
   function submitForm() {
     validateName("submit");
-    validateId();
     validateEmail();
-    validatePassword();
     if (emailError === "" && passwordError === "") {
-      buttonText = "Creating Account...";
       // handle admin check like this for now, change it later
       if (isAdmin) {
         isAdmin = 1;
@@ -152,11 +123,11 @@
         isAdmin = 0;
       }
       // axios config
-      let registerConfig = {
+      let updateConfig = {
         method: "post",
-        url: "https://dairies-rest-api.herokuapp.com/auth/register",
+        url: "https://dairies-rest-api.herokuapp.com/user/update",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         withCredentials: true,
         data: {
@@ -164,24 +135,29 @@
           "givenName": givenName,
           "lastName": lastName,
           "companyEmail": email,
-          "password": password,
           "admin": isAdmin
         }
       }
-      registerUser(registerConfig);
+      buttonText = "Updating User...";
+      updateUser(updateConfig);
     }
   }
 
-
 </script>
 
-<section id="body" class="">
-  <!-- Put this in class below if needed: min-h-screen -->
+{#await getEmployee()}
+  <div>Loading...</div>
+{:then data}
+  <form
+    on:submit|preventDefault={submitForm}
+  >
+    <section id="body" class="">
+      <!-- Put this in class below if needed: min-h-screen -->
       <div class="flex flex-col overflow-y-auto ">
         <div class="flex items-center justify-center p-6 sm:p-12">
           <div class="w-full">
             <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
-              Create account
+              User Profile
             </h1>
             <div class="grid xl:grid-cols-2 xl:gap-6">
               <div class="relative z-0 w-full mb-6 group">
@@ -211,10 +187,7 @@
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   bind:value={lastName}
-                  on:focusout={() => {
-                    validateName("last")
-                    createEmployeeId()
-                  }}
+                  on:focusout={() => validateName("last")}
                 />
                 <label
                   for="floating_lastName"
@@ -233,8 +206,8 @@
                 id="floating_email"
                 class=" vehicle block py-2.5 px-0 text-sm w-full text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                 placeholder=" "
-                disabled
                 bind:value={email}
+                on:focusout={validateEmail}
               />
               <label
                 for="floating_email"
@@ -252,9 +225,8 @@
                 id="floating_id"
                 class=" vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                 placeholder=" "
-                disabled
                 bind:value={employeeId}
-                on:focusout={validateId}
+                disabled
               />
               <label
                 for="floating_id"
@@ -265,48 +237,8 @@
                 {idError}
               </div>
             </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input
-                type="password"
-                name="make"
-                id="floating_pass"
-                class=" vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                placeholder=" "
-                bind:value={password}
-                on:focusout={validatePassword}
-              />
-              <label
-                for="floating_pass"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Password</label
-              >
-              <div class="text-red-600 pt-3">
-                {passwordError}
-              </div>
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input
-                type="password"
-                name="make"
-                id="floating_confirmPass"
-                class=" vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                placeholder=" "
-                bind:value={confirmPassword}
-                on:focusout={validatePassword}
-              />
-              <label
-                for="floating_confirmPass"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Password</label
-              >
-            </div>
-            <div>
-              <Switch name="isAdmin" bind:value={isAdmin}
-                      label="Admin" design="slider" />
-            </div>
-
-            <!-- Change to button  -->
             <button
+              type="submit"
               class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
               on:click={submitForm}
             >
@@ -321,4 +253,6 @@
           </div>
         </div>
       </div>
-</section>
+    </section>
+  </form>
+{/await}

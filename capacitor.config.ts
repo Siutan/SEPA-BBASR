@@ -4,7 +4,10 @@ const config: CapacitorConfig = {
 	appId: 'com.sepa.prototype',
 	appName: 'Sepa Prototype',
 	webDir: 'build',
-	bundledWebRuntime: false
+	bundledWebRuntime: false,
+	server: {
+		hostname: 'localhost:3000'
+	}
 };
 
 export default config;

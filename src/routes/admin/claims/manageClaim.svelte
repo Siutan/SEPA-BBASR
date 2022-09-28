@@ -1,14 +1,42 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { get } from 'svelte/store';
+  import { items } from "../../../stores/search";
+  import { filtered } from "../../../stores/search"
+  import Search from "../../../lib/components/search/search.svelte"
   import Switch from "../../../lib/components/Switch.svelte";
   import StatusCircle from "../../../lib/components/StatusCircle.svelte";
-  import form from "form-data";
 
 
   let claims;
   let selectedClaim = {};
   let detailedClaim = {};
   let detailedImage = "";
+
+
+  // sort table by version
+  let sortBy = {col: "version", ascending: true};
+
+  $: sort = (column) => {
+    if (sortBy.col == column) {
+      sortBy.ascending = !sortBy.ascending
+    } else {
+      sortBy.col = column
+      sortBy.ascending = true
+    }
+
+    // Modifier to sorting function for ascending or descending
+    let sortModifier = (sortBy.ascending) ? 1 : -1;
+
+    let sort = (a, b) =>
+      (a[column] < b[column])
+        ? -1 * sortModifier
+        : (a[column] > b[column])
+          ? 1 * sortModifier
+          : 0;
+
+    items.set(claims.sort(sort));
+  }
+
 
   async function getClaims() {
     await fetch("https://dairies-rest-api.herokuapp.com/claims", {
@@ -18,8 +46,8 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         claims = data;
+        items.set(data);
       });
   }
 
@@ -32,16 +60,13 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         detailedClaim = data;
-        console.log(claimId)
         getImage(claimId);
       });
   }
 
   // get image from claim id
   async function getImage(claimId) {
-    console.log(claimId)
     let url = "https://dairies-rest-api.herokuapp.com/claims/image/" + claimId;
     await fetch(url, {
       method: "GET",
@@ -50,7 +75,6 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         detailedImage = data;
       });
   }
@@ -68,21 +92,6 @@
     return [day, month, year].join("-");
   }
 
-  // truncate cid to 7 characters
-  const truncateCID = (cid) => {
-    return cid.slice(0, 10) + "...";
-  };
-
-  // copy the cid to clipboard if clicked
-  const copyCID = (cid) => {
-    navigator.clipboard.writeText(cid);
-    alert("CID copied to clipboard");
-  };
-
-  // capitalize function
-  function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
 
 </script>
 
@@ -114,24 +123,28 @@
       {:then data}
         <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-2">
           <div class="w-full overflow-x-auto col-span-2 ">
+            <Search/>
             <table class="w-full whitespace-no-wrap">
               <thead>
               <tr
                 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
               >
                 <th class="px-4 py-3">Claim ID</th>
-                <th class="px-4 py-3">Version</th>
-                <th class="px-4 py-3">Date</th>
+                <th on:click={() => {
+                  sort("version")
+                }} class="px-4 py-3 cursor-pointer select-none">Version</th>
+                <th on:click={() => {
+                  sort("version")
+                }} class="px-4 py-3">Date</th>
                 <th class="px-4 py-3">Status</th>
               </tr>
               </thead>
               <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-              {#each claims as claim}
+              {#each $filtered as claim}
                 <tr
                   class="text-gray-700 dark:text-gray-400 hover:bg-gray-100 hover:dark:bg-gray-700"
                   on:click={() => {
                     selectedClaim = claim
-                    console.log(selectedClaim)
                   }}
                 >
                   <td class="px-4 py-3">
@@ -364,6 +377,7 @@
                         id="floating_year"
                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                         placeholder=" "
+                        bind:value={detailedClaim.vehicle.years}
                       />
                       <label
                         for="floating_year"
@@ -380,6 +394,7 @@
                       id="floating_model"
                       class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                       placeholder=" "
+                      bind:value={detailedClaim.vehicle.model_name}
                     />
                     <label
                       for="floating_model"
@@ -395,6 +410,7 @@
                       id="floating_vin"
                       class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                       placeholder=" "
+                      bind:value={detailedClaim.vehicle.vehicleId}
                     />
                     <label
                       for="floating_vin"
@@ -410,6 +426,7 @@
                       id="floating_generation"
                       class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                       placeholder=" "
+                      bind:value={detailedClaim.vehicle.generationId}
                     />
                     <label
                       for="floating_generation"
@@ -425,6 +442,7 @@
                           id="floating_color"
                           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                           placeholder=" "
+                          bind:value={detailedClaim.vehicle.color}
                         />
                         <label
                           for="floating_color"
