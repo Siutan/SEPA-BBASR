@@ -1,9 +1,5 @@
 <script>
 	 import {onMount} from "svelte"
-	import Error from "./__error.svelte";
-	// import FusionCharts from 'fusioncharts';
-    // import Charts from 'fusioncharts/fusioncharts.charts';
-    // import SvelteFC, { fcRoot } from 'svelte-fusioncharts';
 
 
 	let claims;
@@ -64,28 +60,7 @@
     return [day, month, year].join("-");
   }
   
-	// fcRoot(FusionCharts, Charts);
 
-	// let dataSource = {
-	// 	"chart": {
-	// 	"caption": "Status",
-    //     "showValues": "1",
-    //     "enableMultiSlicing": "1"
-	// 	},
-	// 	"data": [
-	// 		{"label": "Success","value": "40"},
-	// 		{"label": "Pending","value": "20"},
-	// 		{"label": "Failed","value": "10"}
-	// 	]
-	// },
-	// 	chartConfig = {
-    //   type: 'pie2d',
-      
-    //   renderAt: 'chart-container',
-    //   dataSource
-    // };
-	
-	
 	  onMount(async () => {
 		
 		// getClaims()
