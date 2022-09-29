@@ -1,6 +1,5 @@
 <script>
-  import { onMount } from "svelte";
-  import Chartjs from "chart.js";
+import Chartjs from "chart.js";
 
 
 
@@ -19,10 +18,13 @@
       .then((response) => response.json())
       .then((data) => {
         claims = data;
+		console.log(claims)
+		claims[34]= {"claimID":33,"membershipID":22,"status":"failed","date":"2022-09-03T10:09:01.225Z"}
         totalClaims = Object.keys(claims).length;
         claimProcess();
         console.log(getClaimsByMonth())
         claimChart()
+		pieChart()
 
       }).catch((error) => console.log(error));
   }
@@ -102,6 +104,40 @@
 
   };
 
+// Pie Chart Data
+
+let pieC;
+let chartCanvasPie;
+// Pie chart
+  function pieChart() {
+
+pieC = chartCanvasPie.getContext('2d');
+new Chartjs(pieC, {
+  type: 'pie',
+  data: {
+	labels: ['Success', 'Pending', 'Failed'],
+	datasets: [{
+	  label: 'Claim Status',
+	  backgroundColor: [
+		  "#046C4E",
+          "#FFD700",
+          "#C81E1E",],
+	  borderColor: [
+		  "#FFFFFF",
+          "#FFFFFF",
+          "#FFFFFF"],
+	  data: [completeClaim,pendingClaim,failedClaim]
+	}]
+  }
+});
+
+};
+
+
+
+
+
+
 
 </script>
 
@@ -125,7 +161,7 @@
         <span class="text-gray-300">Welcome </span>
         <span class="text-purple-600">Here's the reports: </span>
         <span
-        >There is <span class="text-orange-500">{pendingClaim} claims in process</span>, <span
+        >There is <span class="text-yellow-300">{pendingClaim} claims in process</span>, <span
           class="text-green-500">{completeClaim} completed claims</span>
 						, and
 						<span class="text-red-500">{failedClaim} failed.</span>
@@ -281,7 +317,7 @@
 										</span>
                   {:else if (claim.status === "pending")}
 									  <span
-                      class="px-2 py-1 font-semibold leading-tight text-orange-700  bg-orange-400 rounded-full dark:bg-orange-700 dark:text-orange-100"
+                      class="px-2 py-1 font-semibold leading-tight text-yellow-700  bg-yellow-400 rounded-full dark:text-yellow-100"
                     >
 									  {claim.status}
 
@@ -323,7 +359,8 @@
 
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
 
-        <canvas id="line" />
+          <canvas bind:this={chartCanvasPie} id="claimPie"></canvas>
+		 
 
       </div>
 
