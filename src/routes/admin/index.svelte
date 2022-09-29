@@ -95,7 +95,7 @@ import Chartjs from "chart.js";
         labels: chartLabels,
         datasets: [{
           label: 'Claims',
-          backgroundColor: 'rgb(127,60,242)',
+          backgroundColor: "#38a3a5",
           borderColor: 'rgb(216,194,255)',
           data: chartValues
         }]
@@ -119,16 +119,18 @@ new Chartjs(pieC, {
 	datasets: [{
 	  label: 'Claim Status',
 	  backgroundColor: [
-		  "#046C4E",
-          "#FFD700",
-          "#C81E1E",],
+		  "#80ed99",
+          "#38a3a5",
+          "#22577a",],
 	  borderColor: [
 		  "#FFFFFF",
           "#FFFFFF",
           "#FFFFFF"],
 	  data: [completeClaim,pendingClaim,failedClaim]
+	  
 	}]
-  }
+  },
+  
 });
 
 };
@@ -351,15 +353,16 @@ new Chartjs(pieC, {
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Charts</h2>
     <div class="grid gap-6 mb-8 md:grid-cols-2">
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800" id="chart-container">
-
+		<h6 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Claims by Date</h6>
         <canvas bind:this={chartCanvas} id="monthlyClaims"></canvas>
 
       </div>
 
 
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-
+		<h6 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Claim Status</h6>
           <canvas bind:this={chartCanvasPie} id="claimPie"></canvas>
+		  
 		 
 
       </div>
