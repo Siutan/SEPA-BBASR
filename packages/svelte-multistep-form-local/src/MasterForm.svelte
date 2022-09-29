@@ -66,18 +66,24 @@
             credentials: "include",
             // send the request data as the new customer details in the body
             body: JSON.stringify(requestData)
-          })
+            })
             .then((response) => response.json())
             .then((res) => {
               console.log("Customer created");
               console.log(res);
               localStorage.setItem("customer", JSON.stringify(res));
+            })
+            .catch((error) => {
+              console.log(`Error creating new customer ${error}`);
             });
         } else {
           console.log("Customer exists");
           console.log(data);
           localStorage.setItem("customer", JSON.stringify(data));
         }
+      })
+      .catch((error) => {
+        console.log(`Error searching for customer ${error}`);
       });
   }
 
