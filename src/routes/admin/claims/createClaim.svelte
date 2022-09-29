@@ -5,9 +5,15 @@
   import { Camera, CameraResultType } from "@capacitor/camera";
   import axios from "axios";
   import form from "form-data";
+	import Search from "$src/lib/components/search/search.svelte";
 
-  // Customer data Form
+    // Customer data Form
   // --------------------------------------------------
+  let firstName: string;
+  let lastName: string;
+  let phone: string;
+  let dob: string;
+  let email: string;
   // Address Lookup
   let address: string;
   let results: object = [];
@@ -23,6 +29,105 @@
   let vehicle_model: string;
   let vehicle_year: string;
   let vehicle_generation: string;
+
+  //Search Customer Data
+  // --------------------------------------------------
+  let searchButtonText = "Search";
+  let customerSearched = false;
+  let policyNumber;
+  let policyNumberError = "";
+  //search if policy number exists, return data to fields if it does
+  const searchPolicyNumber = () => {
+    console.log("policyNumber: ", policyNumber);
+
+    //clear membershipIDerror
+    policyNumberError = "";
+
+    //validate policyID input before searching if exists
+    let regexPolicyNumber = /^[A-Z]{2}\d{6}$/
+    if(policyNumber){
+  
+      if(policyNumber.match(regexPolicyNumber))
+      {
+        console.log("valid policy number format");
+        //search for policy number
+        fetchCustomerData();
+
+      }
+      else{
+        console.log("Not valid policy number format");
+        policyNumberError = "Please type in a policy number in the format 'XX000000'";
+      }
+    }
+    else{
+      policyNumberError = "Please type in a policy number"
+    }
+  }
+
+  //Search if CustomerID exists
+  function fetchCustomerData() {
+    searchButtonText = "Searching ..."
+    let customerGetUrl =
+      `https://dairies-rest-api.herokuapp.com/customers/${policyNumber}`;
+
+    // check if member id exists
+    fetch(customerGetUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      mode: "cors",
+      credentials: "include"
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // check if the request fails by checking the response for a message
+        if ("message" in data) {
+          policyNumberError = "Could not find policy number, please fill out details below";
+          
+          //After search complete show rest of form and revert button text to Search
+          searchButtonText = "Search";
+          customerSearched = true;
+
+          //populate data
+          firstName = "";
+          lastName = ""; 
+          phone = "";
+          dob = "";
+          email = "";
+          address = "";
+
+        } else {
+          console.log("Customer exists");
+          console.log(data);
+          
+          //populate data
+          firstName = data.givenName;
+          lastName = data.lastName; 
+          phone = data.phone;
+          dob = data.dob.slice(0,10);
+          email = data.emailAddress;
+          address = data.address;
+
+          //After search complete show rest of form and revert button text to Search
+          searchButtonText = "Search";
+          customerSearched = true;
+            
+        }
+      })
+      .catch((error) => {
+        console.log(`Error searching for customer ${error}`);
+        policyNumberError = "Error searching for customer, please fill out details below";
+        
+        //After search complete show rest of form and revert button text to Search
+        searchButtonText = "Search";
+        customerSearched = true;
+      });
+      
+
+  }
+
+
 
 
   const debounce = async (e) => {
@@ -257,141 +362,162 @@
         <Step>
           <!-- Customer Information -->
           <div id="customerForm" class="p-5 flex flex-col flex-wrap gap-5">
+            <div class="text-red-600 pt-3">
+              {policyNumberError}
+            </div>
             <div class="grid xl:grid-cols-2 xl:gap-6">
+
+                <div class="relative z-0 w-full mb-6 group">
+                  <input
+                  type="text"
+                  name="membershipId"
+                  id="floating_memberID"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                  placeholder=" "
+                  maxlength="8"
+                  required
+                  bind:value={policyNumber}
+                  />
+                  <label
+                  for="floating_memberID"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Policy Number (XX000000)
+                </label>
+              </div>
+              <div class="relative z-0 y- w-full mb-6 group">
+                <button type="button" on:click={searchPolicyNumber} class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">{searchButtonText}</button>
+              </div>
+            </div>
+
+
+            <!-- Once User has searched PolicyID the rest of the form will appear -->
+            {#if customerSearched}
+                      
+              <div class="grid xl:grid-cols-2 xl:gap-6">
+                
+                <div class="relative z-0 w-full mb-6 group">
+                  <input
+                    type="text"
+                    name="givenName"
+                    id="floating_first_name"
+                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                    placeholder=" "
+                    maxlength="50"
+                    required
+                    bind:value={firstName}
+                  />
+                  <label
+                    for="floating_first_name"
+                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >First name of Insured</label
+                  >
+                </div>
+                <div class="relative z-0 w-full mb-6 group">
+                  <input
+                    type="text"
+                    name="lastName"
+                    id="floating_last_name"
+                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                    placeholder=" "
+                    maxlength="50"
+                    required
+                    bind:value={lastName}
+                  />
+                  <label
+                    for="floating_last_name"
+                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Last name of Insured</label
+                  >
+                </div>
+              </div>
+              <div class="grid xl:grid-cols-2 xl:gap-6">
+                <div class="relative z-0 w-full mb-6 group">
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="floating_phone"
+                    on:focusout={formatPhone}
+                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                    placeholder=" "
+                    maxlength="14"
+                    required
+                    bind:value={phone}
+                  />
+                  <label
+                    for="floating_phone"
+                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Phone number (614XXXXXXXX)</label
+                  >
+                </div>
+                <div class="relative z-0 w-full mb-6 group">
+                  <input
+                    type="text"
+                    name="dob"
+                    id="floating_date"
+                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                    placeholder=" "
+                    maxlength="10"
+                    required
+                    bind:value={dob}
+                  />
+                  <label
+                    for="floating_date"
+                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Date of Birth (yyyy-mm-dd)</label
+                  >
+                </div>
+              </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
                   type="text"
-                  name="givenName"
-                  id="floating_first_name"
+                  name="emailAddress"
+                  id="floating_email"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   maxlength="50"
                   required
+                  bind:value={email}
                 />
                 <label
-                  for="floating_first_name"
+                  for="floating_email"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >First name of Insured</label
+                >Email address</label
                 >
               </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
                   type="text"
-                  name="lastName"
-                  id="floating_last_name"
+                  bind:value={address}
+                  on:input={debounce}
+                  name="address"
+                  id="floating_address"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
-                  maxlength="50"
+                  maxlength="100"
                   required
                 />
                 <label
-                  for="floating_last_name"
+                  for="floating_address"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Last name of Insured</label
+                >Address</label
                 >
-              </div>
-            </div>
-            <div class="grid xl:grid-cols-2 xl:gap-6">
-              <div class="relative z-0 w-full mb-6 group">
-                <input
-                  type="tel"
-                  name="phone"
-                  id="floating_phone"
-                  on:focusout={formatPhone}
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                  placeholder=" "
-                  maxlength="11"
-                  required
-                />
-                <label
-                  for="floating_phone"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Phone number (614XXXXXXXX)</label
-                >
+                <div class="text-sm">
+                  <ul>
+                    {#each results as { label }}
+                      <li
+                        on:click={() => {
+                            address = label;
+                            results = [];
+                          }}
+                        class="p-2 rounded-md cursor-pointer hover:bg-purple-700 dark:hover:bg-gray-900 hover:text-gray-100"
+                      >
+                        {label}
+                      </li>
+                    {/each}
+                  </ul>
+                </div>
               </div>
               <div class="relative z-0 w-full mb-6 group">
-                <input
-                  type="text"
-                  name="dob"
-                  id="floating_date"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                  placeholder=" "
-                  
-                  maxlength="10"
-                  required
-                />
-                <label
-                  for="floating_date"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Date of Birth (yyyy-mm-dd)</label
-                >
-              </div>
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input
-                type="text"
-                name="emailAddress"
-                id="floating_email"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                placeholder=" "
-                maxlength="50"
-                required
-              />
-              <label
-                for="floating_email"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Email address</label
-              >
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input
-                type="text"
-                bind:value={address}
-                on:input={debounce}
-                name="address"
-                id="floating_address"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                placeholder=" "
-                maxlength="100"
-                required
-              />
-              <label
-                for="floating_address"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Address</label
-              >
-              <div class="text-sm">
-                <ul>
-                  {#each results as { label }}
-                    <li
-                      on:click={() => {
-													address = label;
-													results = [];
-												}}
-                      class="p-2 rounded-md cursor-pointer hover:bg-purple-700 dark:hover:bg-gray-900 hover:text-gray-100"
-                    >
-                      {label}
-                    </li>
-                  {/each}
-                </ul>
-              </div>
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input
-                type="text"
-                name="membershipId"
-                id="floating_memberID"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                placeholder=" "
-                maxlength="8"
-                required
-              />
-              <label
-                for="floating_memberID"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Policy Number (XX000000)</label
-              >
-              <div class="relative z-0 my-10 w-full mb-6 group">
                 <select
                   name="lastRider"
                   id="floating_last_rider"
@@ -412,6 +538,10 @@
                 >Was the policy holder the last person to use the vehicle?</label
                 >
               </div>
+            {/if}
+
+            <!-- IF Policy Holder NOT last to use the vehicle -->
+            <div class="relative z-0 w-full mb-6 group">
               {#if driverSelected}
                 {#if driverSelected === 2}
                   <div>
@@ -464,7 +594,7 @@
                         <label
                           for="non_policy_phone"
                           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >Phone number of Last Driver (614XXXXXXXX)</label
+                        >Phone number of Last Driver</label
                         >
                       </div>
                       <div class="relative z-0 w-full mb-6 group">
@@ -480,7 +610,7 @@
                         <label
                           for="non_policy_date"
                           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >Date of Birth of Last Driver (yyyy-mm-dd)</label
+                        >Date of Birth of Last Driver</label
                         >
                       </div>
                     </div>
