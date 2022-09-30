@@ -332,7 +332,7 @@ export const formHasError = () => {
       }
 
       //check if license number has been entered and is valid format
-      let licenseNumber = document.getElementsByName("licenseNumber");
+      let licenseNumber = document.getElementById("licenseNumber").value;
       if(licenseNumber)
       {
         let regexLicense = /^\d{9,11}$/
@@ -348,7 +348,7 @@ export const formHasError = () => {
       }
 
       //Check if license issue date is valid
-      let licenseIssueDate = document.getElementById("licenseIssueDate");
+      let licenseIssueDate = document.getElementById("licenseIssueDate").value;
       if(licenseIssueDate){
         console.log('date: ', licenseIssueDate);
         //check that date is in correct format
@@ -386,7 +386,7 @@ export const formHasError = () => {
 
 
       //validate the vehicle make input
-      let make = document.getElementById("floating_vehicleMake");
+      let make = document.getElementById("floating_vehicleMake").value;
       if(make){
         if(make.match(regexAddress))
         {
@@ -400,7 +400,7 @@ export const formHasError = () => {
       }
 
       //validate the vehicle model input
-      let vehicleModel = document.getElementById("vehicleModel");
+      let vehicleModel = document.getElementById("vehicleModel").value;
       if(vehicleModel){
         if(vehicleModel.match(regexAddress))
         {
@@ -414,8 +414,8 @@ export const formHasError = () => {
       }
 
       //validate the vehicle year input
-      let year = document.getElementById("floating_vehicle_year");
-      let regexYear = /^\d{4}$/
+      let year = document.getElementById("floating_vehicle_year").value;
+      let regexYear = /^\d{4}|\d{4}-\d{4}$/
       if(year){
         if(year.match(regexYear))
         {
@@ -429,7 +429,7 @@ export const formHasError = () => {
       }
 
       //validate the vehicle generation input
-      let generation = document.getElementById("floating_vehicle_generation");
+      let generation = document.getElementById("floating_vehicle_generation").value;
       if(generation){
         if(vehicleModel.match(regexAddress))
         {
@@ -443,7 +443,7 @@ export const formHasError = () => {
       }
 
       //validate the vehicle license input
-      let rego = document.getElementById("floating_vehicle_license");
+      let rego = document.getElementById("floating_vehicle_license").value;
       let regexRego = /^[A-Za-z0-9]{1,6}$/
       if(rego){
         if(rego.match(regexRego))
@@ -458,7 +458,7 @@ export const formHasError = () => {
       }
 
       //validate the vehicle engine input
-      let engine = document.getElementById("floating_engine");
+      let engine = document.getElementById("floating_engine").value;
       if(engine){
         if(engine.match(regexAddress))
         {
@@ -472,7 +472,7 @@ export const formHasError = () => {
       }
 
       //validate the vehicle generation input
-      let vehicleID = document.getElementById("floating_vehicleId");
+      let vehicleID = document.getElementById("floating_vehicleId").value;
       if(vehicleID){
         if(vehicleID.match(regexAddress))
         {
