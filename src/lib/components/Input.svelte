@@ -9,7 +9,7 @@
   export let label = "";
   export let type = "text";
   export let value = "";
-  export let disabled;
+  
   let showPassword = false;
 
   const toggle = () => {
@@ -31,27 +31,7 @@
 </script>
 
 <div class="relative z-0 w-full mb-6 group">
-  {#if disabled}
-    <input
-      disabled
-      type="text"
-      name="{name}"
-      id="{id}"
-      class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
-      placeholder=" "
-      bind:value={value}
-    />
-  {:else if (disabled && type === "password")}
-    <input
-      disabled
-      type="password"
-      name="{name}"
-      id="{id}"
-      class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
-      placeholder=" "
-      bind:value={value}
-    />
-  {:else}
+
     {#if type === "password"}
       <div class="absolute inset-y-0 right-0 flex items-center px-2">
         {#if showPassword === true}
@@ -89,7 +69,7 @@
         on:focusout={dispatchField}
       />
     {/if}
-  {/if}
+  
   <label
     for="{name}"
     class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
