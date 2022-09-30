@@ -24,11 +24,11 @@
 
   // vehicle data Form
   // --------------------------------------------------
-  let vehicle_rego: string;
   let vehicle_make: string;
   let vehicle_model: string;
   let vehicle_year: string;
   let vehicle_generation: string;
+  let vehicle_license_plate:string;
 
   //Search Customer Data
   // --------------------------------------------------
@@ -173,11 +173,10 @@
     formTitle: "Claims Form",
     formSubtitle: "Please fill out the form below",
     stepsDescription: [
-      { title: "Step 1", subtitle: "Customer Information" },
-      { title: "Step 2", subtitle: "Upload Images" },
-      { title: "Step 3", subtitle: "Driver History" },
-      { title: "Step 4", subtitle: "Claim & Vehicle Information" },
-      { title: "Step 5", subtitle: "Review Information" }
+      { title: "Step 1", subtitle: "Customer Information" },   
+      { title: "Step 2", subtitle: "Driver History" },
+      { title: "Step 3", subtitle: "Claim & Vehicle Information" },
+      { title: "Step 4", subtitle: "Review Information" }
     ]
   };
 
@@ -212,12 +211,18 @@
       });
   };
 
+  let imageRecButtonText = "Run Image Recognition";
+  let imageRecError = "";
 
   function getClaim(e) {
     e.preventDefault();
+    
+    imageRecButtonText = "Processing...";
+    imageRecError = ""; //clear any errors
 
     let data = new FormData();
     let vehicleImage = document.querySelector("#imageInput");
+    console.log(`vehicleImage: ${vehicleImage}`)
     data.append("image", vehicleImage.files[0]);
     let config = {
       method: "post",
@@ -233,16 +238,38 @@
       .then((response) => {
         console.log(response);
         localStorage.setItem("vehicle", JSON.stringify(response.data));
-        // fill out the form with the data
-        let vehicleData = JSON.parse(localStorage.getItem("vehicle"));
-        vehicle_rego = vehicleData.plate;
-        vehicle_make = vehicleData.mode_info.make_name;
-        vehicle_model = vehicleData.mode_info.model_name;
-        vehicle_year = vehicleData.mode_info.years;
-        vehicle_generation = vehicleData.mode_info.generation_name;
+        
+        //Check if Error
+        if(response.data.message)
+        {
+          
+          imageRecError = "Unable to run image recognition, please type details below";
+          //clear input fields         
+          vehicle_make = "";
+          vehicle_model = "";
+          vehicle_year = "";
+          vehicle_generation = "";
+          vehicle_license_plate = "";
+          
+          imageRecButtonText = "Run Image Recognition";
+        }
+        else{
+
+          // fill out the form with the data
+          let vehicleData = JSON.parse(localStorage.getItem("vehicle"));
+          vehicle_make = vehicleData.mode_info.make_name;
+          vehicle_model = vehicleData.mode_info.model_name;
+          vehicle_year = vehicleData.mode_info.years;
+          vehicle_generation = vehicleData.mode_info.generation_name;
+          vehicle_license_plate = vehicleData.plate;
+          imageRecButtonText = "Run Image Recognition";
+        }        
+        
       })
       .catch((error) => {
         console.log(error);
+        imageRecError = "Unable to run image recognition, please type details below";
+
       });
   }
 
@@ -693,47 +720,7 @@
             </div>
           </div>
         </Step>
-        <Step>
-          <!-- Upload Image -->
-          <div
-            id="imageForm"
-            class=" ml-10 flex flex-col flex-wrap items-center gap-5 h-full px-4 py-3 mb-8 bg-white self-center w-3/4 rounded-lg shadow-md dark:bg-gray-900 md:ml-0 lg:ml-0  "
-          >
-            <div class="w-32 flex flex-col gap-4 pl-4 px-4 pb-4 md:w-full lg:w-full">
-              <div class="w-full">
-                <img class="object-cover" draggable="false" src={imageUrl} alt="" />
-              </div>
-              <!-- buttons -->
-              <div class="flex flex-row gap-2">
-                <label
-                  class="w-3/4 flex flex-col items-center text-center px-4 py-6 bg-white text-gray-900 rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer transition duration-500 hover:bg-gray-700 hover:text-white"
-                >
-                  <svg
-                    class="w-8 h-8"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z"
-                    />
-                  </svg>
-                  <span class="mt-2 text-base leading-normal hidden md:block lg:block "
-                  >Upload an image</span
-                  >
-                  <!--									on:click|preventDefault={takePicture}-->
-                  <input id="imageInput" type="file" class="hidden" />
-                </label>
-                <label
-                  class=" flex flex-col items-center text-center md:px-4 lg:py-6 lg:px-4 lg:px-4 bg-white text-gray-900 rounded-lg shadow-lg md:tracking-wide lg:tracking-wide uppercase border cursor-pointer transition duration-500 hover:bg-gray-700 hover:text-white"
-                >
-                  <span class="mt-2 text-sm leading-normal">Get Vehicle Data</span>
-                  <input on:click={getClaim} class="hidden" />
-                </label>
-              </div>
-            </div>
-          </div>
-        </Step>
+       <!-- Driver History Form -->
         <Step>
           <div
             id="historyForm"
@@ -786,6 +773,7 @@
                   id="licenseNumber"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  required
                 />
                 <label
                   for="licenseNumber"
@@ -800,17 +788,49 @@
                   id="licenseIssueDate"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  required
                 />
                 <label
                   for="licenseIssueDate"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Licence issue date (yyyy/mm/dd)</label
+                >Licence issue date (yyyy-mm-dd)</label
                 >
               </div>
             </div>
           </div>
         </Step>
         <Step>
+          <!-- Upload Image -->
+        <div class="flex justify-center">
+          <div class="mb-3 w-96">
+            <label for="formFile" class="form-label inline-block mb-2 text-gray-500 dark:text-gray-400">Upload File</label>
+            <input id="imageInput"  type="file" class="form-control
+                    block
+                    w-full
+                    px-3
+                    py-1.5
+                    text-base
+                    font-normal
+                    text-gray-700
+                    bg-white bg-clip-padding
+                    border border-solid border-gray-300
+                    rounded
+                    transition
+                    ease-in-out
+                    m-0
+                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
+                   >
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <button type="button" on:click={getClaim} class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">{imageRecButtonText}</button>
+        </div>
+        <div class="flex justify-center">
+          <div class="text-red-600 pt-3">
+            {imageRecError}
+          </div>
+        </div>
+
           <!-- Vehicle Fields -->
           <div id="vehicleForm" class="p-5 flex flex-col flex-wrap gap-5">
             <div class="grid xl:grid-cols-2 xl:gap-6">
@@ -822,6 +842,7 @@
                   class=" vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   bind:value={vehicle_make}
+                  required
                 />
                 <label
                   for="floating_vehicleMake"
@@ -836,6 +857,7 @@
                   id="vehicleModel"
                   class="vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  required
                   bind:value={vehicle_model}
                 />
                 <label
@@ -853,6 +875,7 @@
                   id="floating_vehicle_year"
                   class="vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  required
                   bind:value={vehicle_year}
                 />
                 <label
@@ -868,6 +891,7 @@
                   id="floating_vehicle_generation"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  required
                   bind:value={vehicle_generation}
                 />
                 <label
@@ -876,34 +900,53 @@
                 >Vehicle Generation</label
                 >
               </div>
+              <div class="relative z-0 w-full mb-6 group">
+                <input
+                  type="text"
+                  name="vehicleLicense"
+                  id="floating_vehicle_license"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                  placeholder=" "
+                  required
+                  bind:value={vehicle_license_plate}
+                />
+                <label
+                  for="floating_vehicle_generation"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Vehicle License Plate</label
+                >
+              </div>
             </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input
-                type="text"
-                name="engine"
-                id="floating_engine"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                placeholder=" "
-              />
-              <label
-                for="floating_engine"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Vehicle Engine Type</label
-              >
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input
-                type="text"
-                name="vehicleId"
-                id="floating_vehicleId"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
-                placeholder=" "
-              />
-              <label
-                for="floating_vehicleId"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Vehicle ID</label
-              >
+            <div class="grid xl:grid-cols-2 xl:gap-6">
+              <div class="relative z-0 w-full mb-6 group">
+                <input
+                  type="text"
+                  name="engine"
+                  id="floating_engine"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                  placeholder=" "
+                  required
+                />
+                <label
+                  for="floating_engine"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Vehicle Engine Type</label
+                >
+              </div>
+              <div class="relative z-0 w-full mb-6 group">
+                <input
+                  type="text"
+                  name="vehicleId"
+                  id="floating_vehicleId"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                  placeholder=" "
+                />
+                <label
+                  for="floating_vehicleId"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Vehicle ID</label
+                >
+              </div>
             </div>
           </div>
         </Step>
@@ -912,12 +955,21 @@
             <p>Please Review your Form Before Submitting, Once the form is Submitted, It <span class="text-red-600">CANNOT</span>
               be deleted.</p>
           </div>
-          <button
-            on:click={handleSubmit}
-            class=" mx-5 px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-          >
-            Submit
-          </button>
+          <div class="grid grid-cols-5 gap-1">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div>  
+              <button
+                on:click={handleSubmit}
+                class=" mx-5 px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+              >
+                Submit
+              </button>
+            </div>
+            <div></div>
+          </div>
+          
         </Step>
       </Form>
     </div>
