@@ -36,7 +36,8 @@ let required_key =
   "year":"Please enter the year for the vehicle model",
   "generation":"Please enter the generation for the vehicle",
   "engine":"Please enter the engine type",
-  "vehicleId":"Please enter the vehicle ID"
+  "vehicleId":"Please enter the vehicle ID",
+  "vehicleLicense":"Please enter a vehicle license plate"
 
 
 
@@ -112,15 +113,16 @@ export const formHasError = () => {
   
   //validate datestring
   const dateString = document.getElementById('floating_date').value;
-  let regexDate = /^\d{4}\-\d{2}\-\d{2}$/;
+  let regexDate = /^\d{4}\/\d{2}\/\d{2}$/;
   if(dateString)
   {
-    console.log('date: ', dateString);
+    console.log('date1: ', dateString);
     //check that date is in correct format
     if(dateString.match(regexDate)){
       console.log("valid format")
-      var d = new Date(dateString);
-      var dNum = d.getTime();
+
+      let d = new Date(dateString);
+      let dNum = d.getTime();
       
       //Check if is a valid date
       if(!dNum){
@@ -132,7 +134,7 @@ export const formHasError = () => {
       
       if((dMin - dNum) > 0){
         hasError = true
-        errorMessages.push("The Date of Birth needs to be after '1900-01-01'");
+        errorMessages.push("The Date of Birth needs to be after '1900/01/01'");
       }
 
       //Apply error if dob is in the future
@@ -145,7 +147,7 @@ export const formHasError = () => {
     else{
       console.log("invalid date format")
       hasError = true
-      errorMessages.push("Please enter Date of Birth in yyyy-mm-dd format");
+      errorMessages.push("Please enter Date of Birth in yyyy/mm/dd format");
     }
   }
   
@@ -199,7 +201,7 @@ export const formHasError = () => {
 
     //Check if policy holder was last one driving
     let lastRider = document.getElementById('floating_last_rider').value;
-    if(lastRider == 2)
+    if(lastRider === 2)
     {
       
       //validate first name of last rider
@@ -257,8 +259,8 @@ export const formHasError = () => {
         //check that date is in correct format
         if(nonPolicyDate.match(regexDate)){
           console.log("valid format")
-          var d = new Date(dateString);
-          var dNum = d.getTime();
+          let d = new Date(dateString);
+          let dNum = d.getTime();
           
           //Check if is a valid date
           if(!dNum){
@@ -270,7 +272,7 @@ export const formHasError = () => {
           
           if((dMin - dNum) > 0){
             hasError = true
-            errorMessages.push("The Date of Birth for the last rider needs to be after '1900-01-01'");
+            errorMessages.push("The Date of Birth for the last rider needs to be after '1900/01/01'");
           }
 
           //Apply error if dob is in the future
@@ -283,13 +285,13 @@ export const formHasError = () => {
         else{
           console.log("invalid date format")
           hasError = true
-          errorMessages.push("Please enter Date of Birth of last rider in 'yyyy-mm-dd format'");
+          errorMessages.push("Please enter Date of Birth of last rider in 'yyyy/mm/dd format'");
         }
       }
 
       //check if relation selected was other
       let relation = document.getElementById('floating_relation').value;
-      if(relation == 5){
+      if(relation === 5){
         //validate other relation details
         let otherDetails = document.getElementById('relation_other').value;
         if(otherDetails){
@@ -330,7 +332,7 @@ export const formHasError = () => {
         hasError = true
         errorMessages.push("Please answer if user had permission to drive car");
       }
-
+    }
       //check if license number has been entered and is valid format
       let licenseNumber = document.getElementById("licenseNumber").value;
       if(licenseNumber)
@@ -354,8 +356,8 @@ export const formHasError = () => {
         //check that date is in correct format
         if(licenseIssueDate.match(regexDate)){
           console.log("valid format")
-          var d = new Date(licenseIssueDate);
-          var dNum = d.getTime();
+          let d = new Date(licenseIssueDate);
+          let dNum = d.getTime();
           
           //Check if is a valid date
           if(!dNum){
@@ -367,7 +369,7 @@ export const formHasError = () => {
           
           if((dMin - dNum) > 0){
             hasError = true
-            errorMessages.push("The license isssue date needs to be after '1900-01-01'");
+            errorMessages.push("The license isssue date needs to be after '1900/01/01'");
           }
 
           //Apply error if dob is in the future
@@ -380,7 +382,7 @@ export const formHasError = () => {
         else{
           console.log("invalid license issue date format")
           hasError = true
-          errorMessages.push("Please enter The license isssue date in 'yyyy-mm-dd' format");
+          errorMessages.push("Please enter The license isssue date in 'yyyy/mm/dd' format");
         }
       }
 
@@ -485,14 +487,12 @@ export const formHasError = () => {
         }
       }
 
-
-
+    
+    if (hasError) {
+      showError(errorMessages)
+      console.log("errorMessages", errorMessages);
     }
-  if (hasError) {
-    showError(errorMessages)
-    console.log("errorMessages", errorMessages);
-  }
-  return hasError
+    return hasError
 }
 
 export const showError = (errorMessages) => {
