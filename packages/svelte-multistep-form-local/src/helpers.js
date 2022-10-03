@@ -39,11 +39,9 @@ let required_key =
   "vehicleId":"Please enter the vehicle ID",
   "vehicleLicense":"Please enter a vehicle license plate"
 
-
-
-
-
 }
+
+let error_ids = ['floating_first_name_error','floating_last_name_error','floating_phone_error','floating_date_error', 'floating_email_error', 'floating_address_error', 'floating_membershipID_error', 'non_policy_first_name_error', 'non_policy_last_name_error', 'non_policy_phone_error', 'non_policy_date_error', 'relation_other_error', 'licenseNumber_error', 'licenseIssueDate_error', 'floating_vehicleMake_error','vehicleModel_error', 'floating_vehicle_year','floating_vehicle_generation_error','floating_vehicle_license_error','floating_engine_error', 'floating_vehicleId_error'];
 
 export const formHasError = () => {
   const steps = document.querySelectorAll('.step')
@@ -51,17 +49,49 @@ export const formHasError = () => {
 
   const requiredFields = step.querySelectorAll('[required]')
   let hasError = false
-  let errorMessages = []
+  let errorMessages = ["Please fix any errors and fill out all fields!"]
 
   //checks all required fields for an input
   requiredFields.forEach((el) => {
-    
+    //clear any highlighted labels
+    el.classList.remove('dark:border-red-600');
+    el.classList.add('dark:border-gray-600');
+    el.classList.remove('border-red-500');
+    el.classList.add('border-gray-300');
+
     if (!el.checkValidity()) {
       hasError = true
-      errorMessages.push(required_key[el.name])
+      console.log("Has error:", el);
+      //Highlight fields that have not been filled in
+      el.classList.remove('dark:border-gray-600');
+      el.classList.add('dark:border-red-600');
+      el.classList.remove('border-gray-300');
+      el.classList.add('border-red-500');
       
     }
   })
+
+  //turn radio question back to gray if weren't filled out last pass
+  if(document.getElementById("floating_last_rider").value === "2"){
+    document.getElementById("driver_permission_question").classList.remove("dark:text-red-600");
+    document.getElementById("driver_permission_question").classList.add("dark:text-gray-400");
+    document.getElementById("last_driver_insurance_question").classList.remove("dark:text-red-600");
+    document.getElementById("last_driver_insurance_question").classList.add("dark:text-gray-400");
+    document.getElementById("driver_permission_question").classList.remove("text-red-600");
+    document.getElementById("driver_permission_question").classList.add("text-gray-900");
+    document.getElementById("last_driver_insurance_question").classList.remove("text-red-600");
+    document.getElementById("last_driver_insurance_question").classList.add("text-gray-900");
+  }
+
+  //clear any messages from underneath inputs
+  for(let id in error_ids)
+  {
+   
+    let input = document.getElementById(`${error_ids[id]}`);
+    if(input){
+      input.innerHTML = "";
+    }
+  }
 
   //validate first name
   const firstName = document.getElementById('floating_first_name').value;
@@ -75,7 +105,8 @@ export const formHasError = () => {
     else{
       console.log("Not valid first name")
       hasError = true
-      errorMessages.push("Please use only letter characters for first name of insured");
+      //Add error message
+      document.getElementById('floating_first_name_error').innerHTML = "Only letter characters";
     }
   }
 
@@ -90,7 +121,7 @@ export const formHasError = () => {
     else{
       console.log("Not valid last name")
       hasError = true
-      errorMessages.push("Please use only letter characters for last name of insured");
+      document.getElementById('floating_last_name_error').innerHTML = "Only letter characters";
     }
   }
 
@@ -106,7 +137,7 @@ export const formHasError = () => {
     else{
       console.log("Not valid phone format")
       hasError = true
-      errorMessages.push("Please use an Australian number in the format '614XXXXXXXX'");
+      document.getElementById('floating_phone_error').innerHTML = "'614XXXXXXXX' format";
     }
   }
 
@@ -127,27 +158,27 @@ export const formHasError = () => {
       //Check if is a valid date
       if(!dNum){
         hasError = true
-        errorMessages.push("The Date of Birth given is not a valid date");
+        document.getElementById('floating_date_error').innerHTML = "Not valid date";
       }
       //Apply error if dob is before 1900
       const dMin = new Date("1900-1-1").getTime();
       
       if((dMin - dNum) > 0){
         hasError = true
-        errorMessages.push("The Date of Birth needs to be after '1900/01/01'");
+        document.getElementById('floating_date_error').innerHTML = "Only after '1900/01/01'";
       }
 
       //Apply error if dob is in the future
       const dMax = new Date().getTime();
       if(dMax - dNum <= 0 ){
         hasError = true
-        errorMessages.push("The Date of Birth cannot be in the future");
+        document.getElementById('floating_date_error').innerHTML = "Can't be a future date";
       }
     }
     else{
       console.log("invalid date format")
       hasError = true
-      errorMessages.push("Please enter Date of Birth in yyyy/mm/dd format");
+      document.getElementById('floating_date_error').innerHTML = "yyyy/mm/dd format";
     }
   }
   
@@ -163,7 +194,7 @@ export const formHasError = () => {
     else{
       console.log("Not valid email format")
       hasError = true
-      errorMessages.push("Please use a valid email address");
+      document.getElementById('floating_email_error').innerHTML = "Require a valid email address";
     }
   }
 
@@ -179,7 +210,7 @@ export const formHasError = () => {
       else{
         console.log("Not valid address format")
         hasError = true
-        errorMessages.push("Please use only letters, numbers, '(', ')', '-', '/' and ',' as part of an address");
+        document.getElementById('floating_address_error').innerHTML = "No special characters"
       }
     }
 
@@ -195,13 +226,14 @@ export const formHasError = () => {
       else{
         console.log("Not valid membership ID format")
         hasError = true
-        errorMessages.push("The membership ID should be two capital letters followed by 6 numbers: `XX000000`");
+        document.getElementById('floating_membershipID_error').innerHTML = "`XX000000` format";
       }
     }
 
     //Check if policy holder was last one driving
     let lastRider = document.getElementById('floating_last_rider').value;
-    if(lastRider === 2)
+    console.log("lastRider: ", lastRider);
+    if(lastRider === "2")
     {
       
       //validate first name of last rider
@@ -215,7 +247,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid first name of non-policy rider")
           hasError = true
-          errorMessages.push("Please use only letter characters for first name of non-policy rider");
+          document.getElementById('non_policy_first_name_error').innerHTML = "Only letter characters";
         }
       }
 
@@ -230,7 +262,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid last name of non-policy rider")
           hasError = true
-          errorMessages.push("Please use only letter characters for last name of non-policy rider");
+          document.getElementById('non_policy_last_name_error').innerHTML = "Only letter characters";
         }
       }
 
@@ -246,7 +278,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid phone format for last rider")
           hasError = true
-          errorMessages.push("Please use an Australian number in the format '614XXXXXXXX' for the last rider");
+          document.getElementById('non_policy_phone_error').innerHTML = "'614XXXXXXXXX' format";
         }
       }
 
@@ -265,33 +297,33 @@ export const formHasError = () => {
           //Check if is a valid date
           if(!dNum){
             hasError = true
-            errorMessages.push("The Date of Birth of the last rider is not a valid date");
+            document.getElementById('non_policy_date_error').innerHTML = "Not a valid date";
           }
           //Apply error if dob is before 1900
           const dMin = new Date("1900-1-1").getTime();
           
           if((dMin - dNum) > 0){
             hasError = true
-            errorMessages.push("The Date of Birth for the last rider needs to be after '1900/01/01'");
+            document.getElementById('non_policy_date_error').innerHTML = "Only after '1900/01/01'";
           }
 
           //Apply error if dob is in the future
           const dMax = new Date().getTime();
           if(dMax - dNum <= 0 ){
             hasError = true
-            errorMessages.push("The Date of Birth of the last rider cannot be in the future");
+            document.getElementById('non_policy_date_error').innerHTML = "Can't be future date";
           }
         }
         else{
           console.log("invalid date format")
           hasError = true
-          errorMessages.push("Please enter Date of Birth of last rider in 'yyyy/mm/dd format'");
+          document.getElementById('non_policy_date_error').innerHTML = "'yyyy/mm/dd' format";
         }
       }
 
       //check if relation selected was other
       let relation = document.getElementById('floating_relation').value;
-      if(relation === 5){
+      if(relation === "5"){
         //validate other relation details
         let otherDetails = document.getElementById('relation_other').value;
         if(otherDetails){
@@ -303,21 +335,28 @@ export const formHasError = () => {
           else{
             console.log("Not valid input for other relation details")
             hasError = true
-            errorMessages.push("Please use only letter characters for other relation details");
+            document.getElementById('relation_other_error').innerHTML = "Only letter characters";
           }
         }
       }
 
       //check if permission question was answered
       let permission = document.getElementsByName("driverPermission");
+      console.log("Permission: ");
+      console.log(permission);
 
       if(permission[0].checked || permission[1].checked){
 
         console.log("Permission question selected")
       }else{
-        console.log("Permission question not selected")
+        console.log("Permission question not selected");
+        //change the colour of the question to indicate not selected
+        console.log("DRIVER PERMI", document.getElementById("driver_permission_question"))
+        document.getElementById("driver_permission_question").classList.remove("dark:text-gray-400");
+        document.getElementById("driver_permission_question").classList.add("dark:text-red-600");
+        document.getElementById("driver_permission_question").classList.remove("text-gray-900");
+        document.getElementById("driver_permission_question").classList.add("text-red-600");
         hasError = true
-        errorMessages.push("Please answer if user had permission to drive car");
       }
 
       //check if last driver has insurance question was answered
@@ -330,7 +369,11 @@ export const formHasError = () => {
       }else{
         console.log("Insurance question not selected")
         hasError = true
-        errorMessages.push("Please answer if user had permission to drive car");
+        //Change colour of question if not selected
+        document.getElementById("last_driver_insurance_question").classList.remove("dark:text-gray-400");
+        document.getElementById("last_driver_insurance_question").classList.add("dark:text-red-600");
+        document.getElementById("last_driver_insurance_question").classList.remove("text-gray-900");
+        document.getElementById("last_driver_insurance_question").classList.add("text-red-600");
       }
     }
       //check if license number has been entered and is valid format
@@ -345,7 +388,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid driver's license number")
           hasError = true
-          errorMessages.push("The driver's license number should be between 9 to 11 digits");
+          document.getElementById('licenseNumber_error').innerHTML = "Between 9 to 11 digits";
         }
       }
 
@@ -362,27 +405,27 @@ export const formHasError = () => {
           //Check if is a valid date
           if(!dNum){
             hasError = true
-            errorMessages.push("The license isssue date given is not a valid date");
+            document.getElementById('licenseIssueDate_error').innerHTML = "Not a valid date";
           }
           //Apply error if dob is before 1900
-          const dMin = new Date("1900-1-1").getTime();
+          const dMin = new Date("1900/01/01").getTime();
           
           if((dMin - dNum) > 0){
             hasError = true
-            errorMessages.push("The license isssue date needs to be after '1900/01/01'");
+            document.getElementById('licenseIssueDate_error').innerHTML = "Date must be after 1900/01/01";
           }
 
           //Apply error if dob is in the future
           const dMax = new Date().getTime();
           if(dMax - dNum <= 0 ){
             hasError = true
-            errorMessages.push("The license isssue date cannot be in the future");
+            document.getElementById('licenseIssueDate_error').innerHTML = "The date cannot be in the future";
           }
         }
         else{
           console.log("invalid license issue date format")
           hasError = true
-          errorMessages.push("Please enter The license isssue date in 'yyyy/mm/dd' format");
+          document.getElementById('licenseIssueDate_error').innerHTML = "Please use yyyy/mm/dd format";
         }
       }
 
@@ -397,7 +440,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid make format")
           hasError = true
-          errorMessages.push("Please use only letters, numbers, '(', ')', '/', '-' and ',' as part of the vehicle make");
+          document.getElementById('floating_vehicleMake_error').innerHTML = "Please use yyyy/mm/dd format";
         }
       }
 
@@ -411,7 +454,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid vehicle make format")
           hasError = true
-          errorMessages.push("Please use only letters, numbers, '(', ')','/' and ',' as part of the vehicle model");
+          document.getElementById('vehicleModel_error').innerHTML = "No special characters";
         }
       }
 
@@ -426,7 +469,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid vehicle year format")
           hasError = true
-          errorMessages.push("Please enter a year for the vehicle year");
+          document.getElementById('floating_vehicle_year_error').innerHTML = "yyyy or yyyy-yyyy format";
         }
       }
 
@@ -440,7 +483,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid vehicle generation format")
           hasError = true
-          errorMessages.push("Please use only letters, numbers, '(', ')', '/', '-' and ',' as part of the vehicle generation");
+          document.getElementById('floating_vehicle_generation_error').innerHTML = "No special characters";
         }
       }
 
@@ -455,7 +498,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid vehicle license plate format")
           hasError = true
-          errorMessages.push("An Australian license plate should have a maximum of 6 letters and numbers");
+          document.getElementById('floating_vehicle_license_error').innerHTML = "No special characters";
         }
       }
 
@@ -469,7 +512,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid vehicle engine format")
           hasError = true
-          errorMessages.push("Please use only letters, numbers, '(', ')', '/', '-' and ',' as part of the vehicle engine");
+          document.getElementById('floating_engine_error').innerHTML = "No special characters";
         }
       }
 
@@ -483,7 +526,7 @@ export const formHasError = () => {
         else{
           console.log("Not valid vehicle ID format")
           hasError = true
-          errorMessages.push("Please use only letters, numbers, '(', ')', '/', '-' and ',' as part of the vehicle engine");
+          document.getElementById('floating_vehicleId_error').innerHTML = "No special characters";
         }
       }
 

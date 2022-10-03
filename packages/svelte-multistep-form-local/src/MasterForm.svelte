@@ -447,14 +447,16 @@
         margin-left: -50px;
         height: auto;
         width: auto;
-        border-left: 10px solid red;
         text-align: left;
-        padding-left: 10px;
-        background: #fff;
+        padding: 20px 100px 20px 100px;
+        background: rgb(205, 33, 33);
         visibility: hidden;
         opacity: 0;
         transition: visibility 0s, opacity 0.2s linear;
-        color:black;
+        color:white;
+        text-align: center;
+        font-weight:bold;
+        z-index: 1;
     }
 
 
