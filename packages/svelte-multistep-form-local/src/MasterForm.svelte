@@ -191,6 +191,18 @@
     	if (vehicleFormExists) {
     		fetchVehicleData(vehicleForm);
     	}
+      // get inputs inside imageForm
+      let imageFormInputs = imageForm.querySelectorAll("input");
+      let imageFormSelects = imageForm.querySelectorAll("select");
+      let imageFormData = {};
+      imageFormInputs.forEach((input) => {
+        imageFormData[input.name] = input.value;
+      });
+      imageFormSelects.forEach((select) => {
+        console.log(select.value);
+        imageFormData[select.name] = select.selectedIndex;
+      });
+      console.log(imageFormData);
     }
 
     let historyFormInputs = historyForm.querySelectorAll("input");
@@ -301,9 +313,6 @@
           <div class="separator-check-current" />
         {:else if $currentStep > index}
           <div class="separator-check">
-            <svg viewBox="0 0 32 32" style="fill:#9061f9">
-              <path d="M1 14 L5 10 L13 18 L27 4 L31 8 L13 26 z" />
-            </svg>
           </div>
         {:else if $currentStep < index}
           <div class="separator-check-pending" />

@@ -19,6 +19,14 @@
   let results: object = [];
   let debounceTimer: NodeJS.Timeout;
 
+  // Non Policy Customer data Form
+  // --------------------------------------------------
+  let nonPolicyFirstName: string;
+  let nonPolicyLastName: string;
+  let nonPolicyPhone: string;
+  let nonPolicyDoB: string;
+
+
   // vehicle data Form
   // --------------------------------------------------
 
@@ -29,6 +37,13 @@
   let vehicle_year: string;
   let vehicle_generation: string;
   let vehicle_license_plate:string;
+  let vehicle_vin:string;
+  let vehicle_transmission:string;
+
+  // Form Data
+  // --------------------------------------------------
+  let sumbitButtonText: string = "Submit";
+
 
   //Search Customer Data
   // --------------------------------------------------
@@ -123,10 +138,7 @@
         searchButtonText = "Search";
         customerSearched = true;
       });
-      
-
   }
-
 
 
 
@@ -138,7 +150,7 @@
       } else {
         getLocation();
       }
-    }, 800);
+    }, 1000);
   };
 
   async function getLocation() {
@@ -255,30 +267,55 @@
         }
         else{
 
+          //TODO: Change this to run off data from response not the LocalStorage object
           // fill out the form with the data
           let vehicleData = JSON.parse(localStorage.getItem("vehicle"));
           vehicle_make = vehicleData.mode_info.make_name;
           vehicle_model = vehicleData.mode_info.model_name;
           vehicle_year = vehicleData.mode_info.years;
           vehicle_generation = vehicleData.mode_info.generation_name;
-          vehicle_license_plate = vehicleData.plate;
+          vehicle_license_plate = vehicleData.plate.toUpperCase();
           imageRecButtonText = "Run Image Recognition";
-        }        
+        }
         
       })
       .catch((error) => {
         console.log(error);
         imageRecError = "Unable to run image recognition, please type details below";
-
       });
+  }
+
+  function setVehicleData() {
+    let vehicleData = JSON.parse(localStorage.getItem("vehicle"));
+    vehicle_make = vehicleData.mode_info.make_name;
+    vehicle_model = vehicleData.mode_info.model_name;
+    vehicle_year = vehicleData.mode_info.years;
+    vehicle_generation = vehicleData.mode_info.generation_name;
+    vehicle_license_plate = vehicleData.plate.toUpperCase();
+
+    let newVdata = {
+      vMakeId: vehicleData.mode_info.make_id,
+      vMake: vehicle_make,
+      vModelId: vehicleData.mode_info.model_id,
+      vModel: vehicle_model,
+      vYear: vehicle_year,
+      vGenId: vehicleData.mode_info.generation_id,
+      vGen: vehicle_generation,
+      vPlate: vehicle_license_plate,
+      vTransmission: vehicle_transmission,
+      vVin: vehicle_vin
+    };
+
+    localStorage.setItem("vehicle2", JSON.stringify(newVdata));
   }
 
   // handle submit
   function handleSubmit(e) {
     e.preventDefault();
+    sumbitButtonText = "Processing claim...";
     //prepare data
     let cData = JSON.parse(localStorage.getItem("customer"));
-    let vData = JSON.parse(localStorage.getItem("vehicle"));
+    let vData = JSON.parse(localStorage.getItem("vehicle2"));
     let dData = JSON.parse(localStorage.getItem("history"));
     console.log(vData)
     console.log(dData)
@@ -299,34 +336,34 @@
     formdata.append("customer[email]", cData.emailAddress);
     formdata.append("customer[address]", cData.address);
     formdata.append("customer[dob]", cData.dob);
-    formdata.append("customer[nonPolicyFirstName]", "");
-    formdata.append("customer[nonPolicyLastName]", "");
-    formdata.append("customer[nonPolicyPhone]", "");
+    formdata.append("customer[nonPolicyFirstName]", nonPolicyFirstName);
+    formdata.append("customer[nonPolicyLastName]", nonPolicyLastName);
+    formdata.append("customer[nonPolicyPhone]", nonPolicyPhone);
+    formdata.append("customer[nonPolicyDoB]", nonPolicyDoB);
+    formdata.append("customer[driverPermission]", driverPermission);
     formdata.append("customer[nonPolicyDoB]", "");
-    formdata.append("customer[driverPermission]", "");
-    formdata.append("customer[nonPolicyDoB]", "");
-    formdata.append("customer[nonDriverHasInsurance]", "");
+    formdata.append("customer[nonDriverHasInsurance]", nonDriverHasInsurance);
     formdata.append("customer[lastRider]", cData.lastRider);
-    formdata.append("customer[driverRelation]", "null");
+    formdata.append("customer[driverRelation]", relationSelected);
     formdata.append("customerHistory[motorAccident]", dData.motorAccident);
     formdata.append("customerHistory[convictedOffence]", dData.convictedOffence);
     formdata.append("customerHistory[disqualified]", dData.disqualified);
     formdata.append("customerHistory[refusedInsurance]", dData.refusedInsurance);
     formdata.append("customerHistory[LicenceNumber]", dData.LicenceNumber);
     formdata.append("customerHistory[LicenceIssueDate]", dData.LicenceIssueDate);
-    formdata.append("vehicle[vehicleId]", "00002");
-    formdata.append("vehicle[plate]", vData.plate);
-    formdata.append("vehicle[generation_id]", vData.generation_id);
-    formdata.append("vehicle[generation_name]", vData.generation_name);
-    formdata.append("vehicle[make_id]", vData.make);
-    formdata.append("vehicle[make_name]", vData.make_name);
-    formdata.append("vehicle[model_id]", "");
-    formdata.append("vehicle[model_name]", "hello");
-    formdata.append("vehicle[years]", "5");
+    formdata.append("vehicle[vehicleId]", vData.vVin);
+    formdata.append("vehicle[plate]", vData.vPlate);
+    formdata.append("vehicle[generation_id]", vData.vGenId);
+    formdata.append("vehicle[generation_name]", vData.vGen);
+    formdata.append("vehicle[make_id]", vData.vMakeId);
+    formdata.append("vehicle[make_name]", vData.vMake);
+    formdata.append("vehicle[model_id]", vData.vModelId);
+    formdata.append("vehicle[model_name]", vData.vModel);
+    formdata.append("vehicle[years]", vData.vYear);
     formdata.append("vehicle[rego]", "");
     formdata.append("vehicle[bodyType]", "");
     formdata.append("vehicle[colour]", "");
-    formdata.append("vehicle[engineNumber]", "");
+    formdata.append("vehicle[engineNumber]", vData.vTransmission);
 
     let requestOptions = {
       method: 'POST',
@@ -337,6 +374,7 @@
       redirect: 'follow'
     };
 
+    // Typescript doesnt like this, fix later
     fetch("https://dairies-rest-api.herokuapp.com/claims", requestOptions)
       // console.log response data
       .then(response => response.json())
@@ -345,7 +383,16 @@
         // redirect to home page
         window.location.href = "/";
       })
-      .catch(error => console.log('error', error));
+      .catch(error => {
+        sumbitButtonText = "Error Submitting Claim";
+      });
+  }
+
+  // change dashes to slashes
+  function changeDate(e) {
+    let date = e.target.value;
+    let newDate = date.replace(/-/g, "/");
+    e.target.value = newDate;
   }
 
 
@@ -404,6 +451,12 @@
                   maxlength="8"
                   required
                   bind:value={policyNumber}
+                  on:keydown={(e) => {
+                    // on key enter searchPolicyNumber
+                    if (e.keyCode === 13) {
+                      searchPolicyNumber();
+                    }
+                  }}
                   />
                   <label
                   for="floating_memberID"
@@ -708,7 +761,7 @@
                         Yes
                       </label>
                       <label class="px-4">
-                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" id="non_driver_has_insurance_yes" value={2}>
+                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" id="non_driver_has_insurance_no" value={2}>
                         No
                       </label>
                     </div>
@@ -803,7 +856,7 @@
           <!-- Upload Image -->
         <div class="flex justify-center">
           <div class="mb-3 w-96">
-            <label for="formFile" class="form-label inline-block mb-2 text-gray-500 dark:text-gray-400">Upload File</label>
+            <label for="imageInput" class="form-label inline-block mb-2 text-gray-500 dark:text-gray-400">Upload File</label>
             <input id="imageInput"  type="file" class="form-control
                     block
                     w-full
@@ -926,11 +979,12 @@
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
+                  bind:value={vehicle_transmission}
                 />
                 <label
                   for="floating_engine"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Vehicle Engine Type</label
+                >Vehicle Transmission Type</label
                 >
               </div>
               <div class="relative z-0 w-full mb-6 group">
@@ -940,6 +994,8 @@
                   id="floating_vehicleId"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  bind:value={vehicle_vin}
+                  on:focusout={setVehicleData}
                 />
                 <label
                   for="floating_vehicleId"
@@ -964,7 +1020,7 @@
                 on:click={handleSubmit}
                 class=" mx-5 px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
               >
-                Submit
+                {sumbitButtonText}
               </button>
             </div>
             <div></div>
