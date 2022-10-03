@@ -436,7 +436,7 @@
         <Step>
           <!-- Customer Information -->
           <div id="customerForm" class="p-5 flex flex-col flex-wrap gap-5">
-            <div class="text-red-600 pt-3">
+            <div id='floating_membershipID_error' class="text-red-600 pt-3">
               {policyNumberError}
             </div>
             <div class="grid xl:grid-cols-2 xl:gap-6">
@@ -451,12 +451,6 @@
                   maxlength="8"
                   required
                   bind:value={policyNumber}
-                  on:keydown={(e) => {
-                    // on key enter searchPolicyNumber
-                    if (e.keyCode === 13) {
-                      searchPolicyNumber();
-                    }
-                  }}
                   />
                   <label
                   for="floating_memberID"
@@ -491,6 +485,8 @@
                     class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                   >First name of Insured</label
                   >
+                  <!-- For adding format error messages -->
+                  <div id="floating_first_name_error" class="text-red-600 pt-1"></div>
                 </div>
                 <div class="relative z-0 w-full mb-6 group">
                   <input
@@ -508,6 +504,8 @@
                     class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                   >Last name of Insured</label
                   >
+                  <!-- For adding format error messages -->
+                  <div id="floating_last_name_error" class="text-red-600 pt-1"></div>
                 </div>
               </div>
               <div class="grid xl:grid-cols-2 xl:gap-6">
@@ -528,6 +526,8 @@
                     class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                   >Phone number (614XXXXXXXX)</label
                   >
+                  <!-- For adding format error messages -->
+                  <div id="floating_phone_error" class="text-red-600 pt-1"></div>
                 </div>
                 <div class="relative z-0 w-full mb-6 group">
                   <input
@@ -543,8 +543,10 @@
                   <label
                     for="floating_date"
                     class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Date of Birth (yyyy-mm-dd)</label
+                  >Date of Birth (yyyy/mm/dd)</label
                   >
+                  <!-- For adding format error messages -->
+                  <div id="floating_date_error" class="text-red-600 pt-1"></div>
                 </div>
               </div>
               <div class="relative z-0 w-full mb-6 group">
@@ -563,6 +565,8 @@
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Email address</label
                 >
+                <!-- For adding format error messages -->
+                <div id="floating_email_error" class="text-red-600 pt-1"></div>
               </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
@@ -581,6 +585,8 @@
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Address</label
                 >
+                <!-- For adding format error messages -->
+                <div id="floating_address_error" class="text-red-600 pt-1"></div>
                 <div class="text-sm">
                   <ul>
                     {#each results as { label }}
@@ -641,6 +647,8 @@
                           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >First name of Last Driver</label
                         >
+                        <!-- For adding format error messages -->
+                        <div id="non_policy_first_name_error" class="text-red-600 pt-1"></div>
                       </div>
                       <div class="relative z-0 w-full mb-6 group">
                         <input
@@ -657,6 +665,8 @@
                           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >Last name of Last Driver</label
                         >
+                        <!-- For adding format error messages -->
+                        <div id="non_policy_last_name_error" class="text-red-600 pt-1"></div>
                       </div>
                     </div>
                     <div class="grid xl:grid-cols-2 xl:gap-6">
@@ -676,6 +686,8 @@
                           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >Phone number of Last Driver</label
                         >
+                        <!-- For adding format error messages -->
+                        <div id="non_policy_phone_error" class="text-red-600 pt-1"></div>
                       </div>
                       <div class="relative z-0 w-full mb-6 group">
                         <input
@@ -692,6 +704,8 @@
                           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >Date of Birth of Last Driver</label
                         >
+                        <!-- For adding format error messages -->
+                        <div id="non_policy_date_error" class="text-red-600 pt-1"></div>
                       </div>
                     </div>
                     <div class="relative z-0 my-10 w-full mb-6 group">
@@ -731,12 +745,15 @@
                               class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                             >Details</label
                             >
+                            <!-- For adding format error messages -->
+                            <div id="relation_other_error" class="text-red-600 pt-1"></div>
                           </div>
                         {/if}
                       {/if}
                     </div>
                     <div class="my-4">
                       <div
+                        id="driver_permission_question"
                         class="text-lg text-gray-500 dark:text-gray-400"
                       >Did the last driver have the policy holder's permission to use the vehicle?
                       </div
@@ -752,6 +769,7 @@
                     </div>
                     <div class="my-4">
                       <div
+                        id="last_driver_insurance_question"
                         class="text-lg text-gray-500 dark:text-gray-400"
                       >Does the last driver have motor vehicle insurance?
                       </div
@@ -761,7 +779,7 @@
                         Yes
                       </label>
                       <label class="px-4">
-                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" id="non_driver_has_insurance_no" value={2}>
+                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" id="non_driver_has_insurance_yes" value={2}>
                         No
                       </label>
                     </div>
@@ -833,6 +851,8 @@
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Licence Number</label
                 >
+                <!-- For adding format error messages -->
+                <div id="licenseNumber_error" class="text-red-600 pt-1"></div>
               </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
@@ -842,12 +862,15 @@
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
+                  maxlength="10"
                 />
                 <label
                   for="licenseIssueDate"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Licence issue date (yyyy-mm-dd)</label
+                >Licence issue date (yyyy/mm/dd)</label
                 >
+                <!-- For adding format error messages -->
+                <div id="licenseIssueDate_error" class="text-red-600 pt-1"></div>
               </div>
             </div>
           </div>
@@ -856,7 +879,7 @@
           <!-- Upload Image -->
         <div class="flex justify-center">
           <div class="mb-3 w-96">
-            <label for="imageInput" class="form-label inline-block mb-2 text-gray-500 dark:text-gray-400">Upload File</label>
+            <label for="formFile" class="form-label inline-block mb-2 text-gray-500 dark:text-gray-400">Upload File</label>
             <input id="imageInput"  type="file" class="form-control
                     block
                     w-full
@@ -896,12 +919,15 @@
                   placeholder=" "
                   bind:value={vehicle_make}
                   required
+                  maxlength="50"
                 />
                 <label
                   for="floating_vehicleMake"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Vehicle Make</label
                 >
+                <!-- For adding format error messages -->
+                <div id="floating_vehicleMake_error" class="text-red-600 pt-1"></div>
               </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
@@ -911,13 +937,16 @@
                   class="vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
+                  maxlength="50"
                   bind:value={vehicle_model}
                 />
                 <label
                   for="vehicleModel"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Vehicle Model</label
-                >
+                >   
+                <!-- For adding format error messages -->
+                <div id="vehicleModel_error" class="text-red-600 pt-1"></div>
               </div>
             </div>
             <div class="grid xl:grid-cols-2 xl:gap-6">
@@ -929,6 +958,7 @@
                   class="vehicle block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
+                  maxlength="9"
                   bind:value={vehicle_year}
                 />
                 <label
@@ -936,6 +966,8 @@
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Vehicle Year of Make (range)</label
                 >
+                <!-- For adding format error messages -->
+                <div id="floating_vehicle_year_error" class="text-red-600 pt-1"></div>
               </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
@@ -945,6 +977,7 @@
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
+                  maxlength="50"
                   bind:value={vehicle_generation}
                 />
                 <label
@@ -952,6 +985,8 @@
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Vehicle Generation</label
                 >
+                <!-- For adding format error messages -->
+                <div id="floating_vehicle_generation_error" class="text-red-600 pt-1"></div>
               </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
@@ -961,13 +996,16 @@
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
+                  maxlength="6"
                   bind:value={vehicle_license_plate}
                 />
                 <label
-                  for="floating_vehicle_generation"
+                  for="floating_vehicle_license"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Vehicle License Plate</label
                 >
+                <!-- For adding format error messages -->
+                <div id="floating_vehicle_license_error" class="text-red-600 pt-1"></div>
               </div>
             </div>
             <div class="grid xl:grid-cols-2 xl:gap-6">
@@ -984,8 +1022,10 @@
                 <label
                   for="floating_engine"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Vehicle Transmission Type</label
+                >Vehicle Tansmission Type</label
                 >
+                 <!-- For adding format error messages -->
+                 <div id="floating_engine_error" class="text-red-600 pt-1"></div>
               </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
@@ -994,6 +1034,8 @@
                   id="floating_vehicleId"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
+                  maxlength="50"
+                  required
                   bind:value={vehicle_vin}
                   on:focusout={setVehicleData}
                 />
@@ -1002,6 +1044,8 @@
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Vehicle ID</label
                 >
+                <!-- For adding format error messages -->
+                <div id="floating_vehicleId_error" class="text-red-600 pt-1"></div>
               </div>
             </div>
           </div>
@@ -1020,7 +1064,7 @@
                 on:click={handleSubmit}
                 class=" mx-5 px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
               >
-                {sumbitButtonText}
+              {sumbitButtonText}
               </button>
             </div>
             <div></div>
@@ -1043,3 +1087,4 @@
         --date-input-width: 250px;
     }
 </style>
+
