@@ -5,40 +5,12 @@ import {
 	BUTTON_OPACITY,
 	BUTTON_DISABLED_OPACITY
 } from './constants.js';
+import { createImportSpecifier } from 'typescript';
 
 let activeStep;
 currentStep.subscribe((value) => {
 	activeStep = value;
 });
-
-let required_key = {
-	givenName: 'Please enter the first name of the insured',
-	lastName: 'Please enter the last name of the insured',
-	phone: 'Please enter the phone number of the insured',
-	dob: 'Please enter the date of birth of the insured',
-	emailAddress: 'Please enter the email of the insured',
-	address: 'Please enter a valid email address for the insured',
-	membershipId: 'Please enter the policy number of the insured',
-	lastRider: 'Please answer if the policy holder was the last to use the vehicle',
-	nonPolicyFirstName: 'Please enter the first name of the non-policy driver',
-	nonPolicyLastName: 'Please enter the last name of the non-policy driver',
-	nonPolicyPhone: 'Please enter the phone number of the non-policy driver',
-	nonPolicyDoB: 'Please enter the date of birth of the non-policy driver',
-	driverRelation: 'Please select the drivers relationship',
-	relationOtherDetails: "Please add details for 'other' selection",
-	driverPermission: 'Please answer if the non-policy driver had permission to use the car',
-	nonDriverHasInsurance: 'Please answer if the non-policy driver has insurance',
-	LicenceNumber: 'Please enter a license number',
-	LicenceIssueDate: 'Please enter a license issue date',
-	make: 'Please enter a vehicle make',
-	model: 'Please enter a vehicle model',
-	year: 'Please enter the year for the vehicle model',
-	generation: 'Please enter the generation for the vehicle',
-	engine: 'Please enter the engine type',
-	vehicleId: 'Please enter the vehicle ID'
-};
-
-let error_ids = ['floating_first_name_error','floating_last_name_error','floating_phone_error','floating_date_error', 'floating_email_error', 'floating_address_error', 'floating_membershipID_error', 'non_policy_first_name_error', 'non_policy_last_name_error', 'non_policy_phone_error', 'non_policy_date_error', 'relation_other_error', 'licenseNumber_error', 'licenseIssueDate_error', 'floating_vehicleMake_error','vehicleModel_error', 'floating_vehicle_year','floating_vehicle_generation_error','floating_vehicle_license_error','floating_engine_error', 'floating_vehicleId_error'];
 
 export const formHasError = () => {
 	const steps = document.querySelectorAll('.step')
@@ -47,47 +19,35 @@ export const formHasError = () => {
 	const requiredFields = step.querySelectorAll('[required]')
 	let hasError = false
 	let errorMessages = ["Please fix any errors and fill out all fields!"]
-  
-	//checks all required fields for an input
+	
 	requiredFields.forEach((el) => {
-	  //clear any highlighted labels
-	  el.classList.remove('dark:border-red-600');
-	  el.classList.add('dark:border-gray-600');
-	  el.classList.remove('border-red-500');
-	  el.classList.add('border-gray-300');
-  
-	  if (!el.checkValidity()) {
-		hasError = true
-		console.log("Has error:", el);
-		//Highlight fields that have not been filled in
-		el.classList.remove('dark:border-gray-600');
-		el.classList.add('dark:border-red-600');
-		el.classList.remove('border-gray-300');
-		el.classList.add('border-red-500');
 		
-	  }
+		let id = el.id;
+		console.log("id:",id)
+		if(id !== "driver_permission_question" || id !== "last_driver_insurance_question")
+		{			
+			//clear any errors
+			if(document.getElementById(`${id}_error`).value !== "")
+			{
+				document.getElementById(`${id}_error`).innerHTML = "";
+			}
+		}
+
+			//if not filled out add in a required field message
+		if (!el.checkValidity()) {
+			hasError = true
+			document.getElementById(`${id}_error`).innerHTML = "Required Field";
+			
+		}
 	})
   
 	//turn radio question back to gray if weren't filled out last pass
 	if(document.getElementById("floating_last_rider").value === "2"){
-	  document.getElementById("driver_permission_question").classList.remove("dark:text-red-600");
-	  document.getElementById("driver_permission_question").classList.add("dark:text-gray-400");
-	  document.getElementById("last_driver_insurance_question").classList.remove("dark:text-red-600");
-	  document.getElementById("last_driver_insurance_question").classList.add("dark:text-gray-400");
-	  document.getElementById("driver_permission_question").classList.remove("text-red-600");
-	  document.getElementById("driver_permission_question").classList.add("text-gray-900");
-	  document.getElementById("last_driver_insurance_question").classList.remove("text-red-600");
-	  document.getElementById("last_driver_insurance_question").classList.add("text-gray-900");
-	}
-  
-	//clear any messages from underneath inputs
-	for(let id in error_ids)
-	{
-	 
-	  let input = document.getElementById(`${error_ids[id]}`);
-	  if(input){
-		input.innerHTML = "";
-	  }
+
+		document.getElementById("driver_permission_question").classList.replace("dark:text-red-600","dark:text-gray-400");
+		document.getElementById("last_driver_insurance_question").classList.replace("dark:text-red-600","dark:text-gray-400");
+		document.getElementById("driver_permission_question").classList.replace("text-red-600","text-gray-900");
+		document.getElementById("last_driver_insurance_question").classList.replace("text-red-600","text-gray-900");
 	}
   
 	//validate first name
