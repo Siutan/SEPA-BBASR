@@ -436,13 +436,13 @@
         <Step>
           <!-- Customer Information -->
           <div id="customerForm" class="p-5 flex flex-col flex-wrap gap-5">
-            <div id='floating_membershipID_error' class="text-red-600 pt-3">
+            <div id='floating_memberID_error' class="text-red-600 pt-3">
               {policyNumberError}
             </div>
             <div class="grid xl:grid-cols-2 xl:gap-6">
 
                 <div class="relative z-0 w-full mb-6 group">
-                  <input
+                  <input  
                   type="text"
                   name="membershipId"
                   id="floating_memberID"
@@ -623,6 +623,8 @@
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Was the policy holder the last person to use the vehicle?</label
                 >
+                <!-- For adding format error messages -->
+                <div id="floating_last_rider_error" class="text-red-600 pt-1"></div>
               </div>
             {/if}
 
@@ -728,6 +730,8 @@
                         class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                       >What was the drivers relation to the policy holder?</label
                       >
+                      <!-- For adding format error messages -->
+                      <div id="floating_relation_error" class="text-red-600 pt-1"></div>
                       {#if relationSelected}
                         {#if relationSelected === 5}
                           <div class="relative mt-5 z-0 w-full mb-6 group">
