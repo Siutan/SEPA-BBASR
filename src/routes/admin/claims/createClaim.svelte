@@ -1,6 +1,5 @@
 <script lang="ts">
   import Switch from "../../../lib/components/Switch.svelte";
-
   import { Form, Step } from "svelte-multistep-form-local";
   import { Camera, CameraResultType } from "@capacitor/camera";
   import axios from "axios";
@@ -44,7 +43,29 @@
   // --------------------------------------------------
   let sumbitButtonText: string = "Submit";
 
+  //function to get the current date in 'yyyy-mm-dd' string format 
+  let format_max_date = () => {
+    let timeElapsed = Date.now();
+    let today = new Date(timeElapsed);
+    console.log("today: ", today);
+    let year = today.getFullYear();
+    
+    let month = today.getMonth().toString();
+     if(month.length === 1){
+      month = `0${month}`;
+    }
+    
+    let day = today.getDate().toString();
+       if(day.length === 1){
+      day = `0${day}`;
+    }
+    let today_string = `${year}-${month}-${day}`;
+    return today_string;
+  }
+  //for date inputs 
+  let max_date = format_max_date();
 
+  
   //Search Customer Data
   // --------------------------------------------------
   let searchButtonText = "Search";
@@ -531,19 +552,20 @@
                 </div>
                 <div class="relative z-0 w-full mb-6 group">
                   <input
-                    type="text"
+                    type="date"
                     name="dob"
                     id="floating_date"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                     placeholder=" "
-                    maxlength="10"
+                    min="1900-01-01" 
+                    max= {max_date}
                     required
                     bind:value={dob}
                   />
                   <label
                     for="floating_date"
                     class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Date of Birth (yyyy/mm/dd)</label
+                  >Date of Birth (dd/mm/yyyy)</label
                   >
                   <!-- For adding format error messages -->
                   <div id="floating_date_error" class="text-red-600 pt-1"></div>
@@ -693,12 +715,13 @@
                       </div>
                       <div class="relative z-0 w-full mb-6 group">
                         <input
-                          type="text"
+                          type="date"
                           name="nonPolicyDoB"
                           id="non_policy_date"
                           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                           placeholder=" "
-                          maxlength="10"
+                          min="1900-01-01" 
+                          max= {max_date}
                           required
                         />
                         <label
@@ -860,18 +883,19 @@
               </div>
               <div class="relative z-0 w-full mb-6 group">
                 <input
-                  type="text"
+                  type="date"
                   name="LicenceIssueDate"
                   id="licenseIssueDate"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
-                  maxlength="10"
+                  min="1900-01-01" 
+                  max= {max_date}
                 />
                 <label
                   for="licenseIssueDate"
                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Licence issue date (yyyy/mm/dd)</label
+                >Licence issue date (dd/mm/yyyy)</label
                 >
                 <!-- For adding format error messages -->
                 <div id="licenseIssueDate_error" class="text-red-600 pt-1"></div>
@@ -1090,5 +1114,8 @@
         --date-picker-selected-background: #121317;
         --date-input-width: 250px;
     }
+    ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
 </style>
 

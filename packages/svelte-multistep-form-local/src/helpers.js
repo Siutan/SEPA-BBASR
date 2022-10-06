@@ -101,7 +101,7 @@ export const formHasError = () => {
 	
 	//validate datestring
 	const dateString = document.getElementById('floating_date').value;
-	let regexDate = /^\d{4}\/\d{2}\/\d{2}$/;
+	let regexDate = /^\d{4}-\d{2}-\d{2}$/;
 	if(dateString)
 	{
 	  console.log('date1: ', dateString);
@@ -122,7 +122,7 @@ export const formHasError = () => {
 		
 		if((dMin - dNum) > 0){
 		  hasError = true
-		  document.getElementById('floating_date_error').innerHTML = "Only after '1900/01/01'";
+		  document.getElementById('floating_date_error').innerHTML = "Must be after '01/01/1900'";
 		}
   
 		//Apply error if dob is in the future
@@ -135,7 +135,7 @@ export const formHasError = () => {
 	  else{
 		console.log("invalid date format")
 		hasError = true
-		document.getElementById('floating_date_error').innerHTML = "yyyy/mm/dd format";
+		document.getElementById('floating_date_error').innerHTML = "Not valid date format";
 	  }
 	}
 	
@@ -261,7 +261,7 @@ export const formHasError = () => {
 			
 			if((dMin - dNum) > 0){
 			  hasError = true
-			  document.getElementById('non_policy_date_error').innerHTML = "Only after '1900/01/01'";
+			  document.getElementById('non_policy_date_error').innerHTML = "Must be after '01/01/1900'";
 			}
   
 			//Apply error if dob is in the future
@@ -274,7 +274,7 @@ export const formHasError = () => {
 		  else{
 			console.log("invalid date format")
 			hasError = true
-			document.getElementById('non_policy_date_error').innerHTML = "'yyyy/mm/dd' format";
+			document.getElementById('non_policy_date_error').innerHTML = "Invalid date format";
 		  }
 		}
   
@@ -369,7 +369,7 @@ export const formHasError = () => {
 			
 			if((dMin - dNum) > 0){
 			  hasError = true
-			  document.getElementById('licenseIssueDate_error').innerHTML = "Date must be after 1900/01/01";
+			  document.getElementById('licenseIssueDate_error').innerHTML = "Must be after 01/01/1900";
 			}
   
 			//Apply error if dob is in the future
@@ -382,7 +382,7 @@ export const formHasError = () => {
 		  else{
 			console.log("invalid license issue date format")
 			hasError = true
-			document.getElementById('licenseIssueDate_error').innerHTML = "Please use yyyy/mm/dd format";
+			document.getElementById('licenseIssueDate_error').innerHTML = "Invalid date format";
 		  }
 		}
   
