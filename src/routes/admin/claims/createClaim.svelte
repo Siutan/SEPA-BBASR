@@ -1116,6 +1116,6 @@
     }
     ::-webkit-calendar-picker-indicator {
     filter: invert(1);
-}
+    }
 </style>
 
