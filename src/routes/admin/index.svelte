@@ -1,7 +1,5 @@
 <script>
-import Chartjs from "chart.js";
-
-
+  import Chartjs from "chart.js";
 
   let claims;
   let totalClaims;
