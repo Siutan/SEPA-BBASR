@@ -519,7 +519,7 @@
                     <p class="font-semibold text-xl p-2">Vehicle Images</p>
                     <div class="flex flex-col space-y-3 p-2">
                       <!-- send https with request -->
-                      <img src={detailedImage.imageLink} alt="Image" />
+                      <img src={detailedImage.imageLink} alt="Vehicle Image" />
                     </div>
                   </div>
                 </div>
