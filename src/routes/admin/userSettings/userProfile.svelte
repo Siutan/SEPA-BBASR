@@ -38,7 +38,7 @@
       givenName = response.data.givenName;
       lastName = response.data.lastName;
       email = response.data.companyEmail;
-      isAdmin = response.data.isAdmin;
+      isAdmin = response.data.admin;
     } catch (error) {
       console.log(error);
     }
