@@ -29,9 +29,6 @@ const config = {
 					$icon: resolve('./node_modules/svelte-bootstrap-icons/lib')
 				}
 			},
-			test: {
-				//
-			},
 			server: {
 				fs: {
 					// Allow serving files from one level up to the project root (needed for local modules in packages)
