@@ -1,6 +1,7 @@
 <script lang="ts">
   import { clickOutside } from "$lib/ioevents/click";
   import { keydownEscape } from "$lib/ioevents/keydown";
+  import Input from "$lib/components/Input.svelte";
 
   let isModalOpen = false;
 
@@ -88,6 +89,10 @@
     <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">Big section cards</h4>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <p class="text-sm text-gray-600 dark:text-gray-400">Large, full width sections goes here</p>
+    </div>
+
+    <div>
+      <Input id="employeeId" name="employeeId" label="Employee Id" type="password" />
     </div>
 
     <!-- Responsive cards -->
