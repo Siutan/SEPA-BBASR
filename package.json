@@ -3,9 +3,11 @@
 	"version": "1.8.5",
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "svelte-kit build",
+		"build": "vite build",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview",
+		"test": "vitest run src --segfault-retry=3",
+		"test:watch": "vitest src",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
@@ -18,6 +20,7 @@
 		"@sveltejs/adapter-vercel": "^1.0.0-next.22",
 		"@sveltejs/kit": "^1.0.0-next.2.9.1",
 		"@tailwindcss/jit": "^0.1.18",
+		"@testing-library/svelte": "^3.2.2",
 		"@types/cookie": "^0.4.1",
 		"@typescript-eslint/eslint-plugin": "^5.10.1",
 		"@typescript-eslint/parser": "^5.10.1",
@@ -26,6 +29,8 @@
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^3.2.1",
 		"form-data": "^4.0.0",
+		"jest-dom": "^4.0.0",
+		"jsdom": "^20.0.1",
 		"postcss": "^8.4.12",
 		"prettier": "^2.4.1",
 		"prettier-plugin-svelte": "^2.4.0",
@@ -36,7 +41,9 @@
 		"svelte-preprocess": "^4.9.4",
 		"tailwindcss": "^3.0.24",
 		"tslib": "^2.3.1",
-		"typescript": "^4.4.3"
+		"typescript": "^4.4.3",
+		"vite": "^3.1.8",
+		"vitest": "^0.24.1"
 	},
 	"type": "module",
 	"dependencies": {
@@ -55,7 +62,6 @@
 		"axios": "^0.27.2",
 		"chartjs": "^0.3.24",
 		"cookie": "^0.4.1",
-		"leaflet-geosearch": "^3.6.0",
 		"next": "^12.1.5",
 		"set-cookie-parser": "^2.5.1",
 		"svelte-chartjs": "^3.0.1",
@@ -66,5 +72,8 @@
 	"private": true,
 	"workspaces": [
 		"packages/*"
-	]
+	],
+	"engines": {
+		"node": "16.14"
+	}
 }

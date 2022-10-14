@@ -1,5 +1,4 @@
 <script>
-	import { goto } from "$app/navigation";
 
     function logout() {
         fetch('https://dairies-rest-api.herokuapp.com/auth/logout', {
@@ -9,7 +8,7 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                goto('/auth/login')
+                window.location.href = "/";
             })
             .catch((error) => {
                 console.error('Error:', error);

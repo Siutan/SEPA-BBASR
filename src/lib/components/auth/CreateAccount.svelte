@@ -114,7 +114,7 @@
         passwordError = "Password must be at least 8 characters";
         break;
       case password.match(passwordExpression) == null:
-        passwordError = "Password must have at least 1 number, 1 Uppercase character and 1 special character";
+        passwordError = "Password must have at least 1 number, 1 Uppercase character, 1 Lowercase character and 1 special character";
         break;
       case password != confirmPassword:
         passwordError = "Passwords do not match";
@@ -297,16 +297,17 @@
               <label
                 for="floating_confirmPass"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Password</label
+              >Confirm Password</label
               >
             </div>
-            <div>
+            <div data-testid="adminSwitch">
               <Switch name="isAdmin" bind:value={isAdmin}
                       label="Admin" design="slider" />
             </div>
 
             <!-- Change to button  -->
             <button
+              data-testid="submitBtn"
               class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
               on:click={submitForm}
             >
