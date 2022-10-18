@@ -65,8 +65,11 @@
       .then((response) => response.json())
       .then((data) => {
         detailedClaim = data;
+        console.log(detailedClaim);
         getImage(claimId);
+        setClaimInputs();
       });
+
   }
 
   // get image from claim id
@@ -100,6 +103,13 @@
     return [day, month, year].join("-");
   }
 
+  //if updating claims
+  let nonPolicyFirstName;
+  let relationSelected; 
+  function setClaimInputs(){
+    nonPolicyFirstName =  detailedClaim.customer.nonPolicyFirstName;
+    relationSelected = detailedClaim.customer.nonPolicyRelation;
+  }
 
 </script>
 
@@ -318,15 +328,16 @@
                       >
                     </div>
                     <div class="relative z-0 w-full mb-6 group">
+                      <!-- Readonly as won't be able to update this input -->
                       <input
-
                         type="text"
                         name="membershipId"
                         id="floating_memberID"
                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                         placeholder=" "
                         bind:value={detailedClaim.membershipId}
-                      />
+                        
+                        />
                       <label
                         for="floating_memberID"
                         class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
@@ -335,9 +346,10 @@
                       <div class="relative z-0 my-10 w-full mb-6 group">
                         <select
                           name="lastRider"
-                          bind:value={detailedClaim.lastRider}
+                          bind:value={detailedClaim.customer.driverSelected}
                           id="floating_last_rider"
                           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                          
                         >
                           <option value="" class="text-gray-600">Select</option>
                           <option value="1" class="text-gray-600">Yes</option>
@@ -349,6 +361,132 @@
                         >Was the policy holder the last person to use the vehicle?</label
                         >
                       </div>
+
+                      {#if detailedClaim.customer.driverSelected === "0"}
+                        <div class="grid xl:grid-cols-2 xl:gap-6">
+                          <div class="relative z-0 w-full mb-6 group">
+                            <input
+    
+                              type="text"
+                              name="nonPolicyFirstName"
+                              id="non_policy_first_name"
+                              class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                              placeholder=" "
+                              bind:value={nonPolicyFirstName}
+                            />
+                            <label
+                              for="non_policy_first_name"
+                              class="absolute text-sm text-purple-900 dark:text-gray-400 left-0 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                            >First name of Last Driver</label
+                            >
+                          </div>
+                          <div class="relative z-0 w-full mb-6 group">
+                            <input
+                              type="text"
+                              name="nonPolicyLastName"
+                              id="non_policy_last_name"
+                              class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                              placeholder=" "
+                              bind:value={detailedClaim.customer.nonPolicyLastName}
+                            />
+                            <label
+                              for="floating_last_name"
+                              class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                            >Last name of Last Driver</label
+                            >
+                          </div>
+                        </div>
+                        <div class="grid xl:grid-cols-2 xl:gap-6">
+                          <div class="relative z-0 w-full mb-6 group">
+                            <input
+    
+                              type="tel"
+                              name="nonPolicyPhone"
+                              id="non_policy_phone"
+                              class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                              placeholder=" "
+                              bind:value={detailedClaim.customer.nonPolicyPhone}
+                            />
+                            <label
+                              for="non_policy_phone"
+                              class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                            >Phone number of Last Driver</label
+                            >
+                          </div>
+                          <div class="relative z-0 w-full mb-6 group">
+                            <input
+    
+                              type="text"
+                              name="nonPolicyDoB"
+                              id="nonPolicyDoB"
+                              class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                              placeholder=" "
+                              value={formatDate(detailedClaim.customer.nonPolicyDoB)}
+                            />
+                            <label
+                              for="non_policy_date"
+                              class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                            >Date of Birth of Last Driver</label
+                            >
+                          </div>
+                        </div>
+                        <div class="relative z-0 my-10 w-full mb-6 group">
+                          <select
+                            name="driverRelation"
+                            bind:value={relationSelected}
+                            id="floating_relation"
+                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                            readonly
+                          >
+                            <option value="" class="text-gray-600">Select</option>
+                            <option value="1" class="text-gray-600">Husband</option>
+                            <option value="2" class="text-gray-600">Wife</option>
+                            <option value="3" class="text-gray-600">Son</option>
+                            <option value="4" class="text-gray-600">Daughter</option>
+                            <option value="5" class="text-gray-600">Other</option>
+                          </select>
+                          <label
+                            for="floating_last_rider"
+                            class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                          >What was the drivers relation to the policy holder?</label
+                          >
+                        </div>
+                        {#if relationSelected === "5"}
+                        <div class="relative z-0 w-full mb-6 group">
+                          <input
+    
+                            type="text"
+                            name="relationOtherDetails"
+                            id="relation_other"
+                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                            placeholder=" "
+                            bind:value={detailedClaim.customer.nonPolicyRelationOther}
+                          />
+                          <label
+                            for="relation_other"
+                            class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                          >Description</label
+                          >
+                        </div>
+                        {/if}
+                        
+                         
+                          <div class="flex text-left flex-col space-y-3 p-2">
+                           
+                            <Switch
+                            design="inner"
+                            value={detailedClaim.customerHistory.driverPermission}
+                            label="Did the last driver have the policy holder's permission to use the vehicle?"
+                            />
+                            <Switch
+                            design="inner"
+                            
+                            value={detailedClaim.customerHistory.nonDriverHasInsurance}
+                            label="Does the last driver have motor vehicle insurance?"
+                            />
+                          </div>
+                        
+                      {/if}
                     </div>
                   </div>
                 </div>
@@ -464,7 +602,7 @@
                       id="floating_generation"
                       class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                       placeholder=" "
-                      bind:value={detailedClaim.vehicle.generation_id}
+                      bind:value={detailedClaim.vehicle.generation_name}
                     />
                     <label
                       for="floating_generation"
@@ -480,7 +618,7 @@
                           id="floating_color"
                           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                           placeholder=" "
-                          bind:value={detailedClaim.vehicle.color}
+                          bind:value={detailedClaim.vehicle.colour}
                         />
                         <label
                           for="floating_color"
@@ -497,18 +635,25 @@
                     <p class="font-medium text-lg">In the past 5 years, has the driver:</p>
                     <Switch
                       design="inner"
+                      value={detailedClaim.customerHistory.motorAccident}
                       label="Been involved in a motor vehicle accident?"
-                    />
-                    <Switch
+                      />
+                      <Switch
                       design="inner"
+                      
+                      value={detailedClaim.customerHistory.convictedOffence}
                       label="Been convicted of a driving offence?"
                     />
                     <Switch
                       design="inner"
+                      value={detailedClaim.customerHistory.disqualified}
+                      
                       label="Been disqualified for driving or had their licence cancelled/suspended?"
-                    />
-                    <Switch
+                      />
+                      <Switch
                       design="inner"
+              
+                      value={detailedClaim.customerHistory.refusedInsurance}
                       label="Been refused vehicle insurance or had their policy cancelled?"
                     />
                   </div>

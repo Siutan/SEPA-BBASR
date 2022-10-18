@@ -1,5 +1,6 @@
 <script lang="ts">
   import Input from "../../../lib/components/Input.svelte";
+  import Header2 from "$src/lib/templates/Admin/Header2.svelte"
   import { goto } from "$app/navigation";
 
 
@@ -117,7 +118,7 @@
   }
 
 </script>
-
+<Header2 />
 <section id="body" class="">
   <div class="flex items-center p-6 bg-gray-50 dark:bg-gray-900">
     <div

@@ -54,7 +54,7 @@ export const formHasError = () => {
 
 	//validate first name
 	const firstName = document.getElementById('floating_first_name').value;
-	let regexName = /^[A-Za-z]+$/;
+	let regexName = /^[A-Za-z ]+$/;
 	if (firstName) {
 		if (firstName.match(regexName)) {
 			console.log('valid first name');
@@ -408,6 +408,19 @@ export const formHasError = () => {
 			console.log('Not valid vehicle license plate format');
 			hasError = true;
 			document.getElementById('floating_vehicle_license_error').innerHTML = 'No special characters';
+		}
+	}
+	
+	//validate the vehicle colour input
+	let colour = document.getElementById('floating_vehicle_colour').value;
+	
+	if (colour) {
+		if (colour.match(regexName)) {
+			console.log('valid colour input format');
+		} else {
+			console.log('Not valid vehicle colour format');
+			hasError = true;
+			document.getElementById('floating_vehicle_colour_error').innerHTML = 'Only letter characters';
 		}
 	}
 

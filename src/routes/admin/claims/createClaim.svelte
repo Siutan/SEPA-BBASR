@@ -38,6 +38,7 @@
   let vehicle_license_plate:string;
   let vehicle_vin:string;
   let vehicle_transmission:string;
+  let vehicle_colour:string;
 
   // Form Data
   // --------------------------------------------------
@@ -283,6 +284,7 @@
           vehicle_year = "";
           vehicle_generation = "";
           vehicle_license_plate = "";
+          vehicle_colour = "";
           
           imageRecButtonText = "Run Image Recognition";
         }
@@ -296,6 +298,7 @@
           vehicle_year = vehicleData.mode_info.years;
           vehicle_generation = vehicleData.mode_info.generation_name;
           vehicle_license_plate = vehicleData.plate.toUpperCase();
+          vehicle_colour = vehicleData.color;
           imageRecButtonText = "Run Image Recognition";
         }
         
@@ -313,6 +316,7 @@
     vehicle_year = vehicleData.mode_info.years;
     vehicle_generation = vehicleData.mode_info.generation_name;
     vehicle_license_plate = vehicleData.plate.toUpperCase();
+    vehicle_colour = vehicleData.color;
 
     let newVdata = {
       vMakeId: vehicleData.mode_info.make_id,
@@ -324,7 +328,8 @@
       vGen: vehicle_generation,
       vPlate: vehicle_license_plate,
       vTransmission: vehicle_transmission,
-      vVin: vehicle_vin
+      vVin: vehicle_vin,
+      vColour:vehicle_colour
     };
 
     localStorage.setItem("vehicle2", JSON.stringify(newVdata));
@@ -347,44 +352,48 @@
     let formdata = new form();
     formdata.append("image", fileInput.files[0]);
     
-    //Test if this is needed
-    formdata.append("recordID", "5");
+    //Extra field recordID can be repurposed
+    formdata.append("recordID", "1");
     
-    formdata.append("membershipId", cData.membershipId);
-    formdata.append("customer[givenName]", cData.givenName);
-    formdata.append("customer[lastName]", cData.lastName);
-    formdata.append("customer[phone]", cData.phone);
-    formdata.append("customer[email]", cData.emailAddress);
-    formdata.append("customer[address]", cData.address);
-    formdata.append("customer[dob]", cData.dob);
-    formdata.append("customer[nonPolicyFirstName]", nonPolicyFirstName);
-    formdata.append("customer[nonPolicyLastName]", nonPolicyLastName);
-    formdata.append("customer[nonPolicyPhone]", nonPolicyPhone);
-    formdata.append("customer[nonPolicyDoB]", nonPolicyDoB);
-    formdata.append("customer[driverPermission]", driverPermission);
-    formdata.append("customer[nonPolicyDoB]", "");
-    formdata.append("customer[nonDriverHasInsurance]", nonDriverHasInsurance);
-    formdata.append("customer[lastRider]", cData.lastRider);
-    formdata.append("customer[driverRelation]", relationSelected);
-    formdata.append("customerHistory[motorAccident]", dData.motorAccident);
-    formdata.append("customerHistory[convictedOffence]", dData.convictedOffence);
-    formdata.append("customerHistory[disqualified]", dData.disqualified);
-    formdata.append("customerHistory[refusedInsurance]", dData.refusedInsurance);
-    formdata.append("customerHistory[LicenceNumber]", dData.LicenceNumber);
-    formdata.append("customerHistory[LicenceIssueDate]", dData.LicenceIssueDate);
-    formdata.append("vehicle[vehicleId]", vData.vVin);
-    formdata.append("vehicle[plate]", vData.vPlate);
-    formdata.append("vehicle[generation_id]", vData.vGenId);
-    formdata.append("vehicle[generation_name]", vData.vGen);
-    formdata.append("vehicle[make_id]", vData.vMakeId);
-    formdata.append("vehicle[make_name]", vData.vMake);
-    formdata.append("vehicle[model_id]", vData.vModelId);
-    formdata.append("vehicle[model_name]", vData.vModel);
-    formdata.append("vehicle[years]", vData.vYear);
-    formdata.append("vehicle[rego]", "");
-    formdata.append("vehicle[bodyType]", "");
-    formdata.append("vehicle[colour]", "");
-    formdata.append("vehicle[engineNumber]", vData.vTransmission);
+    formdata.append("membershipId", policyNumber);
+    formdata.append("customer[givenName]", firstName);
+    formdata.append("customer[lastName]", lastName);
+    formdata.append("customer[phone]", phone);
+    formdata.append("customer[email]", email);
+    formdata.append("customer[address]", address);
+    formdata.append("customer[dob]", dob);
+    formdata.append("customer[driverSelected]", driverSelected);
+
+    //The following group of inputs might be undefined depending on the aswer to driverSelect
+    //If they are undefined they will be appened as ""
+    formdata.append("customer[nonPolicyFirstName]", nonPolicyFirstName === undefined? "" : nonPolicyFirstName);
+    formdata.append("customer[nonPolicyLastName]", nonPolicyLastName === undefined? "" :nonPolicyLastName);
+    formdata.append("customer[nonPolicyPhone]", nonPolicyPhone === undefined? "" :nonPolicyPhone);
+    formdata.append("customer[nonPolicyDoB]", nonPolicyDoB === undefined? "" :nonPolicyDoB);
+    formdata.append("customer[nonPolicyRelation]", relationSelected === undefined? "" :relationSelected);
+    formdata.append("customer[nonPolicyRelationOther]", nonPolicyDoB === undefined? "" : nonPolicyDoB);
+    formdata.append("customer[driverPermission]", driverPermission === undefined? "" :driverPermission);
+    formdata.append("customer[nonDriverHasInsurance]", nonDriverHasInsurance === undefined? "" :nonDriverHasInsurance);
+    
+
+    formdata.append("customerHistory[motorAccident]", motorAccident);
+    formdata.append("customerHistory[convictedOffence]", convictedOfOffence);
+    formdata.append("customerHistory[disqualified]", disqualified);
+    formdata.append("customerHistory[refusedInsurance]", refusedInsurance);
+    formdata.append("customerHistory[LicenceNumber]", licenceNumber);
+    formdata.append("customerHistory[LicenceIssueDate]", licenceIssueDate);
+    formdata.append("vehicle[vehicleId]",vehicle_vin);
+    formdata.append("vehicle[plate]", vehicle_license_plate);
+
+    formdata.append("vehicle[generation_name]", vehicle_generation);
+
+    formdata.append("vehicle[make_name]", vehicle_make);
+
+    formdata.append("vehicle[model_name]", vehicle_model);
+    formdata.append("vehicle[years]", vehicle_year);
+
+    formdata.append("vehicle[colour]", vehicle_colour);
+    formdata.append("vehicle[engineNumber]", vehicle_transmission);
 
     let requestOptions = {
       method: 'POST',
@@ -432,6 +441,7 @@
     { id: 5, text: `Other` }
   ];
   let relationSelected;
+  let relationSelectedOther;
 
   let driverPermission;
   let nonDriverHasInsurance;
@@ -440,6 +450,9 @@
   let convictedOfOffence;
   let disqualified;
   let refusedInsurance;
+
+  let licenceNumber;
+  let licenceIssueDate
 
 
 </script>
@@ -665,6 +678,7 @@
                           placeholder=" "
                           maxlength="50"
                           required
+                          bind:value={nonPolicyFirstName}
                         />
                         <label
                           for="non_policy_first_name"
@@ -683,6 +697,7 @@
                           placeholder=" "
                           maxlength="50"
                           required
+                          bind:value={nonPolicyLastName}
                         />
                         <label
                           for="non_policy_last_name"
@@ -704,6 +719,7 @@
                           placeholder=" "
                           maxlength="11"
                           required
+                          bind:value={nonPolicyPhone}
                         />
                         <label
                           for="non_policy_phone"
@@ -723,6 +739,7 @@
                           min="1900-01-01" 
                           max= {max_date}
                           required
+                          bind:value={nonPolicyDoB}
                         />
                         <label
                           for="non_policy_date"
@@ -766,6 +783,7 @@
                               placeholder=" "
                               maxlength="50"
                               required
+                              bind:value={relationSelectedOther}
                             />
                             <label
                               for="relation_other"
@@ -872,6 +890,7 @@
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
+                  bind:value={licenceNumber}
                 />
                 <label
                   for="licenseNumber"
@@ -891,6 +910,7 @@
                   required
                   min="1900-01-01" 
                   max= {max_date}
+                  bind:value={licenceIssueDate}
                 />
                 <label
                   for="licenseIssueDate"
@@ -1034,6 +1054,25 @@
                 >
                 <!-- For adding format error messages -->
                 <div id="floating_vehicle_license_error" class="text-red-600 pt-1"></div>
+              </div>
+              <div class="relative z-0 w-full mb-6 group">
+                <input
+                  type="text"
+                  name="vehicleColour"
+                  id="floating_vehicle_colour"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                  placeholder=" "
+                  required
+                  maxlength="20"
+                  bind:value={vehicle_colour}
+                />
+                <label
+                  for="floating_vehicle_colour"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Colour</label
+                >
+                <!-- For adding format error messages -->
+                <div id="floating_vehicle_colour_error" class="text-red-600 pt-1"></div>
               </div>
             </div>
             <div class="grid xl:grid-cols-2 xl:gap-6">
