@@ -1,7 +1,7 @@
 <script>
   import Chartjs from "chart.js";
   import Modal from '$src/lib/components/Modal.svelte'; 
-  import ClaimDetails from '$src/lib/components/ClaimDetails.svelte'
+  import ClaimDetails from '$src/lib/components/ClaimModals/ClaimDetails.svelte'
 
   let claims;
   let totalClaims;
@@ -371,7 +371,7 @@ new Chartjs(pieC, {
 
     <!-- New Table -->
     <div class="w-full overflow-hidden rounded-lg shadow-xs">
-      <div class="">
+      <div class="overflow-x-auto">
         <table class="w-full whitespace-no-wrap">
           <thead>
           <tr
@@ -466,7 +466,9 @@ new Chartjs(pieC, {
                       disabled={prevDisabled} 
                       on:click={prev}
               >
-                Previous
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
             </li>
             <!-- If more than 5 (starts at page 0) pages worth of claim data -->
@@ -524,7 +526,9 @@ new Chartjs(pieC, {
                 disabled={nextDisabled} 
                 on:click={next}
               >
-                Next
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
               </button>
             </li>
           </ul>

@@ -410,10 +410,10 @@ export const formHasError = () => {
 			document.getElementById('floating_vehicle_license_error').innerHTML = 'No special characters';
 		}
 	}
-	
+
 	//validate the vehicle colour input
 	let colour = document.getElementById('floating_vehicle_colour').value;
-	
+
 	if (colour) {
 		if (colour.match(regexName)) {
 			console.log('valid colour input format');
@@ -457,7 +457,6 @@ export const formHasError = () => {
 
 export const showError = (errorMessages) => {
 	let errorField = document.querySelector('#multistep-error-messages');
-
 	deleteChildNodes(errorField);
 	showOrHide(errorField, 'visible');
 
