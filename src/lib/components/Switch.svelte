@@ -7,6 +7,7 @@
   export let options = [];
   export let fontSize = 16;
   export let value = 'true';
+  export let disabled = false;
 
   let checked = value === 'true'? true : false;
 
@@ -28,18 +29,33 @@
 </script>
 
 {#if design == 'inner'}
-  <div class="s s--inner">
-      <button
-        role="switch"
-        aria-checked={checked}
-        aria-labelledby={`switch-${uniqueID}`}
-        on:click={handleClick}>
-        <span>Yes</span>
-        <span class="p-2">No</span>
-      </button>
-
-      <span id={`switch-${uniqueID}`}>{label}</span>
-  </div>
+    {#if disabled}
+        <div class="s s--inner">
+            <button
+            role="switch"
+            aria-checked={checked}
+            aria-labelledby={`switch-${uniqueID}`}
+            >
+            <span>Yes</span>
+            <span class="p-2">No</span>
+            </button>
+    
+            <span id={`switch-${uniqueID}`}>{label}</span>
+        </div>
+    {:else}
+        <div class="s s--inner">
+            <button
+            role="switch"
+            aria-checked={checked}
+            aria-labelledby={`switch-${uniqueID}`}
+            on:click={handleClick}>
+            <span>Yes</span>
+            <span class="p-2">No</span>
+            </button>
+    
+            <span id={`switch-${uniqueID}`}>{label}</span>
+        </div>
+    {/if}
 
 {:else if design == 'slider'}
   {#if value === "false"}

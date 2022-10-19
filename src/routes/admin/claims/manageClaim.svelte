@@ -273,7 +273,7 @@
                   information.
                   Access will be monitored</p>
               </div>
-              <div class="text-center">
+              <div class="text-left">
                 <!-- Customer Info -->
                 <div class="rounded-lg p-2 ml-2 mb-2  bg-gray-100 dark:bg-gray-800">
                   <p class="font-semibold text-xl p-2">Policy Holder Details</p>
@@ -707,6 +707,40 @@
                       value={detailedClaim.customerHistory.refusedInsurance}
                       label="Been refused vehicle insurance or had their policy cancelled?"
                     />
+                    <div class="grid xl:grid-cols-2 xl:gap-6">
+                      <div class="relative z-0 w-full mb-6 my-5  group">
+                        <input
+
+                          type="number"
+                          name="LicenceNumber"
+                          id="licenseNumber"
+                          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                          placeholder=" "
+                          bind:value={detailedClaim.customerHistory.LicenceNumber}
+                        />
+                        <label
+                          for="licenseNumber"
+                          class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                        >Licence Number</label
+                        >
+                      </div>
+                      <div class="relative z-0 w-full mb-6 my-5 group">
+                        <input
+
+                          type="date"
+                          name="LicenceIssueDate"
+                          id="licenseIssueDate"
+                          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                          placeholder=" "
+                          value={detailedClaim.customerHistory.LicenceIssueDate}
+                        />
+                        <label
+                          for="floating_date"
+                          class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                        >Licence issue date</label
+                        >
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div>

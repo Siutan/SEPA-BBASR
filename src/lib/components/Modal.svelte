@@ -73,10 +73,21 @@
         overflow: auto; /* Enable scroll if needed */
 
     }
+    /* For Small Screens */
+    @media only screen and (max-width: 600px) {
+      .modal {
+          margin: 5% 5%; 
+          padding: 10px;
+          width: 90%;
+      }
+    }
 
+    /* For Big Screens */
+    @media only screen and (min-width: 601px) {
     .modal {
-        margin: 5% 20%; /* 15% from the top and centered */
+        margin: 5% 17%; 
         padding: 10px;
         width: 75%;
     }
+  }
 </style>

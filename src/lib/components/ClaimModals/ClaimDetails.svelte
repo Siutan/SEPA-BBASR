@@ -140,6 +140,7 @@
                 id="floating_phone"
                 class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                 placeholder=" "
+                readonly
                 bind:value={detailedClaim.customer.phone}
               />
               <label
@@ -156,6 +157,7 @@
                 id="floating_date"
                 class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                 placeholder=" "
+                readonly
                 value={formatDate(detailedClaim.customer.dob)}
               />
               <label
@@ -173,6 +175,7 @@
               id="floating_email"
               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
               placeholder=" "
+              readonly
               bind:value={detailedClaim.customer.email}
             />
             <label
@@ -189,6 +192,7 @@
               id="floating_address"
               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
               placeholder=" "
+              readonly
               bind:value={detailedClaim.customer.address}
             />
             <label
@@ -205,6 +209,7 @@
               id="floating_memberID"
               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
               placeholder=" "
+              readonly
               bind:value={detailedClaim.membershipId}
 
             />
@@ -214,13 +219,13 @@
             >Policy Number</label
             >
           </div>
-          <div class="relative z-0 my-10 w-full mb-6 group">
+          <div class="relative z-0 w-full mb-6 group">
             <select
               name="lastRider"
               bind:value={detailedClaim.customer.driverSelected}
               id="floating_last_rider"
               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
-
+              disabled
             >
               <option value="" class="text-gray-600">Select</option>
               <option value="1" class="text-gray-600">Yes</option>
@@ -242,6 +247,7 @@
                   id="non_policy_first_name"
                   class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                   placeholder=" "
+                  readonly
                   bind:value={detailedClaim.customer.nonPolicyLastName}
                 />
                 <label
@@ -257,6 +263,7 @@
                   id="non_policy_last_name"
                   class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                   placeholder=" "
+                  readonly
                   bind:value={detailedClaim.customer.nonPolicyLastName}
                 />
                 <label
@@ -275,6 +282,7 @@
                   id="non_policy_phone"
                   class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                   placeholder=" "
+                  readonly
                   bind:value={detailedClaim.customer.nonPolicyPhone}
                 />
                 <label
@@ -291,6 +299,7 @@
                   id="nonPolicyDoB"
                   class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                   placeholder=" "
+                  readonly
                   value={formatDate(detailedClaim.customer.nonPolicyDoB)}
                 />
                 <label
@@ -306,7 +315,7 @@
                 bind:value={detailedClaim.customer.relationSelected}
                 id="floating_relation"
                 class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
-                readonly
+                disabled
               >
                 <option value="" class="text-gray-600">Select</option>
                 <option value="1" class="text-gray-600">Husband</option>
@@ -330,6 +339,7 @@
                   id="relation_other"
                   class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                   placeholder=" "
+                  readonly
                   bind:value={detailedClaim.customer.nonPolicyRelationOther}
                 />
                 <label
@@ -345,12 +355,13 @@
                 design="inner"
                 value={detailedClaim.customerHistory.driverPermission}
                 label="Did the last driver have the policy holder's permission to use the vehicle?"
+                disabled = {true}
               />
               <Switch
                 design="inner"
-
                 value={detailedClaim.customerHistory.nonDriverHasInsurance}
                 label="Does the last driver have motor vehicle insurance?"
+                disabled = {true}
               />
             </div>
           {/if}
@@ -378,25 +389,62 @@
               design="inner"
               value={detailedClaim.customerHistory.motorAccident}
               label="Been involved in a motor vehicle accident?"
+              disabled = {true}
             />
             <Switch
               design="inner"
-
               value={detailedClaim.customerHistory.convictedOffence}
               label="Been convicted of a driving offence?"
+              disabled = {true}
             />
             <Switch
               design="inner"
               value={detailedClaim.customerHistory.disqualified}
-
               label="Been disqualified for driving or had their licence cancelled/suspended?"
+              disabled = {true}
             />
             <Switch
               design="inner"
-
               value={detailedClaim.customerHistory.refusedInsurance}
               label="Been refused vehicle insurance or had their policy cancelled?"
+              disabled = {true}
             />
+          </div>
+          <div class="grid xl:grid-cols-2 xl:gap-6">
+            <div class="relative z-0 w-full mb-6 my-5  group">
+              <input
+
+                type="number"
+                name="LicenceNumber"
+                id="licenseNumber"
+                class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                placeholder=" "
+                readonly
+                bind:value={detailedClaim.customerHistory.LicenceNumber}
+              />
+              <label
+                for="licenseNumber"
+                class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+              >Licence Number</label
+              >
+            </div>
+            <div class="relative z-0 w-full mb-6 my-5 group">
+              <input
+
+                type="date"
+                name="LicenceIssueDate"
+                id="licenseIssueDate"
+                class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                placeholder=" "
+                readonly
+                value={detailedClaim.customerHistory.LicenceIssueDate}
+              />
+              <label
+                for="floating_date"
+                class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+              >Licence issue date</label
+              >
+            </div>
           </div>
         </div>
       </div>
