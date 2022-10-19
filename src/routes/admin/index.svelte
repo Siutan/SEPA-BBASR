@@ -1,11 +1,19 @@
 <script>
   import Chartjs from "chart.js";
+  import Modal from '$src/lib/components/Modal.svelte'; 
+  import ClaimDetails from '$src/lib/components/ClaimDetails.svelte'
 
   let claims;
   let totalClaims;
   let completeClaim = 0;
   let pendingClaim = 0;
   let failedClaim = 0;
+  let perPage = 5;
+  let end;
+  let page = 0;
+  let prevDisabled = true;
+  let nextDisabled = false;
+  let pagSlots = [2,3,4,5,6];
 
   async function getClaims() {
     await fetch("https://dairies-rest-api.herokuapp.com/claims", {
@@ -19,6 +27,15 @@
 		console.log(claims)
 		claims[34]= {"claimID":33,"membershipID":22,"status":"failed","date":"2022-09-03T10:09:01.225Z"}
         totalClaims = Object.keys(claims).length;
+        //if the number of claims is perfectly divisible by perPage value
+        if(totalClaims%perPage == 0)
+        {
+          end = Math.floor(totalClaims/perPage) - 1;
+
+        }
+        else{
+          end = Math.floor(totalClaims/perPage);
+        }
         claimProcess();
         console.log(getClaimsByMonth())
         claimChart()
@@ -40,6 +57,73 @@
 
     }
     ;
+  }
+
+  function prev() {
+		if (page == 0) {
+      prevDisabled = true;
+			return
+		}
+    
+    if(page == 1)
+    {
+      prevDisabled = true;
+      nextDisabled = false;
+      page --;
+      return
+    }
+    nextDisabled = false;
+    prevDisabled = false;
+
+    page --;
+
+    let last = end + 1;
+    let currentPage = page+1;
+      
+    if(currentPage <= pagSlots[3])
+    {
+      if(pagSlots[0] > 2)
+      {
+        pagSlots.forEach((val, index) => {
+          pagSlots[index] --;
+        })
+      }
+    }
+	}
+	function next() {
+        page ++;
+        if(page == end)
+        { 
+            nextDisabled = true;
+            return
+        }
+    
+
+      let last = end + 1;
+      let currentPage = page+1;
+      
+      if(currentPage >= pagSlots[3])
+      {
+        if(last - 1 > pagSlots[4])
+        {
+          pagSlots.forEach((val, index) => {
+            pagSlots[index] ++;
+          })
+        }
+      }
+      
+
+    prevDisabled = false;
+    nextDisabled = false;
+	}
+
+  function changePage(selectedPage){
+    console.log(`Go to Page ${selectedPage}`)
+    //change the page (count is from zero so take away 1)
+    page = selectedPage -1;
+
+    //update the pagination slots
+    //if have time to figure out
   }
 
   // function to change 2022-09-03T10:09:01.225Z to 03-09-2022
@@ -134,9 +218,21 @@ new Chartjs(pieC, {
 };
 
 
+    // Modal
+    let isModalOpen = false;
+    let id;
 
+    const openModal = (newId) => {
+      
+      isModalOpen = true;
+      id=newId;
+      console.log("Id is: ", id);
+    };
 
-
+    const closeModal = () => {
+      
+      isModalOpen = false;
+    };
 
 
 </script>
@@ -147,6 +243,9 @@ new Chartjs(pieC, {
 
 </svelte:head>
 
+<Modal {isModalOpen} title={`Claim ID: ${id}`} on:closeModal={closeModal} >
+  <ClaimDetails ID={`${id}`} />
+</Modal>
 
 <main class="h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
@@ -278,65 +377,73 @@ new Chartjs(pieC, {
           <tr
             class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
           >
-            <th class="px-8 py-3">MembershipID</th>
-            <th class="px-4 py-3">ClaimID</th>
-            <th class="px-4 py-3">Status</th>
-            <th class="px-4 py-3">Date</th>
+            <th class="px-8 py-3 text-base">MembershipID</th>
+            <th class="px-4 py-3 text-base">ClaimID</th>
+            <th class="px-4 py-3 text-base">Status</th>
+            <th class="px-4 py-3 text-base">Date</th>
           </tr>
           </thead>
 
 
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
 
-
+          <!-- Await fetching claim data from backend -->
           {#await getClaims()}
-            <p>Loading...</p>
+            <!-- Renders a dark screen while waiting -->
+            <div class="flex h-screen bg-gray-50 dark:bg-gray-900"></div>
           {:then data}
+            <!-- Loop based on number perPage (10) and print out claims associated with that data -->
+            {#each Array(perPage) as _, i}
+              <!-- Make sure claim exists before printing table row -->
+              {#if claims[i + (page * perPage)]}   
+                <tr data-bs-toggle="modal" data-bs-target="#exampleModalLg" on:click={() => openModal(claims[i + (page * perPage)].claimID)} class="cursor-pointer text-gray-700 dark:text-gray-400">
+                  <td class="px-0 py-3">
+                      <div>
+                        <p class="font-semibold px-10">{claims[i + (page * perPage)].membershipId}</p>
 
-            {#each claims as claim (claim._id)}
-              <tr class="text-gray-700 dark:text-gray-400">
-                <td class="px-0 py-3">
-                  <div class="flex items-center text-sm">
-                    <!-- Avatar with inset shadow -->
+                      </div>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-sm">{claims[i + (page * perPage)].claimID} </td>
+                  <td class="px-4 py-3 text-xs">
+                    <!-- Depending on the status of the claim format the colour of the output -->
+                    {#if claims[i + (page * perPage)].status === "success"}
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                      >
+                        {claims[i + (page * perPage)].status}
 
-                    <div>
-                      <p class="font-semibold px-10">{claim.membershipId}</p>
+                      </span>
+                    {:else if (claims[i + (page * perPage)].status === "pending")}
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-yellow-700  bg-yellow-400 rounded-full dark:text-yellow-100"
+                      >
+                      {claims[i + (page * perPage)].status}
 
-                    </div>
-                  </div>
-                </td>
-                <td class="px-4 py-3 text-sm">{claim.claimID} </td>
-                <td class="px-4 py-3 text-xs">
+                    </span>
+                    {:else}
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-red-700  bg-red-600 rounded-full dark:bg-red-700 dark:text-red-100"
+                      >
+                      {claims[i + (page * perPage)].status}
 
-                  {#if claim.status === "success"}
-										<span
-                      class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
-                    >
-											{claim.status}
-
-										</span>
-                  {:else if (claim.status === "pending")}
-									  <span
-                      class="px-2 py-1 font-semibold leading-tight text-yellow-700  bg-yellow-400 rounded-full dark:text-yellow-100"
-                    >
-									  {claim.status}
-
-								  </span>
-                  {:else}
-									  <span
-                      class="px-2 py-1 font-semibold leading-tight text-red-700  bg-red-600 rounded-full dark:bg-red-700 dark:text-red-100"
-                    >
-									  {claim.status}
-
-								  </span>
-                  {/if}
+                    </span>
+                    {/if}
 
 
-                </td>
-                <td class="px-4 py-3 text-sm"> {formatDate(claim.createdAt)} </td>
-              </tr>
+                  </td>
+                  <td class="px-4 py-3 text-sm"> {formatDate(claims[i + (page * perPage)].createdAt)} </td>
+                </tr>
+              {:else}
+                <tr class="text-gray-700 dark:text-gray-400">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              {/if}
             {/each}
-
+          <!-- catch any errors -->
           {:catch error}
             <div>{error.message}</div>
           {/await}
@@ -344,6 +451,86 @@ new Chartjs(pieC, {
           </tbody>
         </table>
       </div>
+      <div
+      class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800"
+    >
+      <!-- Pagination -->
+      <span class="flex items-center col-span-3"> {`Showing ${page*perPage + 1} to ${Math.min((page+1)*perPage,totalClaims)} of ${totalClaims} claims`}</span>
+      <span class="col-span-2" />
+      <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+        <nav aria-label="Table navigation">
+          <ul class="inline-flex items-center">
+            <li>
+              <button class="px-3 py-1 underline hover:underline-offset-4 text-purple-700 dark:text-purple-600 text-xl rounded-md focus:outline-none focus:shadow-outline-purple" 
+                      class:disabledButton={prevDisabled} 
+                      disabled={prevDisabled} 
+                      on:click={prev}
+              >
+                Previous
+              </button>
+            </li>
+            <!-- If more than 5 (starts at page 0) pages worth of claim data -->
+            {#if end > 7}
+              <li>
+                <button class={page===0? "px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple" : "px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"}
+                        on:click={() => changePage(1)} 
+                >
+                  {1}
+                </button>
+              </li>
+              {#if pagSlots[0] > 2}
+                <li>
+                  <span class="px-3 py-1">...</span>
+                </li>
+              {/if}
+              <!-- Pagination Slots -->
+              {#each pagSlots as bar, i}
+                <li>
+                  <button class={page+1===pagSlots[i]? "px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple" : "px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"}
+                          on:click={() => changePage(pagSlots[i])} 
+                  >
+                    {pagSlots[i]}
+                  </button>
+                </li>
+              {/each} 
+              {#if pagSlots[4] < end}
+                <li>
+                  <span class="px-3 py-1">...</span>
+                </li>
+              {/if}
+              <li>
+                <button class={page===end? "px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple" : "px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"}
+                        on:click={() => changePage(end+1) } 
+                >
+                  {end+1}
+                </button>
+              </li>
+            <!-- Can just print all the pages without needing to use span -->
+            {:else}
+              {#each {length:end+1} as foo, i}
+              <li>
+                <button class={page===i? "px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple" : "px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"}
+                on:click={() => changePage(i+1)} 
+                >
+                  {i+1}
+                </button>
+              </li>
+              {/each}
+            {/if}
+            <li>
+              <button 
+                class="px-3 py-1 underline hover:underline-offset-4 text-purple-700 dark:text-purple-600 text-xl rounded-md focus:outline-none focus:shadow-outline-purple" 
+                class:disabledButton={nextDisabled} 
+                disabled={nextDisabled} 
+                on:click={next}
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </span>
+    </div>
 
     </div>
 
@@ -369,3 +556,10 @@ new Chartjs(pieC, {
   </div>
 
 </main>
+
+<style>
+.disabledButton {
+  text-decoration: none;
+  cursor: default; 
+}
+</style>

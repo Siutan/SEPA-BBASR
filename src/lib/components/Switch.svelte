@@ -8,12 +8,13 @@
   export let fontSize = 16;
   export let value = 'true';
 
-  let checked = true;
+  let checked = value === 'true'? true : false;
 
   const uniqueID = Math.floor(Math.random() * 100)
 
   function handleClick(event){
     event.preventDefault();
+    console.log('handleClick')
     const target = event.target
 
     const state = target.getAttribute('aria-checked')
@@ -21,21 +22,23 @@
     checked = state !== 'true'
 
     value = checked === true
+   
+    
   }
 </script>
 
 {#if design == 'inner'}
   <div class="s s--inner">
+      <button
+        role="switch"
+        aria-checked={checked}
+        aria-labelledby={`switch-${uniqueID}`}
+        on:click={handleClick}>
+        <span>Yes</span>
+        <span class="p-2">No</span>
+      </button>
 
-    <button
-      role="switch"
-      aria-checked={checked}
-      aria-labelledby={`switch-${uniqueID}`}
-      on:click={handleClick}>
-      <span>Yes</span>
-      <span class="p-2">No</span>
-    </button>
-    <span id={`switch-${uniqueID}`}>{label}</span>
+      <span id={`switch-${uniqueID}`}>{label}</span>
   </div>
 
 {:else if design == 'slider'}
