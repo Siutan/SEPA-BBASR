@@ -5,6 +5,8 @@
   import Search from "../../../lib/components/search/search.svelte";
   import Switch from "../../../lib/components/Switch.svelte";
   import StatusCircle from "../../../lib/components/StatusCircle.svelte";
+  import Modal from "../../../lib/components/Modal.svelte";
+  import ClaimDetails from "../../../lib/components/ClaimModals/ClaimDetails.svelte";
 
 
   let claims;
@@ -105,17 +107,39 @@
 
   //if updating claims
   let nonPolicyFirstName;
-  let relationSelected; 
-  function setClaimInputs(){
-    nonPolicyFirstName =  detailedClaim.customer.nonPolicyFirstName;
-    relationSelected = detailedClaim.customer.nonPolicyRelation;
+  let relationSelected;
+
+  function setClaimInputs() {
+    nonPolicyFirstName = detailedClaim["customer"]["nonPolicyFirstName"];
+    relationSelected = detailedClaim["customer"]["nonPolicyRelation"];
   }
+
+  // Modal
+  let isModalOpen = false;
+  let id;
+
+  const openModal = (newId) => {
+
+    isModalOpen = true;
+    id=newId;
+    console.log("Id is: ", id);
+  };
+
+  const closeModal = () => {
+
+    isModalOpen = false;
+  };
+
 
 </script>
 
 <svelte:head>
   <title>Manage claims</title>
 </svelte:head>
+
+<Modal {isModalOpen} title={`Claim ID: ${id}`} on:closeModal={closeModal} >
+  <ClaimDetails ID={`${id}`} />
+</Modal>
 
 <main class="h-full pb-16 overflow-y-auto">
   <div class="container px-6 mx-auto grid">
@@ -140,7 +164,7 @@
         </div>
       {:then data}
         <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-2">
-          <div class="w-full overflow-x-auto col-span-2 ">
+          <div class="w-full overflow-x-auto col-span-3 xl:col-span-2 ">
             <Search />
             <div>
               <button
@@ -151,7 +175,10 @@
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                      width="20" height="20"
                      viewBox="0 0 30 30"
-                     style=" fill:#fff;"><path d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 A 1.0001 1.0001 0 1 0 8.5058594 7.3945312 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 A 1.0001 1.0001 0 1 0 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"></path></svg>
+                     style=" fill:#fff;">
+                  <path
+                    d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 A 1.0001 1.0001 0 1 0 8.5058594 7.3945312 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 A 1.0001 1.0001 0 1 0 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"></path>
+                </svg>
                 <span>{refreshText}</span>
               </button>
             </div>
@@ -160,16 +187,17 @@
               <tr
                 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
               >
-                <th class="px-4 py-3">Claim ID</th>
+                <th class="xl:px-4 py-3">Claim ID</th>
                 <th on:click={() => {
                   sort("version")
-                }} class="px-4 py-3 cursor-pointer select-none">Version
+                }} class="hidden xl:block xl:px-4 py-3 cursor-pointer select-none">Version
                 </th>
                 <th on:click={() => {
                   sort("Date")
-                }} class="px-4 py-3">Date
+                }} class="xl:px-4 py-3">Date
                 </th>
-                <th class="px-4 py-3">Status</th>
+                <th class="xl:px-4 py-3">Status</th>
+                <th class="xl:hidden py-3">View</th>
               </tr>
               </thead>
               <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -187,10 +215,32 @@
                       </div>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-sm">{claim.version}</td>
+                  <td class="hidden xl:block px-4 py-3 text-sm">{claim.version}</td>
                   <td class="px-4 py-3 text-sm">{formatDate(claim.createdAt)}</td>
                   <td class="px-4 py-3 text-xs">
                     <StatusCircle status={claim.status} />
+                  </td>
+                  <td class="xl:hidden">
+                    <!-- eyeball svg -->
+                    <div on:click={() => openModal(claim.claimID)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="dark:fill-white"
+                           x="0px" y="0px" width="20" height="20" viewBox="0 0 442.04 442.04" xml:space="preserve">
+                            <g>
+                              <g>
+                                <path
+                                  d="M221.02,341.304c-49.708,0-103.206-19.44-154.71-56.22C27.808,257.59,4.044,230.351,3.051,229.203    c-4.068-4.697-4.068-11.669,0-16.367c0.993-1.146,24.756-28.387,63.259-55.881c51.505-36.777,105.003-56.219,154.71-56.219    c49.708,0,103.207,19.441,154.71,56.219c38.502,27.494,62.266,54.734,63.259,55.881c4.068,4.697,4.068,11.669,0,16.367    c-0.993,1.146-24.756,28.387-63.259,55.881C324.227,321.863,270.729,341.304,221.02,341.304z M29.638,221.021    c9.61,9.799,27.747,27.03,51.694,44.071c32.83,23.361,83.714,51.212,139.688,51.212s106.859-27.851,139.688-51.212    c23.944-17.038,42.082-34.271,51.694-44.071c-9.609-9.799-27.747-27.03-51.694-44.071    c-32.829-23.362-83.714-51.212-139.688-51.212s-106.858,27.85-139.688,51.212C57.388,193.988,39.25,211.219,29.638,221.021z" />
+                              </g>
+                              <g>
+                                <path
+                                  d="M221.02,298.521c-42.734,0-77.5-34.767-77.5-77.5c0-42.733,34.766-77.5,77.5-77.5c18.794,0,36.924,6.814,51.048,19.188    c5.193,4.549,5.715,12.446,1.166,17.639c-4.549,5.193-12.447,5.714-17.639,1.166c-9.564-8.379-21.844-12.993-34.576-12.993    c-28.949,0-52.5,23.552-52.5,52.5s23.551,52.5,52.5,52.5c28.95,0,52.5-23.552,52.5-52.5c0-6.903,5.597-12.5,12.5-12.5    s12.5,5.597,12.5,12.5C298.521,263.754,263.754,298.521,221.02,298.521z" />
+                              </g>
+                              <g>
+                                <path
+                                  d="M221.02,246.021c-13.785,0-25-11.215-25-25s11.215-25,25-25c13.786,0,25,11.215,25,25S234.806,246.021,221.02,246.021z" />
+                              </g>
+                            </g>
+                      </svg>
+                    </div>
                   </td>
                 </tr>
               {/each}
@@ -200,9 +250,10 @@
           <!-- Claim details -->
           {#await getDetailedClaim(selectedClaim.claimID)}
             <!-- loading -->
-            <div class="flex items-start justify-center">
+            <div class="hidden xl:flex flex items-start justify-center">
               <div role="status">
-                <svg aria-hidden="true" class="mr-2 w-40 h-40 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                <svg aria-hidden="true"
+                     class="mr-2 w-40 h-40 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                      viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
@@ -216,7 +267,7 @@
               </div>
             </div>
           {:then x}
-            <div class="flex flex-col border-2 border-gray-300 dark:border-gray-700 rounded-lg p-1">
+            <div class="hidden xl:flex flex-col border-2 border-gray-300 dark:border-gray-700 rounded-lg p-1">
               <div>
                 <p class="text-center font-semibold text-yellow-400 dark:text-yellow-300 m-4">⚠️This is sensitive
                   information.
@@ -336,8 +387,8 @@
                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
                         placeholder=" "
                         bind:value={detailedClaim.membershipId}
-                        
-                        />
+
+                      />
                       <label
                         for="floating_memberID"
                         class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
@@ -349,7 +400,7 @@
                           bind:value={detailedClaim.customer.driverSelected}
                           id="floating_last_rider"
                           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
-                          
+
                         >
                           <option value="" class="text-gray-600">Select</option>
                           <option value="1" class="text-gray-600">Yes</option>
@@ -366,7 +417,7 @@
                         <div class="grid xl:grid-cols-2 xl:gap-6">
                           <div class="relative z-0 w-full mb-6 group">
                             <input
-    
+
                               type="text"
                               name="nonPolicyFirstName"
                               id="non_policy_first_name"
@@ -399,7 +450,7 @@
                         <div class="grid xl:grid-cols-2 xl:gap-6">
                           <div class="relative z-0 w-full mb-6 group">
                             <input
-    
+
                               type="tel"
                               name="nonPolicyPhone"
                               id="non_policy_phone"
@@ -415,7 +466,7 @@
                           </div>
                           <div class="relative z-0 w-full mb-6 group">
                             <input
-    
+
                               type="text"
                               name="nonPolicyDoB"
                               id="nonPolicyDoB"
@@ -424,7 +475,7 @@
                               value={formatDate(detailedClaim.customer.nonPolicyDoB)}
                             />
                             <label
-                              for="non_policy_date"
+                              for="nonPolicyDoB"
                               class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
                             >Date of Birth of Last Driver</label
                             >
@@ -452,40 +503,40 @@
                           >
                         </div>
                         {#if relationSelected === "5"}
-                        <div class="relative z-0 w-full mb-6 group">
-                          <input
-    
-                            type="text"
-                            name="relationOtherDetails"
-                            id="relation_other"
-                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
-                            placeholder=" "
-                            bind:value={detailedClaim.customer.nonPolicyRelationOther}
-                          />
-                          <label
-                            for="relation_other"
-                            class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
-                          >Description</label
-                          >
-                        </div>
+                          <div class="relative z-0 w-full mb-6 group">
+                            <input
+
+                              type="text"
+                              name="relationOtherDetails"
+                              id="relation_other"
+                              class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:border-purple-100 outline-none ring-0 border-purple-900 peer"
+                              placeholder=" "
+                              bind:value={detailedClaim.customer.nonPolicyRelationOther}
+                            />
+                            <label
+                              for="relation_other"
+                              class="absolute text-sm text-gray-500 dark:text-gray-400 left-0 text-purple-900 dark:text-purple-100 scale-100 translate-y-0 scale-75 -translate-y-14"
+                            >Description</label
+                            >
+                          </div>
                         {/if}
-                        
-                         
-                          <div class="flex text-left flex-col space-y-3 p-2">
-                           
-                            <Switch
+
+
+                        <div class="flex text-left flex-col space-y-3 p-2">
+
+                          <Switch
                             design="inner"
                             value={detailedClaim.customerHistory.driverPermission}
                             label="Did the last driver have the policy holder's permission to use the vehicle?"
-                            />
-                            <Switch
+                          />
+                          <Switch
                             design="inner"
-                            
+
                             value={detailedClaim.customerHistory.nonDriverHasInsurance}
                             label="Does the last driver have motor vehicle insurance?"
-                            />
-                          </div>
-                        
+                          />
+                        </div>
+
                       {/if}
                     </div>
                   </div>
@@ -637,22 +688,22 @@
                       design="inner"
                       value={detailedClaim.customerHistory.motorAccident}
                       label="Been involved in a motor vehicle accident?"
-                      />
-                      <Switch
+                    />
+                    <Switch
                       design="inner"
-                      
+
                       value={detailedClaim.customerHistory.convictedOffence}
                       label="Been convicted of a driving offence?"
                     />
                     <Switch
                       design="inner"
                       value={detailedClaim.customerHistory.disqualified}
-                      
+
                       label="Been disqualified for driving or had their licence cancelled/suspended?"
-                      />
-                      <Switch
+                    />
+                    <Switch
                       design="inner"
-              
+
                       value={detailedClaim.customerHistory.refusedInsurance}
                       label="Been refused vehicle insurance or had their policy cancelled?"
                     />

@@ -16,7 +16,7 @@
   // Address Lookup
   let address: string;
   let results: object = [];
-  let debounceTimer: NodeJS.Timeout;
+  let debounceTimer: number;
 
   // Non Policy Customer data Form
   // --------------------------------------------------
@@ -465,11 +465,11 @@
   <div class="container px-6 mx-auto grid">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Claims</h2>
 
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class=" py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <Form {multiStepOptions}>
         <Step>
           <!-- Customer Information -->
-          <div id="customerForm" class="p-5 flex flex-col flex-wrap gap-5">
+          <div id="customerForm" class="pl-2 flex flex-col flex-wrap gap-5">
             <div id='floating_memberID_error' class="text-red-600 pt-3">
               {policyNumberError}
             </div>
@@ -549,7 +549,7 @@
                     name="phone"
                     id="floating_phone"
                     on:focusout={formatPhone}
-                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                    class="block py-5 xl:py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                     placeholder=" "
                     maxlength="14"
                     required
@@ -642,7 +642,7 @@
                 <select
                   name="lastRider"
                   id="floating_last_rider"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                  class="block py-5 xl:py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   bind:value={driverSelected}
                   required
                 >
@@ -754,7 +754,7 @@
                       <select
                         name="driverRelation"
                         id="floating_relation"
-                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                        class="block py-5 xl:py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                         bind:value={relationSelected}
                         required
                       >
@@ -824,7 +824,7 @@
                         Yes
                       </label>
                       <label class="px-4">
-                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" id="non_driver_has_insurance_yes" value={2}>
+                        <input type="radio" bind:group={nonDriverHasInsurance} name="nonDriverHasInsurance" id="non_driver_has_insurance_no" value={2}>
                         No
                       </label>
                     </div>
@@ -905,7 +905,7 @@
                   type="date"
                   name="LicenceIssueDate"
                   id="licenseIssueDate"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                  class="block py-5 xl:py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                   placeholder=" "
                   required
                   min="1900-01-01" 
@@ -927,7 +927,7 @@
           <!-- Upload Image -->
         <div class="flex justify-center">
           <div class="mb-3 w-96">
-            <label for="formFile" class="form-label inline-block mb-2 text-gray-500 dark:text-gray-400">Upload File</label>
+            <label for="imageInput" class="form-label inline-block mb-2 text-gray-500 dark:text-gray-400">Upload File</label>
             <input id="imageInput"  type="file" class="form-control
                     block
                     w-full

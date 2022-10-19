@@ -66,7 +66,7 @@
             credentials: "include",
             // send the request data as the new customer details in the body
             body: JSON.stringify(requestData)
-            })
+          })
             .then((response) => response.json())
             .then((res) => {
               console.log("Customer created");
@@ -98,7 +98,7 @@
       method: "post",
       url: "https://dairies-rest-api.herokuapp.com/claims/autogen",
       headers: {
-        'Content-Type': 'multipart/form-data'
+        "Content-Type": "multipart/form-data"
       },
       mode: "cors",
       credentials: "include",
@@ -186,11 +186,11 @@
     }
 
 
-    if(imageFormExists) {
-    	console.log("img form exists");
-    	if (vehicleFormExists) {
-    		fetchVehicleData(vehicleForm);
-    	}
+    if (imageFormExists) {
+      console.log("img form exists");
+      if (vehicleFormExists) {
+        fetchVehicleData(vehicleForm);
+      }
       // get inputs inside imageForm
       let imageFormInputs = imageForm.querySelectorAll("input");
       let imageFormSelects = imageForm.querySelectorAll("select");
@@ -212,61 +212,6 @@
     });
     console.log(historyFormData);
     localStorage.setItem("history", JSON.stringify(historyFormData));
-
-    // if(index === 0) {
-    // 	// if (customerFormExists) {
-    // 	// 	// get inputs inside customerForm
-    // 	// 	let customerFormInputs = customerForm.querySelectorAll('input');
-    // 	// 	let customerFormSelects = customerForm.querySelectorAll('select');
-    // 	// 	let customerFormData = {};
-    // 	// 	customerFormInputs.forEach((input) => {
-    // 	// 		customerFormData[input.name] = input.value;
-    // 	// 	});
-    // 	// 	customerFormSelects.forEach((select) => {
-    // 	// 		console.log(select.value);
-    // 	// 		customerFormData[select.name] = select.selectedIndex;
-    // 	// 	});
-    // 	// 	// check if Member ID exists in database
-    // 	// 	// if it does, get the customer's data from the database
-    // 	// 	// if it doesn't, create a new customer in the database
-    // 	// 	// then get the customer's data from the database
-    // 	// 	fetchCustomerData(customerFormData);
-    // 	// 	console.log(customerFormData);
-    // 		if (stepDirection === 'next') {
-    // 			index++;
-    // 		} else {
-    // 			index--;
-    // 		}
-    // 	}
-    // } else if (index === 1){
-    // 	// if(imageFormExists) {
-    // 	// 	console.log("img form exists");
-    // 	// 	if (vehicleFormExists) {
-    // 	// 		fetchVehicleData(vehicleForm);
-    // 			if (stepDirection === 'next') {
-    // 				index++;
-    // 			} else {
-    // 				index--;
-    // 			}
-    // 		}
-    // 	}
-    // } else if (index === 2){
-    // 	if(historyFormExists) {
-    // 		console.log("history form exists");
-    // 		// get inputs inside historyForm
-    // 		// let historyFormInputs = historyForm.querySelectorAll('input');
-    // 		// let historyFormData = {};
-    // 		// historyFormInputs.forEach((input) => {
-    // 		// 	historyFormData[input.name] = input.value;
-    // 		// });
-    // 		// console.log(historyFormData);
-    // 		if (stepDirection === 'next') {
-    // 			index++;
-    // 		} else {
-    // 			index--;
-    // 		}
-    // 	}
-    // }
   }
 
   /*
@@ -448,23 +393,19 @@
     }
 
     #multistep-error-messages {
-        position: absolute;
-        /* right: 0; */
-        top: 50%;
-        left: 50%;
-        margin-top: -50px;
-        margin-left: -50px;
+        position: sticky;
+        display: flex;
+        top: 0;
         height: auto;
         width: auto;
-        text-align: left;
         padding: 20px 100px 20px 100px;
         background: rgb(205, 33, 33);
         visibility: hidden;
         opacity: 0;
         transition: visibility 0s, opacity 0.2s linear;
-        color:white;
+        color: white;
         text-align: center;
-        font-weight:bold;
+        font-weight: bold;
         z-index: 1;
     }
 
