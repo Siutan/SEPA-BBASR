@@ -224,7 +224,7 @@
         >Was the policy holder the last person to use the vehicle?</label
         >
       </div>
-      {#if detailedClaim.customer.driverSelected === "1"}
+      {#if detailedClaim.customer.driverSelected === "0"}
       <div class="grid xl:grid-cols-2 xl:gap-6">
         <div class="relative z-0 w-full mb-6 group">
           <input
