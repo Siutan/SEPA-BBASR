@@ -257,21 +257,6 @@
                   </div>
                 </div>
               </div>
-              <tr
-                class="text-gray-700 dark:text-gray-400 hover:bg-gray-100 hover:dark:bg-gray-700"
-                on:click={openModal}
-              >
-                  <td class="px-4 py-3">
-                    <div class="flex items-center text-sm">
-                      <div>
-                        <p class="font-semibold">+ Add New User</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-4 py-3 text-sm"></td>
-                  <td class="px-4 py-3 text-sm"></td>
-                  <td class="px-4 py-3 text-xs"></td>
-              </tr>
               </tbody>
             </table>
           </div>

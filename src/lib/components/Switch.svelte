@@ -30,13 +30,14 @@
 
 {#if design == 'inner'}
     {#if disabled}
-        <div class="s s--inner">
+        <div class="s s--inner ">
             <button
+            class="bg-gray-200 dark:bg-gray-900 cursor-default"
             role="switch"
             aria-checked={checked}
             aria-labelledby={`switch-${uniqueID}`}
             >
-            <span>Yes</span>
+            <span >Yes</span>
             <span class="p-2">No</span>
             </button>
     
@@ -46,6 +47,7 @@
         <div class="s s--inner">
             <button
             role="switch"
+            class="bg-gray-200 dark:bg-gray-900"
             aria-checked={checked}
             aria-labelledby={`switch-${uniqueID}`}
             on:click={handleClick}>
@@ -62,6 +64,7 @@
     <div class="s s--slider" style="font-size:{fontSize}px">
       <span id={`switch-${uniqueID}`}>{label}</span>
       <button
+        class="bg-gray-300 dark:bg-gray-900"
         role="switch"
         aria-checked={false}
         aria-labelledby={`switch-${uniqueID}`}
@@ -72,6 +75,7 @@
     <div class="s s--slider" style="font-size:{fontSize}px">
       <span id={`switch-${uniqueID}`}>{label}</span>
       <button
+        class="bg-gray-300 dark:bg-gray-900"
         role="switch"
         aria-checked={checked}
         aria-labelledby={`switch-${uniqueID}`}
@@ -109,7 +113,7 @@
     .s--inner button {
         border-radius: 20px;
         padding: 0.2em;
-        background-color: #121317;
+        /* background-color: #121317; removed so tailwind light and dark mode defines color */
         border: 1px solid var(--gray);
     }
     [role='switch'][aria-checked='true'] :first-child,
@@ -139,7 +143,7 @@
         height: 1.6em;
         position: relative;
         margin: 0 0 0 0.5em;
-        background: var(--gray);
+        /* background: var(--gray); removed so tailwind light and dark mode defines color */
         border: none;
     }
 
