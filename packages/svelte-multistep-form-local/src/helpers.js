@@ -11,6 +11,7 @@ currentStep.subscribe((value) => {
 	activeStep = value;
 });
 
+//validates form inputs and makes sure there is not malicious script
 export const formHasError = () => {
 	const steps = document.querySelectorAll('.step');
 	const step = steps[activeStep];
