@@ -66,7 +66,7 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log(users);
+  
             users = [...users, ...data];
           });
       });

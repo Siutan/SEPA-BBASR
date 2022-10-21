@@ -48,7 +48,7 @@
   let format_max_date = () => {
     let timeElapsed = Date.now();
     let today = new Date(timeElapsed);
-    console.log("today: ", today);
+  
     let year = today.getFullYear();
     
     let month = today.getMonth().toString();
@@ -75,7 +75,6 @@
   let policyNumberError = "";
   //search if policy number exists, return data to fields if it does
   const searchPolicyNumber = () => {
-    console.log("policyNumber: ", policyNumber);
 
     //clear membershipIDerror
     policyNumberError = "";
@@ -86,13 +85,12 @@
   
       if(policyNumber.match(regexPolicyNumber))
       {
-        console.log("valid policy number format");
         //search for policy number
         fetchCustomerData();
 
       }
       else{
-        console.log("Not valid policy number format");
+
         policyNumberError = "Please type in a policy number in the format 'XX000000'";
       }
     }
@@ -135,9 +133,7 @@
           address = "";
 
         } else {
-          console.log("Customer exists");
-          console.log(data);
-          
+            
           //populate data
           firstName = data.givenName;
           lastName = data.lastName; 
@@ -187,7 +183,7 @@
       };
       results.push(formattedData);
     }
-    console.log(results);
+
   }
 
   // Phone number formatting
@@ -230,7 +226,6 @@
     // passed to the Filesystem API to read the raw data of the image,
     // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
     imageUrl = CImage.webPath;
-    console.log(CImage.path);
 
     fetch(imageUrl)
       .then(res => res.blob())
@@ -239,7 +234,6 @@
         reader.readAsDataURL(blob);
         reader.onloadend = () => {
           let base64data = reader.result;
-          console.log(base64data);
           setImage = base64data;
         };
       });
@@ -256,7 +250,7 @@
 
     let data = new FormData();
     let vehicleImage = document.querySelector("#imageInput");
-    console.log(`vehicleImage: ${vehicleImage}`)
+
     data.append("image", vehicleImage.files[0]);
     let config = {
       method: "post",
@@ -270,7 +264,6 @@
     };
     axios(config)
       .then((response) => {
-        console.log(response);
         localStorage.setItem("vehicle", JSON.stringify(response.data));
         
         //Check if Error
@@ -339,12 +332,6 @@
   function handleSubmit(e) {
     e.preventDefault();
     sumbitButtonText = "Processing claim...";
-    //prepare data
-    let cData = JSON.parse(localStorage.getItem("customer"));
-    let vData = JSON.parse(localStorage.getItem("vehicle2"));
-    let dData = JSON.parse(localStorage.getItem("history"));
-    console.log(vData)
-    console.log(dData)
 
     let fileInput = document.querySelector("#imageInput") as HTMLInputElement;
 
@@ -406,10 +393,10 @@
 
     // Typescript doesnt like this, fix later
     fetch("https://dairies-rest-api.herokuapp.com/claims", requestOptions)
-      // console.log response data
+
       .then(response => response.json())
       .then(data => {
-        console.log("response data: ", data)
+
         // redirect to home page
         window.location.href = "/";
       })
@@ -926,7 +913,7 @@
         <Step>
           <!-- Upload Image -->
         <div class="flex justify-center">
-          <div class="mb-3 w-96">
+          <div class="mb-3 w-96 pl-2 justify-items-center">
             <label for="imageInput" class="form-label inline-block mb-2 text-gray-500 dark:text-gray-400">Upload File</label>
             <input id="imageInput"  type="file" class="form-control
                     block
@@ -942,7 +929,8 @@
                     transition
                     ease-in-out
                     m-0
-                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
+                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+                    " 
                    >
           </div>
         </div>
@@ -1156,5 +1144,7 @@
     ::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
+
+
 </style>
 

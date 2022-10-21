@@ -6,9 +6,8 @@
   let detailedClaim;
   let detailedImage = "";
 
+  //Retrieves specifc claim data from Web3.storage
   async function getClaimData(claimId) {
-    console.log("getClaimDataCalled");
-    console.log("claimID:", claimId.ID);
 
     let url = "https://dairies-rest-api.herokuapp.com/claims/json/" + claimId.ID;
     await fetch(url, {
@@ -18,7 +17,7 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(`Claim: ${JSON.stringify(data)}`);
+
         detailedClaim = data;
         getImage(claimId);
 
@@ -50,6 +49,7 @@
 
 
   function formatDate(date) {
+   
     let d = new Date(date);
     let month = "" + (d.getMonth() + 1);
     let day = "" + d.getDate();

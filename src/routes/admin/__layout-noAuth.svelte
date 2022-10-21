@@ -11,14 +11,14 @@
           mode: "cors"
         })
         .then(response => {
-          console.log(response.status);
+          
           if (response.status === 200) {
-            console.log("Already Logged in");
+            
             goto("/");
             authenticated = true;
 
           } else {
-            console.log("Not logged in");
+            
             
             authenticated = false;
           }

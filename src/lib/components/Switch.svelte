@@ -13,15 +13,17 @@
 
   const uniqueID = Math.floor(Math.random() * 100)
 
+  //flips the current value for the switch
   function handleClick(event){
+        
     event.preventDefault();
-    console.log('handleClick')
+
     const target = event.target
 
     const state = target.getAttribute('aria-checked')
 
     checked = state !== 'true'
-
+    
     value = checked === true
    
     

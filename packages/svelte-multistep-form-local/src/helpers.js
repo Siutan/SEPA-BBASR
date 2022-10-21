@@ -18,11 +18,13 @@ export const formHasError = () => {
 
 	const requiredFields = step.querySelectorAll('[required]');
 	let hasError = false;
+
 	let errorMessages = ['Please fix any errors and fill out all fields!'];
+
 
 	requiredFields.forEach((el) => {
 		let id = el.id;
-		console.log('id:', id);
+		
 		if (id !== 'driver_permission_question' || id !== 'last_driver_insurance_question') {
 			//clear any errors
 			if (document.getElementById(`${id}_error`).value !== '') {
@@ -58,9 +60,9 @@ export const formHasError = () => {
 	let regexName = /^[A-Za-z ]+$/;
 	if (firstName) {
 		if (firstName.match(regexName)) {
-			console.log('valid first name');
+	
 		} else {
-			console.log('Not valid first name');
+			
 			hasError = true;
 			//Add error message
 			document.getElementById('floating_first_name_error').innerHTML = 'Only letter characters';
@@ -71,9 +73,9 @@ export const formHasError = () => {
 	const lastName = document.getElementById('floating_last_name').value;
 	if (lastName) {
 		if (lastName.match(regexName)) {
-			console.log('valid last name');
+		
 		} else {
-			console.log('Not valid last name');
+
 			hasError = true;
 			document.getElementById('floating_last_name_error').innerHTML = 'Only letter characters';
 		}
@@ -84,9 +86,9 @@ export const formHasError = () => {
 	let regexPhone = /^61 4\d{2}-\d{3}-\d{3}$/;
 	if (phone) {
 		if (phone.match(regexPhone)) {
-			console.log('valid phone format');
+
 		} else {
-			console.log('Not valid phone format');
+
 			hasError = true;
 			document.getElementById('floating_phone_error').innerHTML = "'614XXXXXXXX' format";
 		}
@@ -96,10 +98,10 @@ export const formHasError = () => {
 	const dateString = document.getElementById('floating_date').value;
 	let regexDate = /^\d{4}-\d{2}-\d{2}$/;
 	if (dateString) {
-		console.log('date1: ', dateString);
+	
 		//check that date is in correct format
 		if (dateString.match(regexDate)) {
-			console.log('valid format');
+		
 
 			let d = new Date(dateString);
 			let dNum = d.getTime();
@@ -124,7 +126,7 @@ export const formHasError = () => {
 				document.getElementById('floating_date_error').innerHTML = "Can't be a future date";
 			}
 		} else {
-			console.log('invalid date format');
+	
 			hasError = true;
 			document.getElementById('floating_date_error').innerHTML = 'Not valid date format';
 		}
@@ -136,9 +138,9 @@ export const formHasError = () => {
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	if (email) {
 		if (email.match(regexEmail)) {
-			console.log('valid email format');
+
 		} else {
-			console.log('Not valid email format');
+	
 			hasError = true;
 			document.getElementById('floating_email_error').innerHTML = 'Require a valid email address';
 		}
@@ -149,9 +151,9 @@ export const formHasError = () => {
 	let regexAddress = /^[a-zA-Z0-9,\- \/\(\)]+$/;
 	if (address) {
 		if (address.match(regexAddress)) {
-			console.log('valid address');
+		
 		} else {
-			console.log('Not valid address format');
+		
 			hasError = true;
 			document.getElementById('floating_address_error').innerHTML = 'No special characters';
 		}
@@ -162,9 +164,9 @@ export const formHasError = () => {
 	let regexMembership = /^[A-Z]{2}\d{6}$/;
 	if (membershipID) {
 		if (membershipID.match(regexMembership)) {
-			console.log('valid membershipID');
+		
 		} else {
-			console.log('Not valid membership ID format');
+
 			hasError = true;
 			document.getElementById('floating_membershipID_error').innerHTML = '`XX000000` format';
 		}
@@ -172,15 +174,15 @@ export const formHasError = () => {
 
 	//Check if policy holder was last one driving
 	let lastRider = document.getElementById('floating_last_rider').value;
-	console.log('lastRider: ', lastRider);
+
 	if (lastRider === '2') {
 		//validate first name of last rider
 		const nonPolicyFirstName = document.getElementById('non_policy_first_name').value;
 		if (nonPolicyFirstName) {
 			if (nonPolicyFirstName.match(regexName)) {
-				console.log('valid first name of non-policy rider');
+
 			} else {
-				console.log('Not valid first name of non-policy rider');
+			
 				hasError = true;
 				document.getElementById('non_policy_first_name_error').innerHTML = 'Only letter characters';
 			}
@@ -190,9 +192,9 @@ export const formHasError = () => {
 		const nonPolicyLastName = document.getElementById('non_policy_last_name').value;
 		if (nonPolicyLastName) {
 			if (nonPolicyLastName.match(regexName)) {
-				console.log('valid last name of non-policy rider');
+			
 			} else {
-				console.log('Not valid last name of non-policy rider');
+			
 				hasError = true;
 				document.getElementById('non_policy_last_name_error').innerHTML = 'Only letter characters';
 			}
@@ -203,9 +205,9 @@ export const formHasError = () => {
 
 		if (nonPolicyPhone) {
 			if (nonPolicyPhone.match(regexPhone)) {
-				console.log('valid phone format for last rider');
+
 			} else {
-				console.log('Not valid phone format for last rider');
+			
 				hasError = true;
 				document.getElementById('non_policy_phone_error').innerHTML = "'614XXXXXXXXX' format";
 			}
@@ -216,7 +218,7 @@ export const formHasError = () => {
 		if (nonPolicyDate) {
 			//check that date is in correct format
 			if (nonPolicyDate.match(regexDate)) {
-				console.log('valid format');
+
 				let d = new Date(dateString);
 				let dNum = d.getTime();
 
@@ -240,7 +242,7 @@ export const formHasError = () => {
 					document.getElementById('non_policy_date_error').innerHTML = "Can't be future date";
 				}
 			} else {
-				console.log('invalid date format');
+
 				hasError = true;
 				document.getElementById('non_policy_date_error').innerHTML = 'Invalid date format';
 			}
@@ -253,9 +255,9 @@ export const formHasError = () => {
 			let otherDetails = document.getElementById('relation_other').value;
 			if (otherDetails) {
 				if (otherDetails.match(regexName)) {
-					console.log('valid other details ');
+	
 				} else {
-					console.log('Not valid input for other relation details');
+
 					hasError = true;
 					document.getElementById('relation_other_error').innerHTML = 'Only letter characters';
 				}
@@ -264,15 +266,15 @@ export const formHasError = () => {
 
 		//check if permission question was answered
 		let permission = document.getElementsByName('driverPermission');
-		console.log('Permission: ');
-		console.log(permission);
+
+
 
 		if (permission[0].checked || permission[1].checked) {
-			console.log('Permission question selected');
+		
 		} else {
-			console.log('Permission question not selected');
+			
 			//change the colour of the question to indicate not selected
-			console.log('DRIVER PERMI', document.getElementById('driver_permission_question'));
+		
 			document.getElementById('driver_permission_question').classList.remove('dark:text-gray-400');
 			document.getElementById('driver_permission_question').classList.add('dark:text-red-600');
 			document.getElementById('driver_permission_question').classList.remove('text-gray-900');
@@ -282,12 +284,11 @@ export const formHasError = () => {
 
 		//check if last driver has insurance question was answered
 		let insurance = document.getElementsByName('nonDriverHasInsurance');
-		console.log('insurancey: ', insurance[0].checked);
-		console.log('insurancen: ', insurance[1].checked);
+	
 		if (insurance[0].checked || insurance[1].checked) {
-			console.log('insurance question selected');
+			
 		} else {
-			console.log('Insurance question not selected');
+			
 			hasError = true;
 			//Change colour of question if not selected
 			document
@@ -303,9 +304,9 @@ export const formHasError = () => {
 	if (licenseNumber) {
 		let regexLicense = /^\d{9,11}$/;
 		if (licenseNumber.match(regexLicense)) {
-			console.log("valid driver's license number");
+	
 		} else {
-			console.log("Not valid driver's license number");
+
 			hasError = true;
 			document.getElementById('licenseNumber_error').innerHTML = 'Between 9 to 11 digits';
 		}
@@ -314,10 +315,10 @@ export const formHasError = () => {
 	//Check if license issue date is valid
 	let licenseIssueDate = document.getElementById('licenseIssueDate').value;
 	if (licenseIssueDate) {
-		console.log('date: ', licenseIssueDate);
+
 		//check that date is in correct format
 		if (licenseIssueDate.match(regexDate)) {
-			console.log('valid format');
+
 			let d = new Date(licenseIssueDate);
 			let dNum = d.getTime();
 
@@ -342,7 +343,7 @@ export const formHasError = () => {
 					'The date cannot be in the future';
 			}
 		} else {
-			console.log('invalid license issue date format');
+
 			hasError = true;
 			document.getElementById('licenseIssueDate_error').innerHTML = 'Invalid date format';
 		}
@@ -352,9 +353,9 @@ export const formHasError = () => {
 	let make = document.getElementById('floating_vehicleMake').value;
 	if (make) {
 		if (make.match(regexAddress)) {
-			console.log('valid make format');
+
 		} else {
-			console.log('Not valid make format');
+
 			hasError = true;
 			document.getElementById('floating_vehicleMake_error').innerHTML =
 				'Please use yyyy/mm/dd format';
@@ -365,9 +366,9 @@ export const formHasError = () => {
 	let vehicleModel = document.getElementById('vehicleModel').value;
 	if (vehicleModel) {
 		if (vehicleModel.match(regexAddress)) {
-			console.log('valid vehicle model format');
+	
 		} else {
-			console.log('Not valid vehicle make format');
+	
 			hasError = true;
 			document.getElementById('vehicleModel_error').innerHTML = 'No special characters';
 		}
@@ -378,9 +379,9 @@ export const formHasError = () => {
 	let regexYear = /^\d{4}|\d{4}-\d{4}$/;
 	if (year) {
 		if (year.match(regexYear)) {
-			console.log('valid vehicle year format');
+
 		} else {
-			console.log('Not valid vehicle year format');
+
 			hasError = true;
 			document.getElementById('floating_vehicle_year_error').innerHTML = 'yyyy or yyyy-yyyy format';
 		}
@@ -390,9 +391,9 @@ export const formHasError = () => {
 	let generation = document.getElementById('floating_vehicle_generation').value;
 	if (generation) {
 		if (vehicleModel.match(regexAddress)) {
-			console.log('valid vehicle generation format');
+
 		} else {
-			console.log('Not valid vehicle generation format');
+	
 			hasError = true;
 			document.getElementById('floating_vehicle_generation_error').innerHTML =
 				'No special characters';
@@ -404,9 +405,9 @@ export const formHasError = () => {
 	let regexRego = /^[A-Za-z0-9]{1,6}$/;
 	if (rego) {
 		if (rego.match(regexRego)) {
-			console.log('valid vehicle license plate format');
+	
 		} else {
-			console.log('Not valid vehicle license plate format');
+		
 			hasError = true;
 			document.getElementById('floating_vehicle_license_error').innerHTML = 'No special characters';
 		}
@@ -417,9 +418,9 @@ export const formHasError = () => {
 
 	if (colour) {
 		if (colour.match(regexName)) {
-			console.log('valid colour input format');
+	
 		} else {
-			console.log('Not valid vehicle colour format');
+	
 			hasError = true;
 			document.getElementById('floating_vehicle_colour_error').innerHTML = 'Only letter characters';
 		}
@@ -429,9 +430,9 @@ export const formHasError = () => {
 	let engine = document.getElementById('floating_engine').value;
 	if (engine) {
 		if (engine.match(regexAddress)) {
-			console.log('valid vehicle engine format');
+
 		} else {
-			console.log('Not valid vehicle engine format');
+
 			hasError = true;
 			document.getElementById('floating_engine_error').innerHTML = 'No special characters';
 		}
@@ -441,9 +442,9 @@ export const formHasError = () => {
 	let vehicleID = document.getElementById('floating_vehicleId').value;
 	if (vehicleID) {
 		if (vehicleID.match(regexAddress)) {
-			console.log('valid vehicle ID format');
+
 		} else {
-			console.log('Not valid vehicle ID format');
+	
 			hasError = true;
 			document.getElementById('floating_vehicleId_error').innerHTML = 'No special characters';
 		}
@@ -451,15 +452,22 @@ export const formHasError = () => {
 
 	if (hasError) {
 		showError(errorMessages);
-		console.log('errorMessages', errorMessages);
+
 	}
+
 	return hasError;
 };
 
+
+//If form has error add error messages to form inputs
 export const showError = (errorMessages) => {
+	
 	let errorField = document.querySelector('#multistep-error-messages');
+
 	deleteChildNodes(errorField);
+
 	showOrHide(errorField, 'visible');
+
 
 	errorMessages.forEach((message) => {
 		createElementAppendTo('p', message, errorField);
@@ -470,6 +478,7 @@ export const showError = (errorMessages) => {
 	}, ERROR_DISPLAY_TIME);
 };
 
+//Updates the status of the step components when next/prev buttons clicked 
 export const updateStepStatus = (operation) => {
 	if (!operation) return;
 	const steps = document.querySelectorAll('.step');
@@ -485,6 +494,7 @@ export const updateStepStatus = (operation) => {
 	updateButtonVisibility();
 };
 
+//Disables prev and next buttons if at the start or end of the step components
 export const updateButtonVisibility = () => {
 	const steps = document.querySelectorAll('.step');
 	const stepsLength = steps.length;
@@ -503,6 +513,7 @@ export const updateButtonVisibility = () => {
 	}
 };
 
+//Changes the visibility and opacity settings of the inputs
 export const showOrHide = (el, status) => {
 	if (!el) return;
 
@@ -515,21 +526,24 @@ export const showOrHide = (el, status) => {
 	el.style.opacity = statusOptions[status] ? statusOptions[status] : null;
 };
 
-// TODO: think about it if this is nedeed or useless
+//Returns a unique identifier for components rendered to use as id's
 export const uuidv4 = () => {
 	return UUID_PATTERN.replace(/[xy]/g, function (c) {
 		let r = (Math.random() * 16) | 0,
 			v = c === 'x' ? r : (r & 0x3) | 0x8;
+			
 		return v.toString(16);
 	});
 };
 
+//removes any child nodes from passed in input
 export const deleteChildNodes = (el) => {
 	while (el.firstChild) {
 		el.removeChild(el.firstChild);
 	}
 };
 
+//Appends html content to an input
 export const createElementAppendTo = (type, content, target) => {
 	let el = document.createElement(type);
 	el.innerHTML = content;
