@@ -1,8 +1,9 @@
 <script>
 	import { goto } from "$app/navigation";
+    const BASE_URL = import.meta.env.VITE_BASE_URL
 
     function logout() {
-        fetch('https://dairies-rest-api.herokuapp.com/auth/logout', {
+        fetch(`${BASE_URL}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             })

@@ -1,6 +1,8 @@
 <script lang="ts">
   import axios from "axios";
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+
   // form data
   let givenName = "";
   let lastName = "";
@@ -34,7 +36,7 @@
         },
         withCredentials: true
       }
-      const response = await axios.get(`https://dairies-rest-api.herokuapp.com/user/${employeeId}`, employeeConfig);
+      const response = await axios.get(`${BASE_URL}/user/${employeeId}`, employeeConfig);
       givenName = response.data.givenName;
       lastName = response.data.lastName;
       email = response.data.companyEmail;
@@ -125,7 +127,7 @@
       // axios config
       let updateConfig = {
         method: "post",
-        url: "https://dairies-rest-api.herokuapp.com/user/update",
+        url: `${BASE_URL}/user/update`,
         headers: {
           "Content-Type": "application/json"
         },

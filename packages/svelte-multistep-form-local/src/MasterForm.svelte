@@ -9,6 +9,8 @@
   import axios from "axios";
   import FormData from "form-data";
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+
   export let multiStepOptions;
   export let resetSteps;
 
@@ -42,8 +44,8 @@
 
   function fetchCustomerData(requestData) {
     let customerGetUrl =
-      "https://dairies-rest-api.herokuapp.com/customers/" + requestData["membershipId"];
-    let customerPostUrl = "https://dairies-rest-api.herokuapp.com/customers/";
+      `${BASE_URL}/customers/${requestData["membershipId"]}`;
+    let customerPostUrl = `${BASE_URL}/customers/`;
     // check if member id exists
     fetch(customerGetUrl, {
       method: "GET",
@@ -88,15 +90,12 @@
   }
 
   function fetchVehicleData(vehicleForm) {
-    // axios request to get the vehicle data
-    // let vehicleGetUrl = "https://dairies-rest-api.herokuapp.com/claims/autogen/";
-
     let data = new FormData();
     let vehicleImage = document.querySelector("#imageInput");
     data.append("image", vehicleImage.files[0]);
     let config = {
       method: "post",
-      url: "https://dairies-rest-api.herokuapp.com/claims/autogen",
+      url: `${BASE_URL}/claims/autogen`,
       headers: {
         "Content-Type": "multipart/form-data"
       },
@@ -113,41 +112,6 @@
         console.log(error);
       });
 
-    // check if member id exists
-    // fetch(vehicleGetUrl, {
-    // 	method: 'GET',
-    // 	headers: {
-    // 		'Content-Type': 'application/json'
-    // 	}
-    // })
-    // 	.then((response) => response.json())
-    // 	.then((data) => {
-    //
-    // 		console.log(data);
-    // 		let vMake = data["vehicle"]["Make"];
-    // 		let vModel = data["vehicle"]["Model"];
-    // 		let vYear = data["vehicle"]["Year"];
-    // 		let vBody = data["vehicle"]["Body"];
-    // 		let vEngine = data["vehicle"]["Engine"];
-    // 		let vId = data["vehicleId"];
-    //
-    // 		let vehicle = {
-    // 			"vehicleId": vId,
-    // 			"make": vMake,
-    // 			"model": vModel,
-    // 			"year": vYear,
-    // 			"bodyType": vBody,
-    // 			"engine": vEngine
-    // 		};
-    //
-    // 		let vehicleFormInputs = vehicleForm.querySelectorAll('input');
-    // 		let vehicleFormData = {};
-    // 		vehicleFormInputs.forEach((input) => {
-    // 			vehicleFormData[input.value = vehicle[input.name]];
-    // 		});
-    // 		console.log(vehicleFormData);
-    // 		localStorage.setItem('vehicle', JSON.stringify(data["vehicle"]));
-    // 	});
   }
 
 

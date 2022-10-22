@@ -2,6 +2,8 @@
   import Switch from "../Switch.svelte";
   import Accordion from "../Accordian.svelte";
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+
   export let ID;
   let detailedClaim;
   let detailedImage = "";
@@ -9,7 +11,7 @@
   //Retrieves specifc claim data from Web3.storage
   async function getClaimData(claimId) {
 
-    let url = "https://dairies-rest-api.herokuapp.com/claims/json/" + claimId.ID;
+    let url = `${BASE_URL}/claims/json/${claimId.ID}`;
     await fetch(url, {
       method: "GET",
       credentials: "include",
@@ -30,7 +32,7 @@
 
   // get image from claim id
   async function getImage(claimId) {
-    let url = "https://dairies-rest-api.herokuapp.com/claims/image/" + claimId.ID;
+    let url = `${BASE_URL}/claims/image/${claimId.ID}`;
     await fetch(url, {
       method: "GET",
       credentials: "include",

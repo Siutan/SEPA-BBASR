@@ -3,6 +3,8 @@
   import HeaderLogin from "$src/lib/templates/Admin/HeaderLogin.svelte"
   import { goto } from "$app/navigation";
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+
 
   let employeeId = "";
   let employeeIdError = "";
@@ -41,7 +43,7 @@
       buttonText = "Logging in...";
 
       //Post to the login endpoint
-      fetch('https://dairies-rest-api.herokuapp.com/auth/login', {
+      fetch(`${BASE_URL}/auth/login`, {
           method: 'POST',
           credentials: 'include',
           mode: 'cors',

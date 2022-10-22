@@ -3,6 +3,8 @@
   import Modal from '$src/lib/components/Modal.svelte'; 
   import ClaimDetails from '$src/lib/components/ClaimModals/ClaimDetails.svelte'
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+
   let claims;
   let totalClaims;
   let completeClaim = 0;
@@ -17,7 +19,7 @@
 
   //Call to the getClaims endpoint to display on dashboard table
   async function getClaims() {
-    await fetch("https://dairies-rest-api.herokuapp.com/claims", {
+    await fetch(`${BASE_URL}/claims`, {
       method: "GET",
       credentials: "include",
       mode: "cors"
