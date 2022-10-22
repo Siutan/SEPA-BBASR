@@ -57,7 +57,7 @@ export const formHasError = () => {
 
 	//validate first name
 	const firstName = document.getElementById('floating_first_name').value;
-	let regexName = /^[A-Za-z ]+$/;
+	let regexName = /^[A-Za-z ']+$/;
 	if (firstName) {
 		if (firstName.match(regexName)) {
 	
@@ -148,7 +148,7 @@ export const formHasError = () => {
 
 	//validate address
 	const address = document.getElementById('floating_address').value;
-	let regexAddress = /^[a-zA-Z0-9,\- \/\(\)]+$/;
+	let regexAddress = /^[a-zA-Z0-9',\- \/\(\)]+$/;
 	if (address) {
 		if (address.match(regexAddress)) {
 		

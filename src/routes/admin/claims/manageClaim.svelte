@@ -67,7 +67,7 @@
       .then((response) => response.json())
       .then((data) => {
         detailedClaim = data;
-        console.log(detailedClaim);
+
         getImage(claimId);
         setClaimInputs();
       });
@@ -122,7 +122,7 @@
 
     isModalOpen = true;
     id=newId;
-    console.log("Id is: ", id);
+
   };
 
   const closeModal = () => {
@@ -248,13 +248,15 @@
             </table>
           </div>
           <!-- Claim details -->
-          {#await getDetailedClaim(selectedClaim.claimID)}
+          <!-- Make sure that a claim has been selected before rendering info -->
+          {#if Object.keys(selectedClaim).length !== 0 }
+            {#await getDetailedClaim(selectedClaim.claimID)}
             <!-- loading -->
             <div class="hidden xl:flex flex items-start justify-center">
               <div role="status">
                 <svg aria-hidden="true"
-                     class="mr-2 w-40 h-40 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                     viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    class="mr-2 w-40 h-40 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                    viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                     fill="currentColor" />
@@ -756,6 +758,7 @@
               </div>
             </div>
           {/await}
+          {/if}
         </div>
       {:catch error}
         <div>{error.message}</div>
