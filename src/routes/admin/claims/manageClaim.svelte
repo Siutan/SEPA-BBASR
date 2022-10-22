@@ -8,6 +8,8 @@
   import Modal from "../../../lib/components/Modal.svelte";
   import ClaimDetails from "../../../lib/components/ClaimModals/ClaimDetails.svelte";
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+
 
   let claims;
   let selectedClaim = {};
@@ -44,7 +46,7 @@
 
   async function getClaims() {
     refreshText = "Refreshing...";
-    await fetch("https://dairies-rest-api.herokuapp.com/claims", {
+    await fetch(`${BASE_URL}/claims`, {
       method: "GET",
       credentials: "include",
       mode: "cors"
@@ -58,7 +60,7 @@
   }
 
   async function getDetailedClaim(claimId) {
-    let url = "https://dairies-rest-api.herokuapp.com/claims/json/" + claimId;
+    let url = `${BASE_URL}/claims/json/${claimId}`;
     await fetch(url, {
       method: "GET",
       credentials: "include",
@@ -76,7 +78,7 @@
 
   // get image from claim id
   async function getImage(claimId) {
-    let url = "https://dairies-rest-api.herokuapp.com/claims/image/" + claimId;
+    let url = `${BASE_URL}/claims/image/${claimId}`;
     await fetch(url, {
       method: "GET",
       credentials: "include",

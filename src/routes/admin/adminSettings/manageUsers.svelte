@@ -5,7 +5,9 @@
   import { keydownEscape } from "$lib/ioevents/keydown";
   import Modal from "../../../lib/components/Modal.svelte";
   import UserDetails from "../../../lib/components/UserModal/UserDetails.svelte"
-
+  
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+  
   // modal stuff
   let isModalOpen = false;
 
@@ -47,7 +49,7 @@
 
   async function getUsers() {
     
-    await fetch("https://dairies-rest-api.herokuapp.com/user", {
+    await fetch(`${BASE_URL}/user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -59,7 +61,7 @@
       .then((data) => {
         users = data;
         
-        fetch("https://dairies-rest-api.herokuapp.com/user/inactive", {
+        fetch(`${BASE_URL}/user/inactive`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
@@ -84,7 +86,7 @@
     }
     
     reactivateButtonText = "Reactivating user...";
-    await fetch("https://dairies-rest-api.herokuapp.com/user/reactivate/" + selectedUser.employeeId, {
+    await fetch(`${BASE_URL}/user/reactivate/` + selectedUser.employeeId, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -109,7 +111,7 @@
     }
 
     deleteButtonText = "Deactivating user...";
-    await fetch("https://dairies-rest-api.herokuapp.com/user/deactivate/" + selectedUser.employeeId, {
+    await fetch(`${BASE_URL}/user/deactivate/` + selectedUser.employeeId, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -151,7 +153,7 @@
     }
 
     
-    await fetch("https://dairies-rest-api.herokuapp.com/user/update", {
+    await fetch(`${BASE_URL}user/update`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -207,6 +209,12 @@
       on:deleteAccount={deleteAccount}
       on:reactivateAccount={reactivateAccount}
     />
+  </Modal>
+</div>
+
+<div class="xl:hidden">
+  <Modal isModalOpen={isModalOpen} on:closeModal={closeModal}>
+    <CreateAccount />
   </Modal>
 </div>
 
@@ -306,17 +314,19 @@
                 </tr>
               {/each}
               <div
+              
                 class:hidden={!isModalOpen}
-                class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center"
+                class="xl:fixed hidden overflow-y-auto inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center"
               >
                 <!-- Modal -->
                 <div
+                
                   class:hidden={!isModalOpen}
                   use:clickOutside
                   on:click-outside={closeModal}
                   use:keydownEscape
                   on:keydown-escape={closeModal}
-                  class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+                  class="w-full px-6 py-4 bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
                   role="dialog"
                   id="modal"
                 >
@@ -337,7 +347,7 @@
                     </button>
                   </header>
                   <!-- Modal body -->
-                  <div class="overflow mt-4 mb-6">
+                  <div class="mt-4 mb-6">
                     <!-- Modal description -->
                     <CreateAccount/>
                   </div>
@@ -510,3 +520,8 @@
     </div>
   </div>
 </main>
+
+<style>
+
+  
+</style>

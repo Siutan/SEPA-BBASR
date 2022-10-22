@@ -6,6 +6,9 @@
   import form from "form-data";
 	import Search from "$src/lib/components/search/search.svelte";
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+  const API_KEY = import.meta.env.VITE_GEO_API_KEY
+
     // Customer data Form
   // --------------------------------------------------
   let firstName: string;
@@ -103,7 +106,7 @@
   function fetchCustomerData() {
     searchButtonText = "Searching ..."
     let customerGetUrl =
-      `https://dairies-rest-api.herokuapp.com/customers/${policyNumber}`;
+    `${BASE_URL}/customers/${policyNumber}`;
 
     // check if member id exists
     fetch(customerGetUrl, {
@@ -173,7 +176,7 @@
 
   async function getLocation() {
     // url = https://api.geoapify.com/v1/geocode/autocomplete?text=LOCATIONGOESHERE&filter=countrycode:au&apiKey=dc17356b57e24d99aad8a6d3f195dedc
-    let url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&filter=countrycode:au&apiKey=dc17356b57e24d99aad8a6d3f195dedc`;
+    let url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&filter=countrycode:au&apiKey=${API_KEY}`;
     let response = await axios.get(url);
     let resData = response.data.features;
     // loop through the results and get the formatted address
@@ -254,7 +257,7 @@
     data.append("image", vehicleImage.files[0]);
     let config = {
       method: "post",
-      url: "https://dairies-rest-api.herokuapp.com/claims/autogen",
+      url: `${BASE_URL}/claims/autogen`,
       headers: {
         "Content-Type": "multipart/form-data"
       },
@@ -392,7 +395,7 @@
     };
 
     // Typescript doesnt like this, fix later
-    fetch("https://dairies-rest-api.herokuapp.com/claims", requestOptions)
+    fetch(`${BASE_URL}/claims`, requestOptions)
 
       .then(response => response.json())
       .then(data => {

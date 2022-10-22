@@ -2,6 +2,8 @@
   import Switch from "../../../lib/components/Switch.svelte";
   import axios from "axios";
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+
   // form data
   let employeeId = "";
   let givenName = "";
@@ -154,7 +156,7 @@
       // axios config
       let registerConfig = {
         method: "post",
-        url: "https://dairies-rest-api.herokuapp.com/auth/register",
+        url: `${BASE_URL}/auth/register`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -322,3 +324,9 @@
         </div>
       </div>
 </section>
+
+<style>
+  #body{
+    overflow: auto;
+  }
+</style>

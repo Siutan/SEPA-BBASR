@@ -1,11 +1,13 @@
 <script lang="ts">
   import '$lib/tailwind.css'
   import { goto } from "$app/navigation";
+
+  const BASE_URL = import.meta.env.VITE_BASE_URL
   
   //function checks auth endpoint to determine if user is already logged in
   async function authenticate(){
     let authenticated:boolean = false;
-        await fetch("https://dairies-rest-api.herokuapp.com/auth", {
+        await fetch(`${BASE_URL}/auth`, {
           method: "GET",
           credentials: "include",
           mode: "cors"
