@@ -3,6 +3,8 @@
   import CreateAccount from "../../../lib/components/auth/CreateAccount.svelte";
   import { clickOutside } from "$lib/ioevents/click";
   import { keydownEscape } from "$lib/ioevents/keydown";
+  import Modal from "../../../lib/components/Modal.svelte";
+  import UserDetails from "../../../lib/components/UserModal/UserDetails.svelte"
 
   // modal stuff
   let isModalOpen = false;
@@ -12,7 +14,7 @@
   let deleteButtonText = "Deactivate User";
   let reactivateButtonText = "Reactivate User";
 
-  const openModal = () => {
+  const openModal = () => { 
     isModalOpen = true;
   };
 
@@ -44,7 +46,7 @@
 
 
   async function getUsers() {
-
+    
     await fetch("https://dairies-rest-api.herokuapp.com/user", {
       method: "GET",
       headers: {
@@ -56,6 +58,7 @@
       .then((response) => response.json())
       .then((data) => {
         users = data;
+        
         fetch("https://dairies-rest-api.herokuapp.com/user/inactive", {
           method: "GET",
           headers: {
@@ -66,14 +69,20 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log(users);
+  
             users = [...users, ...data];
           });
-      });
+      })
+      .catch((error) => console.log(`Error:${error}`));
   }
 
   // delete user
-  async function reactivateAccount() {
+  async function reactivateAccount(e) {
+    //check if function is being called by dispatch from UserDetails component
+    if(e){
+      selectedUser = e.detail;
+    }
+    
     reactivateButtonText = "Reactivating user...";
     await fetch("https://dairies-rest-api.herokuapp.com/user/reactivate/" + selectedUser.employeeId, {
       method: "POST",
@@ -85,13 +94,20 @@
     })
       .then((response) => response.json())
       .then((data) => {
+        selectedUser = data;
         getUsers();
         reactivateButtonText = "Reactivate User";
-      });
+      })
+      .catch((error) => console.log(`Error:${error}`));
   }
 
   // reactivate user
-  async function deleteAccount() {
+  async function deleteAccount(e) {
+     //check if function is being called by dispatch from UserDetails component
+    if(e){
+      selectedUser = e.detail;
+    }
+
     deleteButtonText = "Deactivating user...";
     await fetch("https://dairies-rest-api.herokuapp.com/user/deactivate/" + selectedUser.employeeId, {
       method: "POST",
@@ -103,22 +119,38 @@
     })
       .then((response) => response.json())
       .then((data) => {
+        selectedUser = data;
         getUsers();
+
+        
         deleteButtonText = "Deactivate User";
-      });
+      })
+      .catch((error) => console.log(`Error:${error}`));
   }
 
   // update account
-  async function updateAccount() {
+  async function updateAccount(e) {
+    
     updateButtonText = "Updating User...";
-    let user = {
-      "employeeId": selectedUser.employeeId,
-      "givenName": selectedUser.givenName,
-      "lastName": selectedUser.lastName,
-      "companyEmail": selectedUser.companyEmail,
-      "admin": selectedUser.admin,
-      "password": newPass
-    };
+    
+    let user;
+    
+    //check if function is being called by dispatch from UserDetails component
+    if(e){
+      user = e.detail;
+    }
+    else{
+      user = {
+        "employeeId": selectedUser.employeeId,
+        "givenName": selectedUser.givenName,
+        "lastName": selectedUser.lastName,
+        "companyEmail": selectedUser.companyEmail,
+        "admin": selectedUser.admin,
+        "password": newPass
+      };  
+    }
+
+    
     await fetch("https://dairies-rest-api.herokuapp.com/user/update", {
       method: "POST",
       headers: {
@@ -130,22 +162,53 @@
     })
       .then((response) => response.json())
       .then((data) => {
+        
         getUsers();
-        updateButtonText = "Update User";
-      });
+        
+        updateButtonText = "Update User";  
+        //isModalDetailsOpen = false;      
+        selectedUser = data;
+      })
+      .catch((error) => console.log(`Error:${error}`));
   }
+
+  
 
   // capitalize function
   function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
+  let isModalDetailsOpen;
+  //Modal for Small Screen
+  function openModalSS(user){
+    
+    isModalDetailsOpen = true;
+    selectedUser = user;
+  }
 
+  const closeModalSS = () => {
+    isModalDetailsOpen = false;
+  };
 
 </script>
 
 <svelte:head>
   <title>Manage Users</title>
 </svelte:head>
+
+<div class="xl:hidden">
+  <Modal isModalOpen={isModalDetailsOpen} title={`EmployeeID:`} on:closeModal={closeModalSS} >
+    <UserDetails 
+      selectedUser={selectedUser}
+      updateButtonText={updateButtonText}
+      {deleteButtonText}
+      {reactivateButtonText} 
+      on:updateAccount={updateAccount} 
+      on:deleteAccount={deleteAccount}
+      on:reactivateAccount={reactivateAccount}
+    />
+  </Modal>
+</div>
 
 <main class="h-full pb-16 overflow-y-auto">
   <div class="container px-6 mx-auto grid">
@@ -164,7 +227,7 @@
           </div>
         </div>
       {:then data}
-        <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-2">
+        <div class="grid grid-flow-row-dense grid-cols-1 grid-rows-1 xl:grid-cols-3 xl:grid-rows-3 gap-2">
           <div class="w-full overflow-x-auto col-span-2 ">
             <div>
               <button
@@ -186,10 +249,11 @@
                 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
               >
                 <th class="px-4 py-3">Employee ID</th>
-                <th class="px-4 py-3">Given Name</th>
+                <th class="hidden xl:flex xl:px-4 xl:py-3">Given Name</th>
                 <th class="px-4 py-3">Last Name</th>
-                <th class="px-4 py-3">Admin</th>
-                <th class="px-4 py-3">Active</th>
+                <th class="px-1 py-3">Admin</th>
+                <th class="hidden xl:flex px-4 py-3">Active</th>
+                <th class="xl:hidden px-4 py-3">View</th>
               </tr>
               </thead>
               <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -205,10 +269,10 @@
                       </div>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-sm">{capitalize(user.givenName)}</td>
+                  <td class="px-4 py-3 hidden xl:flex text-sm">{capitalize(user.givenName)}</td>
                   <td class="px-4 py-3 text-sm">{capitalize(user.lastName)}</td>
 
-                  <td class="px-4 py-3 text-xs">
+                  <td class="px-2 py-3 text-xs">
 
                     {#if user.admin}
                       <StatusCircle status="success" />
@@ -216,7 +280,29 @@
                       <StatusCircle status="danger" />
                     {/if}
                   </td>
-                  <td class="px-4 py-3 text-sm">{user.active}</td>
+                  <td class="hidden px-5 py-3 xl:flex text-sm">{user.active}</td>
+                  <td class="xl:hidden px-5">
+                    <!-- eyeball svg -->
+                    <div on:click={openModalSS(user)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="dark:fill-white"
+                           x="0px" y="0px" width="20" height="20" viewBox="0 0 442.04 442.04" xml:space="preserve">
+                            <g>
+                              <g>
+                                <path
+                                  d="M221.02,341.304c-49.708,0-103.206-19.44-154.71-56.22C27.808,257.59,4.044,230.351,3.051,229.203    c-4.068-4.697-4.068-11.669,0-16.367c0.993-1.146,24.756-28.387,63.259-55.881c51.505-36.777,105.003-56.219,154.71-56.219    c49.708,0,103.207,19.441,154.71,56.219c38.502,27.494,62.266,54.734,63.259,55.881c4.068,4.697,4.068,11.669,0,16.367    c-0.993,1.146-24.756,28.387-63.259,55.881C324.227,321.863,270.729,341.304,221.02,341.304z M29.638,221.021    c9.61,9.799,27.747,27.03,51.694,44.071c32.83,23.361,83.714,51.212,139.688,51.212s106.859-27.851,139.688-51.212    c23.944-17.038,42.082-34.271,51.694-44.071c-9.609-9.799-27.747-27.03-51.694-44.071    c-32.829-23.362-83.714-51.212-139.688-51.212s-106.858,27.85-139.688,51.212C57.388,193.988,39.25,211.219,29.638,221.021z" />
+                              </g>
+                              <g>
+                                <path
+                                  d="M221.02,298.521c-42.734,0-77.5-34.767-77.5-77.5c0-42.733,34.766-77.5,77.5-77.5c18.794,0,36.924,6.814,51.048,19.188    c5.193,4.549,5.715,12.446,1.166,17.639c-4.549,5.193-12.447,5.714-17.639,1.166c-9.564-8.379-21.844-12.993-34.576-12.993    c-28.949,0-52.5,23.552-52.5,52.5s23.551,52.5,52.5,52.5c28.95,0,52.5-23.552,52.5-52.5c0-6.903,5.597-12.5,12.5-12.5    s12.5,5.597,12.5,12.5C298.521,263.754,263.754,298.521,221.02,298.521z" />
+                              </g>
+                              <g>
+                                <path
+                                  d="M221.02,246.021c-13.785,0-25-11.215-25-25s11.215-25,25-25c13.786,0,25,11.215,25,25S234.806,246.021,221.02,246.021z" />
+                              </g>
+                            </g>
+                      </svg>
+                    </div>
+                  </td>
                 </tr>
               {/each}
               <div
@@ -251,7 +337,7 @@
                     </button>
                   </header>
                   <!-- Modal body -->
-                  <div class="mt-4 mb-6">
+                  <div class="overflow mt-4 mb-6">
                     <!-- Modal description -->
                     <CreateAccount/>
                   </div>
@@ -260,19 +346,19 @@
               </tbody>
             </table>
           </div>
-          <!-- Claim details -->
-          <div class="flex flex-col border-2 border-gray-300 dark:border-gray-700 rounded-lg p-1">
+          <!-- User details -->
+          <div class="hidden xl:flex flex flex-col border-2 border-gray-300 dark:border-gray-700 rounded-lg p-1">
             <div>
               <p class="text-center font-semibold text-yellow-400 dark:text-yellow-300 m-4">⚠️This is sensitive
                 information.
                 Access will be monitored</p>
             </div>
             <div>
-              <div class="text-center">
+              <div class="text-left">
                 <div id="customerForm" class="p-5 flex flex-col flex-wrap gap-5">
                   <div class="">
                     <div class="w-full">
-                      <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
+                      <h1 class="mb-4 text-xl text-center font-semibold text-gray-700 dark:text-gray-200">
                         Account Information
                       </h1>
                       <div class="grid xl:grid-cols-2 xl:gap-6">

@@ -21,6 +21,7 @@
     let steps = document.querySelectorAll(".step");
 
     steps.forEach((step, index) => {
+
       step.setAttribute("id", uuidv4());
       step.dataset.stepNumber = index;
       if ($currentStep === index) {
@@ -69,21 +70,20 @@
           })
             .then((response) => response.json())
             .then((res) => {
-              console.log("Customer created");
-              console.log(res);
+
               localStorage.setItem("customer", JSON.stringify(res));
             })
             .catch((error) => {
-              console.log(`Error creating new customer ${error}`);
+      
             });
         } else {
-          console.log("Customer exists");
-          console.log(data);
+
+
           localStorage.setItem("customer", JSON.stringify(data));
         }
       })
       .catch((error) => {
-        console.log(`Error searching for customer ${error}`);
+
       });
   }
 
@@ -106,7 +106,7 @@
     };
     axios(config)
       .then((response) => {
-        console.log(response);
+
         localStorage.setItem("vehicle", JSON.stringify(response.data));
       })
       .catch((error) => {
@@ -152,7 +152,7 @@
 
 
   function handleForm(stepDirection) {
-    console.log(index);
+
 
 
     let customerForm = document.getElementById("customerForm");
@@ -174,7 +174,7 @@
         customerFormData[input.name] = input.value;
       });
       customerFormSelects.forEach((select) => {
-        console.log(select.value);
+
         customerFormData[select.name] = select.selectedIndex;
       });
       // check if Member ID exists in database
@@ -182,12 +182,12 @@
       // if it doesn't, create a new customer in the database
       // then get the customer's data from the database
       fetchCustomerData(customerFormData);
-      console.log(customerFormData);
+ 
     }
 
 
     if (imageFormExists) {
-      console.log("img form exists");
+
       if (vehicleFormExists) {
         fetchVehicleData(vehicleForm);
       }
@@ -199,10 +199,10 @@
         imageFormData[input.name] = input.value;
       });
       imageFormSelects.forEach((select) => {
-        console.log(select.value);
+
         imageFormData[select.name] = select.selectedIndex;
       });
-      console.log(imageFormData);
+
     }
 
     let historyFormInputs = historyForm.querySelectorAll("input");
@@ -210,7 +210,7 @@
     historyFormInputs.forEach((input) => {
       historyFormData[input.name] = input.value;
     });
-    console.log(historyFormData);
+
     localStorage.setItem("history", JSON.stringify(historyFormData));
   }
 
@@ -220,9 +220,12 @@
   export function nextStep() {
     handleForm("next");
     const steps = document.querySelectorAll(".step");
+    
+    //validate form inputs
     if (formHasError()) {
       return;
     }
+    
     if ($currentStep + 1 <= steps.length - 1) {
       updateStepStatus(currentStep.increment);
     }
@@ -234,6 +237,7 @@
       updateStepStatus(currentStep.decrement);
     }
   };
+
 </script>
 
 <div class="multistep-master-form">
@@ -394,11 +398,11 @@
 
     #multistep-error-messages {
         position: sticky;
-        display: flex;
+        display: block;
         top: 0;
         height: auto;
         width: auto;
-        padding: 20px 100px 20px 100px;
+        /* padding: 20px 100px 20px 100px; */
         background: rgb(205, 33, 33);
         visibility: hidden;
         opacity: 0;
@@ -408,6 +412,18 @@
         font-weight: bold;
         z-index: 1;
     }
+        @media only screen and (min-width: 601px) {
+          #multistep-error-messages{
+            padding: 20px 100px;
+          }
+        }
+        @media only screen and (max-width: 600px) {
+          #multistep-error-messages{
+            padding: 0px 20px 
+          }
+        }
+
+    
 
 
     .noselect {

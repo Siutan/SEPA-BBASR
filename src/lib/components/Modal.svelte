@@ -9,10 +9,8 @@
   export let title = "";
   export let isModalOpen = false;
 
-
+  //Closes the modal
   const closeModal = () => {
-    console.log("Close Modal dispatched");
-
     dispatch("closeModal", false);
   };
 

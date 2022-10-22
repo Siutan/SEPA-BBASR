@@ -13,8 +13,9 @@
   let page = 0;
   let prevDisabled = true;
   let nextDisabled = false;
-  let pagSlots = [2,3,4,5,6];
+  let pagSlots = [2,3,4];
 
+  //Call to the getClaims endpoint to display on dashboard table
   async function getClaims() {
     await fetch("https://dairies-rest-api.herokuapp.com/claims", {
       method: "GET",
@@ -24,8 +25,8 @@
       .then((response) => response.json())
       .then((data) => {
         claims = data;
-		console.log(claims)
-		claims[34]= {"claimID":33,"membershipID":22,"status":"failed","date":"2022-09-03T10:09:01.225Z"}
+		
+		
         totalClaims = Object.keys(claims).length;
         //if the number of claims is perfectly divisible by perPage value
         if(totalClaims%perPage == 0)
@@ -36,15 +37,17 @@
         else{
           end = Math.floor(totalClaims/perPage);
         }
+        //count claims by status
         claimProcess();
-        console.log(getClaimsByMonth())
+        //create charts based on claim data
+        getClaimsByMonth()
         claimChart()
-		pieChart()
+		    pieChart()
 
-      }).catch((error) => console.log(error));
+      }).catch((error) => console.log("Error for getClaims(): ", error));
   }
 
-
+  //counts the number of claims by success, pending or failed and populates those variables
   function claimProcess() {
     for (let i = 0; i < totalClaims; i++) {
       if (claims[i].status == "success") {
@@ -59,6 +62,7 @@
     ;
   }
 
+  //Updates the table pagination when previous button clicked
   function prev() {
 		if (page == 0) {
       prevDisabled = true;
@@ -80,7 +84,7 @@
     let last = end + 1;
     let currentPage = page+1;
       
-    if(currentPage <= pagSlots[3])
+    if(currentPage <= pagSlots[pagSlots.length - 2])
     {
       if(pagSlots[0] > 2)
       {
@@ -90,6 +94,8 @@
       }
     }
 	}
+  
+  //Updates the table pagination when next button clicked
 	function next() {
         page ++;
         if(page == end)
@@ -102,9 +108,9 @@
       let last = end + 1;
       let currentPage = page+1;
       
-      if(currentPage >= pagSlots[3])
+      if(currentPage >= pagSlots[pagSlots.length - 2])
       {
-        if(last - 1 > pagSlots[4])
+        if(last - 1 > pagSlots[pagSlots.length - 1])
         {
           pagSlots.forEach((val, index) => {
             pagSlots[index] ++;
@@ -117,14 +123,29 @@
     nextDisabled = false;
 	}
 
+  //changes the page on the table to the selected number
   function changePage(selectedPage){
-    console.log(`Go to Page ${selectedPage}`)
     //change the page (count is from zero so take away 1)
     page = selectedPage -1;
 
     //update the pagination slots
-    //if have time to figure out
+    //if first page is selected
+    if(selectedPage === 1)
+    {
+      pagSlots.forEach((val, index) => {
+            pagSlots[index] = index + 2;
+          })
+    }
+
+    
+  //if the last page is selected
+  if(selectedPage === end + 1)
+  {
+    pagSlots.forEach((val, index) => {
+            pagSlots[index] = end + 1 - (pagSlots.length - index) ;
+          })
   }
+}
 
   // function to change 2022-09-03T10:09:01.225Z to 03-09-2022
   function formatDate(date) {
@@ -164,12 +185,11 @@
       chartLabels.push(key);
     }
 
-    console.log(chartLabels)
     return claimsByMonth;
   }
 
+  //creates a chart for functions based on date
   function claimChart() {
-
     ctx = chartCanvas.getContext('2d');
     new Chartjs(ctx, {
       type: 'line',
@@ -190,30 +210,29 @@
 
 let pieC;
 let chartCanvasPie;
-// Pie chart
-  function pieChart() {
+// Creates a pieChart for the dashboard
+function pieChart() {
 
-pieC = chartCanvasPie.getContext('2d');
-new Chartjs(pieC, {
-  type: 'pie',
-  data: {
-	labels: ['Success', 'Pending', 'Failed'],
-	datasets: [{
-	  label: 'Claim Status',
-	  backgroundColor: [
-		  "#80ed99",
-          "#38a3a5",
-          "#22577a",],
-	  borderColor: [
-		  "#FFFFFF",
-          "#FFFFFF",
-          "#FFFFFF"],
-	  data: [completeClaim,pendingClaim,failedClaim]
-	  
-	}]
-  },
+  pieC = chartCanvasPie.getContext('2d');
+  new Chartjs(pieC, {
+                    type: 'pie',
+                    data: {
+                      labels: ['Success', 'Pending', 'Failed'],
+                      datasets: [{
+                        label: 'Claim Status',
+                        backgroundColor: [
+                          "#80ed99",
+                              "#38a3a5",
+                              "#22577a",],
+                        borderColor: [
+                          "#FFFFFF",
+                              "#FFFFFF",
+                              "#FFFFFF"],
+                        data: [completeClaim,pendingClaim,failedClaim]
+                    }]
+                   },
   
-});
+  });
 
 };
 
@@ -222,13 +241,15 @@ new Chartjs(pieC, {
     let isModalOpen = false;
     let id;
 
+    //Opens Modal up on dashboard
     const openModal = (newId) => {
-      
+
       isModalOpen = true;
       id=newId;
-      console.log("Id is: ", id);
+
     };
 
+    //Closes Modal from the dashboard
     const closeModal = () => {
       
       isModalOpen = false;
@@ -495,7 +516,7 @@ new Chartjs(pieC, {
                   </button>
                 </li>
               {/each} 
-              {#if pagSlots[4] < end}
+              {#if pagSlots[pagSlots.length - 1] < end}
                 <li>
                   <span class="px-3 py-1">...</span>
                 </li>

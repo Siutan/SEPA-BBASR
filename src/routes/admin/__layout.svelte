@@ -18,13 +18,13 @@
           mode: "cors"
         })
         .then(response => {
-          console.log(response.status);
+          
           if (response.status === 200) {
-            console.log("Logged in");
+          
             authenticated = true;
 
           } else {
-            console.log("Not logged in");
+           
             goto("/auth/login");
             authenticated = false;
           }
